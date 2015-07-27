@@ -1,0 +1,12 @@
+
+
+
+ClassLoader类loadClass($classname)方法是类文件自动加载器
+1。先从类的映射关系中查找：classMap
+2. 如果加载器类的classMapAuthoritative属性值不为真，则继续往下查找，否则到此就停止查找
+3. 继续： 遍历PSR-4规范查找文件
+4. 在3步骤未找到文件则继续遍历fallbackDirsPsr4属性来查找文件（在可靠的psr4规范目录中查找）
+5. 在4步骤未找到文件则继续使用 PSR-0规范查找文件
+6. 在5步骤未找到文件则继续遍历fallbackDirsPsr0属性来查找文件（在可靠的PSR-0规范目录中查找）
+7. 在6步骤未找到文件且useIncludePath属性为真（默认为false），则stream_resolve_include_path(psr-0规范)查找文件
+
