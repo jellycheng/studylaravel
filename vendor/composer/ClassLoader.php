@@ -334,7 +334,7 @@ class ClassLoader
         }
 
         if ($file === null) {
-            // Remember that this class does not exist.
+            // Remember that this class does not exist. 下次再使用相同类时也不会继续往下查找了
             return $this->classMap[$class] = false;
         }
 
@@ -349,9 +349,9 @@ class ClassLoader
         $first = $class[0];
         if (isset($this->prefixLengthsPsr4[$first])) {
             foreach ($this->prefixLengthsPsr4[$first] as $prefix => $length) {
-                if (0 === strpos($class, $prefix)) {
+                if (0 === strpos($class, $prefix)) {//类名的前缀在自动查找的psr4规范对应目录中
                     foreach ($this->prefixDirsPsr4[$prefix] as $dir) {
-                        if (is_file($file = $dir . DIRECTORY_SEPARATOR . substr($logicalPathPsr4, $length))) {
+                        if (is_file($file = $dir . DIRECTORY_SEPARATOR . substr($logicalPathPsr4, $length))) {//文件找到
                             return $file;
                         }
                     }
@@ -359,9 +359,9 @@ class ClassLoader
             }
         }
 
-        // PSR-4 fallback dirs
+        // PSR-4 fallback dirs，在可靠的psr4规范目录中查找
         foreach ($this->fallbackDirsPsr4 as $dir) {
-            if (is_file($file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr4)) {
+            if (is_file($file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr4)) {//找到
                 return $file;
             }
         }
@@ -378,7 +378,7 @@ class ClassLoader
 
         if (isset($this->prefixesPsr0[$first])) {
             foreach ($this->prefixesPsr0[$first] as $prefix => $dirs) {
-                if (0 === strpos($class, $prefix)) {
+                if (0 === strpos($class, $prefix)) {#类名中存在配置的命名空间
                     foreach ($dirs as $dir) {
                         if (is_file($file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr0)) {
                             return $file;
@@ -388,7 +388,7 @@ class ClassLoader
             }
         }
 
-        // PSR-0 fallback dirs
+        // PSR-0 fallback dirs 可靠的psr-0规范中查找
         foreach ($this->fallbackDirsPsr0 as $dir) {
             if (is_file($file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr0)) {
                 return $file;

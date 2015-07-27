@@ -1,0 +1,18 @@
+
+Container 集装箱
+Contracts 合约
+
+Illuminate\Foundation\Application		类=》   /vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+Illuminate\Container\Container			类=》	/vendor/laravel/framework/src/Illuminate/Container/Container.php
+Illuminate\Contracts\Container\Container	接口 =》/vendor/laravel/framework/src/Illuminate/Contracts/Container/Container.php
+Illuminate\Contracts\Foundation\Application     接口=》 /vendor/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php
+Illuminate\Contracts\Container\Container        接口=》 /vendor/laravel/framework/src/Illuminate/Contracts/Container/Container.php 
+Symfony\Component\HttpKernel\HttpKernelInterface接口=》/vendor/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernelInterface.php
+# use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+
+Illuminate\Foundation\Application extends \Illuminate\Container\Container implements \Illuminate\Contracts\Foundation\Application, \Symfony\Component\HttpKernel\HttpKernelInterface
+
+					  \Illuminate\Container\Container implements ArrayAccess, \Illuminate\Contracts\Container\Container 
+									            Illuminate\Contracts\Foundation\Application extends \Illuminate\Contracts\Container\Container
+
+

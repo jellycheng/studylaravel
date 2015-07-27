@@ -1,0 +1,8 @@
+
+
+#laravel常用函数
+
+获取laravel版本：   \Illuminate\Container\Container::getInstance()->version();
+		或者 $app->version();
+
+$app->instance($abstract, $instance); 设置app对象的instances属性值($this->instances[$abstract] = $instance;)

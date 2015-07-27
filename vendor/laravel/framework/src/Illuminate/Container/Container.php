@@ -353,12 +353,12 @@ class Container implements ArrayAccess, ContainerContract {
 		// We'll check to determine if this type has been bound before, and if it has
 		// we will fire the rebound callbacks registered with the container and it
 		// can be updated with consuming classes that have gotten resolved here.
-		$bound = $this->bound($abstract);
+		$bound = $this->bound($abstract);//$abstrace是否是bindings，instances，aliases三个属性之一的key
 
 		$this->instances[$abstract] = $instance;
 
 		if ($bound)
-		{
+		{//是
 			$this->rebound($abstract);
 		}
 	}

@@ -18,32 +18,33 @@ class ComposerAutoloaderInitad8782a91aee7e418d83414e9ead2d42
         if (null !== self::$loader) {
             return self::$loader;
         }
-
+        //注册加载器
         spl_autoload_register(array('ComposerAutoloaderInitad8782a91aee7e418d83414e9ead2d42', 'loadClassLoader'), true, true);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
+        //取消刚才注册的加载器，避免2次利用
         spl_autoload_unregister(array('ComposerAutoloaderInitad8782a91aee7e418d83414e9ead2d42', 'loadClassLoader'));
 
         $includePaths = require __DIR__ . '/include_paths.php';
         array_push($includePaths, get_include_path());
         set_include_path(join(PATH_SEPARATOR, $includePaths));
-
+        //命名空间对应的目录
         $map = require __DIR__ . '/autoload_namespaces.php';
         foreach ($map as $namespace => $path) {
             $loader->set($namespace, $path);
         }
-
+        //命名空间对应的目录
         $map = require __DIR__ . '/autoload_psr4.php';
         foreach ($map as $namespace => $path) {
             $loader->setPsr4($namespace, $path);
         }
-
+        //类名和文件名的映射关系，设置ClassLoader类的classMap属性值
         $classMap = require __DIR__ . '/autoload_classmap.php';
         if ($classMap) {
             $loader->addClassMap($classMap);
         }
-
+        //注册自动加载器：ClassLoader类loadClass($classname)方法
         $loader->register(true);
-
+        //加载自动加载的文件
         $includeFiles = require __DIR__ . '/autoload_files.php';
         foreach ($includeFiles as $file) {
             composerRequiread8782a91aee7e418d83414e9ead2d42($file);
