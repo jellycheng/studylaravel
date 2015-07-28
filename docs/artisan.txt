@@ -1,0 +1,103 @@
+
+
+#在cmd中执行命令，显示命令使用： php artisan help 命令名 如：php artisan help env
+# 查看laravel版本： php artisan --version 等价 php artisan -V
+#在cmd中执行命令： php artisan list 列出所有命令
+
+Laravel Framework version 5.0.16
+Usage:
+ [options] command [arguments]
+
+Options:
+ --help (-h)           Display this help message
+ --quiet (-q)          Do not output any message
+ --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+ --version (-V)        Display this application version 查看应用程序版本
+ --ansi                Force ANSI output
+ --no-ansi             Disable ANSI output
+ --no-interaction (-n) Do not ask any interactive question
+ --env                 The environment the command should run under.
+
+Available commands: 可用的命令
+ clear-compiled       Remove the compiled class file
+ down                 Put the application into maintenance mode
+ env                  Display the current framework environment
+ fresh                Remove the scaffolding included with the framework
+ help                 Displays help for a command
+ inspire              Display an inspiring quote
+ list                 Lists commands
+ migrate              Run the database migrations
+ optimize             Optimize the framework for better performance
+ serve                Serve the application on the PHP development server
+ tinker               Interact with your application
+ up                   Bring the application out of maintenance mode
+app
+ app:name             Set the application namespace
+auth
+ auth:clear-resets    Flush expired password reset tokens
+cache
+ cache:clear          Flush the application cache
+ cache:table          Create a migration for the cache database table
+config
+ config:cache         Create a cache file for faster configuration loading
+ config:clear         Remove the configuration cache file
+db
+ db:seed              Seed the database with records
+event
+ event:generate       Generate the missing events and handlers based on registration
+handler
+ handler:command      Create a new command handler class
+ handler:event        Create a new event handler class
+key
+ key:generate         Set the application key
+make
+ make:command         Create a new command class
+ make:console         Create a new Artisan command
+ make:controller      Create a new resource controller class
+ make:event           Create a new event class
+ make:middleware      Create a new middleware class
+ make:migration       Create a new migration file
+ make:model           Create a new Eloquent model class
+ make:provider        Create a new service provider class
+ make:request         Create a new form request class
+migrate
+ migrate:install      Create the migration repository
+ migrate:refresh      Reset and re-run all migrations
+ migrate:reset        Rollback all database migrations
+ migrate:rollback     Rollback the last database migration
+ migrate:status       Show a list of migrations up/down
+queue
+ queue:failed         List all of the failed queue jobs
+ queue:failed-table   Create a migration for the failed queue jobs database table
+ queue:flush          Flush all of the failed queue jobs
+ queue:forget         Delete a failed queue job
+ queue:listen         Listen to a given queue
+ queue:restart        Restart queue worker daemons after their current job
+ queue:retry          Retry a failed queue job
+ queue:subscribe      Subscribe a URL to an Iron.io push queue
+ queue:table          Create a migration for the queue jobs database table
+ queue:work           Process the next job on a queue
+route
+ route:cache          Create a route cache file for faster route registration
+ route:clear          Remove the route cache file
+ route:list           List all registered routes
+schedule
+ schedule:run         Run the scheduled commands
+session
+ session:table        Create a migration for the session database table
+vendor
+ vendor:publish       Publish any publishable assets from vendor packages
+
+
+
+
+通过http地址来路由执行artisan脚本：
+Route::get('/foo', function()
+{
+    $exitCode = Artisan::call('command:name', ['--option' => 'foo']);
+});
+
+
+
+创建一个新的命令类： php artisan make:console JellyCommand  此时生成一个/app/Console/Commands/JellyCommand.php文件
+
