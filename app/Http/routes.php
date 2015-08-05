@@ -19,3 +19,15 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+
+Route::get('jellyabc', function() {
+		$f = get_included_files();
+		return "sdfad==jellyabc，访问地址是http://localhost/learnlaravel/public/jellyabc" . var_export($f,true);
+});
+
+Route::get('jelly', 'JellyController@index');
+
+Route::get('jelly/tpl', 'JellyController@tplDemo');
+
+Route::get('jelly/tpldemo1', 'JellyController@tpldemo1');

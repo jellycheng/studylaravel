@@ -4,5 +4,19 @@
 
 获取laravel版本：   \Illuminate\Container\Container::getInstance()->version();
 		或者 $app->version();
+		或者 $app->make('app')->version();
 
 $app->instance($abstract, $instance); 设置app对象的instances属性值($this->instances[$abstract] = $instance;)
+
+在实例化Illuminate\Foundation\Application类时（即构造方法中执行）：
+	$this->instance('app', $this); 这个设置$this->instances['app'] = 当前app对象
+	$this->instance('Illuminate\Container\Container', $this); 这个设置$this->instances['Illuminate\Container\Container'] = 当前app对象
+
+$app->make('app'); 获取当前app对象
+
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
+
+
+reboundCallbacks属性是一个数组，$this->reboundCallbacks[$abstract]= "回调函数或者array('类名', '静态方法')或者‘类名::静态方法’);
+
+

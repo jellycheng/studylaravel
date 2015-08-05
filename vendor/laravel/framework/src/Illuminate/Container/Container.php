@@ -342,10 +342,10 @@ class Container implements ArrayAccess, ContainerContract {
 		// are using the correct name when binding the type. If we get an alias it
 		// will be registered with the container so we can resolve it out later.
 		if (is_array($abstract))
-		{
+		{	//$abstract=array('key别名值'=>'val别名key');通过extractAlias提取别名，返回数组array(key名，val别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 
-			$this->alias($abstract, $alias);
+			$this->alias($abstract, $alias);//$alias作为aliases属性的key，$abstract作为对应的值
 		}
 
 		unset($this->aliases[$abstract]);
@@ -358,7 +358,7 @@ class Container implements ArrayAccess, ContainerContract {
 		$this->instances[$abstract] = $instance;
 
 		if ($bound)
-		{//是
+		{//是上面的三个属性key之一
 			$this->rebound($abstract);
 		}
 	}
