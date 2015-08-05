@@ -1,0 +1,13 @@
+
+
+欢迎页： http://localhost/learnlaravel/public/
+查看加载的文件： http://localhost/learnlaravel/public/jellyabc
+第一个控制器： http://localhost/learnlaravel/public/jelly
+模板使用1： http://localhost/learnlaravel/public/jelly/tpl
+模板使用2： http://localhost/learnlaravel/public/jelly/tpldemo1
+模板使用例子（重点）： http://localhost/learnlaravel/public/jellytestview
+路由正则配置方式： http://localhost/learnlaravel/public/123/index/detail.id.9.html
+
+
+http://localhost/learnlaravel/public/jellytestview?name=123
+

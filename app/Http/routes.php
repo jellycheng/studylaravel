@@ -31,3 +31,17 @@ Route::get('jelly', 'JellyController@index');
 Route::get('jelly/tpl', 'JellyController@tplDemo');
 
 Route::get('jelly/tpldemo1', 'JellyController@tpldemo1');
+
+Route::get('/{city}/index/detail.id.{id}.html', 'View\DemoController@detail');
+Route::get('jellytestview', 'View\DemoController@index');
+
+Route::any('foo', function()
+{
+    return 'Hello World';
+});
+
+
+
+Route::get('user/profile', [
+	    'as' => 'profile', 'uses' => 'UserController@showProfile'
+	]);

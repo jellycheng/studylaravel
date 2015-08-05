@@ -1,0 +1,17 @@
+
+
+
+1. 使用命令生成控制器：
+	php artisan make:controller view/DemoController   =》文件位置 \app\Http\Controllers\view\DemoController.php
+
+2. 配置路由
+
+
+3. 通过控制器传值
+
+
+
+4. 模板标签
+
+
+

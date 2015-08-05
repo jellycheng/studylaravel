@@ -2,3 +2,77 @@
 
 路由配置方式
 
+路由种类分get，post，put，delete，any，match
+配置格式：Route::路由种类("url", function(参数可选){ } );
+	  Route::get('url', '控制器目录\控制器类名@控制器方法名');
+路由器别名格式：
+	Route::get('url地址', ['as' => 'profile别名', function() {    //代码 }]);
+	Route::get('url地址', ['as' => 'profile别名', 'uses' => '控制器目录\控制器类名@控制器方法名']);
+	通过路由别名获取对应的url： $url = route('profile别名'); 如果不存在则报语法错误
+	获取跳转代码： $redirect = redirect()->route('profile'); echo $redirect;
+
+GET路由
+Route::get('/', function()
+{	
+    return 'Hello World';#这种是直接响应内容给客户端
+});
+
+Route::get('jelly', 'JellyController@index'); #http://localhost/learnlaravel/public/jelly
+Route::get('/{city}/index/detail.id.{id}.html', 'View\DemoController@detail'); #http://localhost/learnlaravel/public/123/index/detail.id.9.html
+	DemoController控制器类方法：
+	public function detail(Request $request)
+	{
+		echo($request->route('city') . '<br>');
+		echo($request->route('id'));
+	}
+
+Route::get('user/{id}', function($id) {     return 'User '.$id; }); #http://localhost/learnlaravel/public/user/123  这种路由配置一定要带上id参数值
+可选方式并带默认值： Route::get('user/{name?}', function($name = null) {   return $name; });
+正则方式： Route::get('user/{name}', function($name){   //代码 })->where('name', '[A-Za-z]+');  说明url/user/name值一定的字母
+	   Route::get('user/{id}', function($id){  //代码 })->where('id', '[0-9]+');
+多个正则限制： Route::get('user/{id}/{name}', function($id, $name){   //代码 })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
+
+注册路由响应所有 HTTP 请求，也就是不区分请求方式
+Route::any('foo', function() {#http://localhost/learnlaravel/public/foo
+    return 'Hello World';
+});
+
+
+Route::post('foo/bar', function()
+{
+    return 'Hello World';
+});
+
+Route::put('foo/bar', function()
+{
+    // todo
+});
+
+Route::delete('foo/bar', function()
+{
+    // todo
+});
+
+#匹配get和post请求的路由
+Route::match(['get', 'post'], '/', function()
+{
+    return 'Hello World';
+});
+
+
+路由器定义别名：
+	Route::get('user/profile', ['as' => 'profile', function()
+	{
+	    //代码
+	}]);
+
+	Route::get('user/profile', [
+	    'as' => 'profile', 'uses' => 'UserController@showProfile'
+	]);
+
+
+
+
+路由群组： Route::group(); 待研究
+
+
