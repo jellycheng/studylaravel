@@ -81,3 +81,27 @@ Cannot find autoconf. Please check your autoconf installation and the $PHP_AUTOC
 PHP Warning:  PHP Startup: Invalid library (maybe not a PHP library) 'opcache.so' in Unknown on line 0解决办法：
 是因为没有配置zend_extension=/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/opcache.so 或者配置成了extension=opcache.so
 
+
+php5.5版本以后安装opcache扩展：
+	1. 第1次编译时加上--enable-opcache 选项来开启 OPcache
+	2. 如果未安装可以使用phpize来安装
+		cd /usr/local/src/soft/php-5.6.10/ext/opcache 这是源码自带的
+		/usr/local/php56/bin/phpize
+		./configure --with-php-config=/usr/local/php56/bin/php-config
+		make && make install 
+		ls /usr/local/php56/lib/php/extensions/no-debug-non-zts-20131226/
+		/usr/local/php56/bin/php --ini
+		vi /usr/local/php56/lib/php.ini
+			extension_dir = "/usr/local/php56/lib/php/extensions/no-debug-non-zts-20131226/"
+			#extension=opcache.so 说明这里安装的php扩展配置跟其它的有所不同。opcache是用zend_extension来配置
+			zend_extension=/usr/local/php56/lib/php/extensions/no-debug-non-zts-20131226/opcache.so
+		重启服务即可
+		语法检测：./bin/php -l
+		./bin/php -i|grep opcache   查看是否安装好opcache模块 或者 ./bin/php -m|grep cache
+
+
+
+
+
+
+
