@@ -1,0 +1,83 @@
+
+
+http://www.php.net/manual/zh/opcache.configuration.php
+
+opcache: 通过将 PHP 脚本预编译的字节码存储到共享内存中来提升 PHP 的性能, 好处：省去了每次加载和解析 PHP 脚本的开销
+	opcache_compile_file — 无需运行，即可编译并缓存 PHP 脚本
+	opcache_get_configuration — 获取缓存的配置信息
+	opcache_get_status — 获取缓存的状态信息
+	opcache_invalidate — 废除脚本缓存
+	opcache_is_script_cached — Tells whether a script is cached in OPCache
+	opcache_reset — 重置字节码缓存的内容
+
+
+PHP 5.5.0 及后续版本中已经绑定了 OPcache 扩展:  --enable-opcache 选项来开启 OPcache
+PHP 5.2，5.3 和 5.4 版本需要下载安装： http://pecl.php.net/package/ZendOpcache
+备注及注意点： 需要将Xdebug和 OPcache 扩展一起使用，必须在 Xdebug 扩展之前加载 OPcache 扩展
+
+./php -m |grep cache
+
+ cat /usr/local/php56/lib/php.ini |grep extension_dir
+
+ /usr/local/php56/lib/php/extensions/no-debug-non-zts-20131226
+
+
+
+opcache官网： http://pecl.php.net/package/ZendOpcache
+cat /usr/local/php/lib/php.ini |grep extension_dir
+wget http://pecl.php.net/get/zendopcache-7.0.5.tgz
+tar zxvf zendopcache-7.0.5.tgz
+cd zendopcache-7.0.5
+/usr/local/php/bin/phpize 
+./configure --with-php-config=/usr/local/php/bin/php-config 
+make && make install 
+#make install 后会提示编译出的opcache.so文件的位置，在php.ini加上相关配置段即可
+ls /usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/
+/usr/local/php/bin/php --ini
+vi /usr/local/php/lib/php.ini
+	extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/"
+	#extension=opcache.so 说明这里安装的php扩展配置跟其它的有所不同。opcache是用zend_extension来配置
+	zend_extension=/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/opcache.so
+重启服务即可
+语法检测：./bin/php -l
+root@AY130925210658410045Z:/usr/local/php# ./bin/php -i|grep opcache   查看是否安装好opcache模块 或者 ./bin/php -m|grep cache
+	opcache.blacklist_filename => no value => no value
+	opcache.consistency_checks => 0 => 0
+	opcache.dups_fix => Off => Off
+	opcache.enable => On => On
+	opcache.enable_cli => Off => Off
+	opcache.enable_file_override => Off => Off
+	opcache.error_log => no value => no value
+	opcache.fast_shutdown => 0 => 0
+	opcache.file_update_protection => 2 => 2
+	opcache.force_restart_timeout => 180 => 180
+	opcache.inherited_hack => On => On
+	opcache.load_comments => 1 => 1
+	opcache.log_verbosity_level => 1 => 1
+	opcache.max_accelerated_files => 2000 => 2000
+	opcache.max_file_size => 0 => 0
+	opcache.max_wasted_percentage => 5 => 5
+	opcache.memory_consumption => 64 => 64
+	opcache.optimization_level => 0xFFFFFFFF => 0xFFFFFFFF
+	opcache.preferred_memory_model => no value => no value
+	opcache.protect_memory => 0 => 0
+	opcache.restrict_api => no value => no value
+	opcache.revalidate_freq => 2 => 2
+	opcache.revalidate_path => Off => Off
+	opcache.save_comments => 1 => 1
+	opcache.use_cwd => On => On
+	opcache.validate_timestamps => On => On
+
+
+Cannot find autoconf. Please check your autoconf installation and the $PHP_AUTOCONF environment variable. Then, rerun this script.
+解决办法：
+	yum install autoconf
+	apt-get install autoconf
+	yum install m4
+	apt-get install m4
+
+
+
+PHP Warning:  PHP Startup: Invalid library (maybe not a PHP library) 'opcache.so' in Unknown on line 0解决办法：
+是因为没有配置zend_extension=/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/opcache.so 或者配置成了extension=opcache.so
+
