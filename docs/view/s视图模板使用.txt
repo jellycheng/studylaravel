@@ -1,17 +1,131 @@
 
+手册： http://www.golaravel.com/laravel/docs/5.0/views/
+
+视图模板根目录： /resources/views/
+
+直接通过路由定位到模板： http://localhost/learnlaravel/public/jellyrouteview
+	/app/Http/routes.php文件中配置 直接路由到模板
+	Route::get('jellyrouteview', function()
+	{
+	    return view('jelly.jellyroute'); #用法跟在控制器中用法一样
+	});
 
 
 1. 使用命令生成控制器：
 	php artisan make:controller view/DemoController   =》文件位置 \app\Http\Controllers\view\DemoController.php
 
 2. 配置路由
-
+	Route::get('jellytestview', 'View\DemoController@index');  此时可以通过url： http://localhost/learnlaravel/public/jellytestview 访问
 
 3. 通过控制器传值
+     <?php namespace App\Http\Controllers\view;
+
+	use App\Http\Requests;
+	use App\Http\Controllers\Controller;
+	use Illuminate\Http\Request;
+	class DemoController extends Controller {
+		/**
+		 * http://localhost/learnlaravel/public/jellytestview
+		 * Route::get('jellytestview', 'View\DemoController@index');
+		 */
+		public function index()
+		{
+			
+
+			#return view('jelly.jellyLayout', array('jellyName'=>'jelly'));等价
+			return view('jelly.jellyLayout', ['jellyName'=>'jelly']); #/resources/views/jelly/jellyLayout.blade.php
+		}
+	}
 
 
 
-4. 模板标签
+控制器方式：
+	#return view('jelly.jellyLayout', array('jellyName'=>'jelly'));等价view('jelly.jellyLayout', ['jellyName'=>'jelly']);
+	$view = view('jelly.jellyLayout')->with('jellyName', 'jelly'); #传递模板变量方式1 通过第2个参数传递
+	$view->with('curDate', date('Y-m-d',time()));#传递模板变量方式2 通过with(变量名，变量值)方法传递
+	$view->withHi("hi模板变量值"); ##传递模板变量方式2 通过对象->with变量名("变量值");
+	return $view;
+路由方式：
+	Route::get('user/info', function()
+	{
+	    return view('userinfo', ['name' => 'Jelly']);  #对应的模板文件 /resources/views/userinfo.blade.php
+	});
+
+判断模板文件是否存在: $b = view()->exists('模板文件');  如 view()->exists('emails.customer')
+
+4. 模板标签: {{定界符开始， }}定界符结束， 注意：默认情况在模板中使用未定义的变量会报语法错误
+	{{ $变量 }}  变量值输出默认是做html转义的
+	{!! $name8 !!} 输出的内容不会被转义
+	{{-- 模板注释 --}}
+	{{ 函数名() }} 如{{ time() }}：{{ date('Y-m-d', time()) }}
+	{{ isset($name123) ? $name123 : 'Default' }}  $name123变量不存在则使用Default作为其值  写法等价 {{ $name123 or 'Default2' }}
+	@{{ 这块内容不会被@ blade模板引擎解析 }}
+	
+	视图文件继承视图文件：在当前视图文件中使用 @extends('要包含进来的视图文件') 如 @extends('jelly.jellyLayout')
+	加载子模板： @include('子模板文件') 如 @include('jelly.sub.subIndex')   备注，php传递给模板的变量值在子模块是不通的，如果需要通用则在include子模块时再传递 如 @include('jelly.sub.subIndex', ['name' => $name, 'date'=>$date, 'abc'=>'1abc1'])
+
+	引用section定义区块内容：
+			@yield('区块名') 如 @yield('title')  如果引用的模块不存在也不会报错，只是不显示而已
+			@yield('区块名', '区块名没有定义时，使用这个默认值')
+
+	定义区块和引用区块有分先之分，相同的区块名，后面会重写前面相同的区块，先定义区块再使用区块。
+
+定义区块方式1，如果是 @show结尾 则在定义区块时就输出，而且还可以被 @yield(区块名) 再次利用
+	@section('sidebar区块名')
+	    This is the master sidebar. 区块1
+	@show
+
+	备注：以 @show结尾则立即显示， 
+	      以 @stop结尾则只是定义区块，不会立即输出，使用 @yield('区块名')来输出
+	      以 @overwrite结尾则表示重写区块
+	      区块中使用 @parent 表示继承区块
+
+定义模块方式2：
+	@section('区块名', '区块内容') 如 @section('title', 'Page Title')
+
+@section('sidebar')
+    @parent
+	
+    <p>定义区块，但不立即显示，相同区块名重写 This is appended to the master sidebar.</p>
+@stop
+
+
+模板中条件语句：
+	@if (isset($jellyif) && count($jellyif) === 1)
+	    if条件1为真
+	@elseif (isset($jellyif) && count($jellyif) > 1)
+	   if条件2为真
+	@else
+	    if条件不为真
+	@endif
+
+	@unless (isset($a123) && $a123)
+	    <br><font color="red">unless条件不为真时显示</font>
+	@endunless
+
+模板中循环
+	@for ($i = 0; $i < 10; $i++)
+	    The current value is {{ $i }}
+	@endfor
+
+	@foreach ($users as $user)
+	    <p>This is user {{ $user->id }}</p>
+	@endforeach
+
+	@forelse($users as $user)
+	    <li>{{ $user->name }}</li>
+	@empty
+	    <p>No users</p>
+	@endforelse
+
+	@while (true)
+	    <p>I'm looping forever.</p>
+	@endwhile
+
+
+显示语言行
+	@lang('language.line')
+	@choice('language.line', 1)
 
 
 

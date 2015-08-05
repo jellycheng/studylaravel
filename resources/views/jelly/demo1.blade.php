@@ -9,10 +9,10 @@
   <title>/resources/views/jelly/demo1.blade.php</title>
  </head>
  <body>
-  <h1>/resources/views/jelly/demo1.blade.php</h1>
+  <h1>当前文件位置：/resources/views/jelly/demo1.blade.php</h1>
 <pre>
   控制器中使用： return View('jelly.emo'); 或者 return View('jelly.emo', 数组是要传给模板的变量);
-
+  视图模板根目录： /resources/views/
   路由中配置： /app/Http/routes.php 文件追加 Route::get('jelly/tpldemo1', 'JellyController@tpldemo1');
   访问url： http://localhost/learnlaravel/public/jelly/tpldemo1
   

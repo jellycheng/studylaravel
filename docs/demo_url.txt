@@ -7,6 +7,8 @@
 模板使用2： http://localhost/learnlaravel/public/jelly/tpldemo1
 模板使用例子（重点）： http://localhost/learnlaravel/public/jellytestview
 路由正则配置方式： http://localhost/learnlaravel/public/123/index/detail.id.9.html
+直接通过路由定位到模板： http://localhost/learnlaravel/public/jellyrouteview
+			http://localhost/learnlaravel/public/jellytestview/demo2
 
 
 http://localhost/learnlaravel/public/jellytestview?name=123
