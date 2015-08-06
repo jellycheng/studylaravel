@@ -1,0 +1,8 @@
+
+命令：/usr/local/php56/bin/php artisan make:controller JellyController
+    生成1个控制器类： 类名JellyController＝》文件名JellyController.php=>位置app/Http/Controllers/JellyController.php
+    控制器类是继承 App\Http\Controllers\Controller
+    class JellyController extends App\Http\Controllers\Controller
+
+
+
