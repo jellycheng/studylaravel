@@ -10,3 +10,4 @@
  </head>
  <body>
  <h1>通用头</h1>
+{{ isset($headerText)?$headerText:'header' }}

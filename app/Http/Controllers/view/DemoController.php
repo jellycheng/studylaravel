@@ -35,6 +35,7 @@ class DemoController extends Controller {
 	public function demo2() {
 
 		$view = view('jelly.demo2');
+		$view->with('headerText', 'sdfad');
 		return $view;
 	}
 	public function detail(Request $request)
