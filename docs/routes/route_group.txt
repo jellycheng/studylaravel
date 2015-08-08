@@ -1,0 +1,82 @@
+
+路由群组配置及使用： 可配置相同的命名空间，url前缀，相同的中间件，子域名路由
+
+使用命令生成控制器：
+	php artisan make:controller V1_0/WelcomeController
+	php artisan make:controller V1_0/G1Controller
+
+group路由配置格式： Route::group([属性数组'namespace' => 'V1_0', 'prefix' => '1.0','domain' => '{account}.myapp.com', 'middleware' => ['foo', 'bar'] ], function() { 
+				Route代码 如： Route::get('g1', 'G1Controller@index');
+		    });
+在app\Http\routes.php配置
+	Route::group(['namespace' => 'V1_0', 'prefix' => '1.0'], function($router) {
+	    Route::get('/', 'WelcomeController@index');#对应地址 http://localhost/learnlaravel/public/1.0
+	    Route::get('g1', 'G1Controller@index');#对应地址 http://localhost/learnlaravel/public/1.0/g1
+	});
+	说明：其中namespace配置是执行控制器命名空间： namespace App\Http\Controllers\V1_0
+		prefix是指定url目录
+
+
+#群组只指定url前缀情况
+Route::group(['prefix' => 'admin'], function()
+{
+    Route::get('users', function()
+    {
+        echo "对应的url是http://localhost/learnlaravel/public/admin/users";
+    });
+});
+
+Route::group(['prefix' => 'accounts/{account_id}','where' => ['account_id' => '[0-9]+'], ], function() {
+    //指定url前缀，并验证account_id位置值必须是数字
+});
+
+Route::group(['prefix' => 'accounts/{account_id}'], function()
+{
+    Route::get('detail', function($account_id)
+    {#对应的URL： http://localhost/learnlaravel/public/accounts/258/detail
+        echo $account_id;
+    });
+});
+
+
+注册子域名路由
+Route::group(['domain' => '{account}.myapp.com'], function()
+{
+
+    Route::get('user/{id}', function($account, $id)
+    {
+        //
+    });
+
+});
+
+
+#只配置相同的命名空间
+Route::group(['namespace' => 'Admin'], function()
+{
+    // Controllers Within The "App\Http\Controllers\Admin" Namespace
+
+    Route::group(['namespace' => 'User'], function()
+    {
+        // Controllers Within The "App\Http\Controllers\Admin\User" Namespace
+    });
+});
+
+
+
+Middleware 在群组共享属性数组的 middleware 参数定义中间件列表，这些中间件就会应用到群组内的所有路由上。中间件将会按在列表内指定的顺序执行：
+Route::group(['middleware' => ['foo', 'bar']], function()
+{
+    Route::get('/', function()
+    {
+        // Has Foo And Bar Middleware
+    });
+
+    Route::get('user/profile', function()
+    {
+        // Has Foo And Bar Middleware
+    });
+
+});
+
+
