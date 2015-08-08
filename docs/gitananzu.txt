@@ -1,0 +1,19 @@
+
+
+
+D:\pingan\laravel_v5\cloud>git clone git@git.ipo.com:ananzu/ananzu-service.git
+D:\pingan\laravel_v5\cloud>cd ananzu-service
+D:\pingan\laravel_v5\cloud\ananzu-service>git branch
+* master
+
+D:\pingan\laravel_v5\cloud\ananzu-service>git checkout -b develop origin/develop
+D:\pingan\laravel_v5\cloud\ananzu-service>git branch
+* develop
+  master
+
+D:\pingan\laravel_v5\cloud\ananzu-service>git checkout -b ananzu_v1.0 origin/ananzu_v1.0
+D:\pingan\laravel_v5\cloud\ananzu-service>git branch
+* ananzu_v1.0
+  develop
+  master
+
