@@ -80,3 +80,34 @@ Route::group(['middleware' => ['foo', 'bar']], function()
 });
 
 
+
+#查看手册 http://www.golaravel.com/laravel/docs/5.0/controllers/#restful-resource-controllers
+Route::group(
+    ['namespace' => 'V1_0', 'prefix' => '1.0'], function ($router) {
+    $router->resource('user', 'UserController');  #定义了一个RESTful路由, 并且将针对该路由的请求转发到响应的控制器方法
+						#当get请求，url地址/1.0/user 或者 url地址/1.0/user/index则调用UserController控制器下的index方法
+						#当post请求，url地址/1.0/user 或者 url地址/1.0/user/index则调用UserController控制器下的store方法
+						#当get请求，url地址/1.0/user/create 则调用UserController控制器下的create方法
+    $router->resource('userimmap', 'UserImMapController');
+    $router->resource('browsemark', 'BrowseMarkController');
+    $router->resource('collection', 'CollectionController');
+    $router->resource('contract', 'ContractController');
+    $router->resource('contractorder', 'ContractOrderController');
+    $router->resource('contractprogress', 'ContractProgressController');
+    $router->resource('freeback', 'FreebackrController');
+    $router->resource('housing', 'HousingController');
+    $router->resource('housingauditor', 'HousingAuditorController');
+    $router->resource('housingext', 'HousingExtController');
+    $router->resource('report', 'ReportController');
+    $router->resource('auth', 'AuthController');
+	
+
+	Route::resource('photos.comments', 'PhotoCommentController'); #匹配的url是： 地址/photos/{photos}/comments/{comments}
+
+	Route::resource('photo', 'PhotoController',
+                ['only' => ['index', 'show']]); #only表示仅处理配置的行为 如index，show
+
+	Route::resource('photo', 'PhotoController',
+                ['except' => ['create', 'store', 'update', 'destroy']]);#except表示 处理不在配置中以外的行为
+
+});
