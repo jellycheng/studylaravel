@@ -1,0 +1,70 @@
+
+
+workspace
+├─app
+│  ├─Models                         // 数据模型
+│  │                                // php artisan make:model --no-migration
+│  │
+│  ├─Commands                       // 命令 用来放置应用程序的命
+│  │      Command.php               // php artisan make:command
+│  │
+│  ├─Console                        // 命令行
+│  │  │  Kernel.php
+│  │  │
+│  │  └─Commands                    // php artisan make:console
+│  │
+│  ├─Events                         // 用来放置事件类
+│  │      Event.php                 // php artisan make:event
+│  │
+│  ├─Exceptions                     // 异常处理
+│  │      Handler.php
+│  │
+│  ├─Handlers                       // 命令/事件处理 包含命令和事件的处理类。处理进程接收命令或事件，并针对该命令或事件执行逻辑
+│  │  ├─Commands                    // php artisan handler:command
+│  │  └─Events                      // php artisan handler:event
+│  │
+│  ├─Http
+│  │  │  Kernel.php
+│  │  │  routes.php
+│  │  │
+│  │  ├─Controllers                 // 控制器
+│  │  │      Controller.php         // php artisan make:controller
+│  │  │
+│  │  ├─Middleware                  // 中间件
+│  │  │      VerifyCsrfToken.php    // php artisan make:middleware
+│  │  │
+│  │  └─Requests                    // 表单验证
+│  │          Request.php           // php artisan make:request
+│  │
+│  ├─Providers                      // 服务注册
+│  │
+│  └─Services                       // 服务实体,目录包含各种「辅助」服务，囊括应用程序需要的功能
+│
+|- database 数据库迁移与数据填充文件
+├─config                            // 配置文件位置, 可以根据配置需要自行在这里新增文件
+│  │ app.php
+│  │ database.php
+│  │ session.php
+│  
+├─resources
+│  └─lang
+│      └─zh-cn                      // 语言文件, 语言翻译/错误信息翻译
+│
+└─storage                           // 临时目录, 无需关心，目录包含编译后的 Blade 模板、基于文件的 session、文件缓存和其他框架产生的文件，该目录一定要可读可写
+│─public                           //web 入口，项目web入口和静态资源文件 (图片、js、css，字体等等)
+│  │ index.php
+|- vendor 目录包含你的 Composer 依赖模块及laravel框架
+|- bootstrap 目录包含几个框架启动跟自动加载配置的文件。
+		|- app.php
+		|- autoload.php
+|- tests 自动化测试目录
+|- resources 目录包含视图、原始的资源文件 (LESS、SASS、CoffeeScript) 和「语言」文件。
+	|- views 视图模板目录
+	|- lang 语言包目录
+	|- assets
+		|- less
+	|- storage 目录包含编译后的 Blade 模板、基于文件的 session、文件缓存和其他框架产生的文件，该目录一定要可读可写。
+	
+
+
+
