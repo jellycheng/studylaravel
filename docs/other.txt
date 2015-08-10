@@ -1,0 +1,28 @@
+
+
+
+Illuminate\Foundation\Application => /laravel/framework/src/Illuminate/Foundation/Application.php
+Illuminate\Container\Container =>/laravel/framework/src/Illuminate/Container/Container.php
+
+Illuminate\Contracts\Foundation\Application=>/laravel/framework/src/Illuminate/Contracts/Foundation/Application.php
+
+Illuminate\Events\EventServiceProvider=>/laravel/framework/src/Illuminate/Events/EventServiceProvider.php
+Illuminate\Routing\RoutingServiceProvider=>/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php
+
+Application类对象的instances属性
+    $instance属性＝Applicationd对象
+    instances['app']=Applicationd对象
+    instances['Illuminate\Container\Container']=Applicationd对象
+    instances['path']=项目根目录
+    instances['path.base']=项目根目录/app
+    instances['path.config']=项目根目录/config
+    instances['path.database']=项目根目录/database
+    instances['path.lang']=项目根目录/resources/lang
+    instances['path.public']=项目根目录/public
+    instances['path.storage']=项目根目录/storage  这个属性值可以通过app对象->useStoragePath('目录')来更改
+
+
+
+
+
+
