@@ -1,0 +1,33 @@
+
+
+CREATE DATABASE `db_laraveldemo` /*!40100 DEFAULT CHARACTER SET utf8 */
+
+--
+-- 数据库: `db_laraveldemo`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `t_user_reg`
+--
+
+CREATE TABLE IF NOT EXISTS `t_user_reg` (
+  `userid` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL COMMENT '帐号',
+  `pwd` char(32) DEFAULT NULL,
+  `create_time` int(10) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0正常，1锁定',
+  PRIMARY KEY (`userid`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户注册表' AUTO_INCREMENT=4 ;
+
+--
+-- 转存表中的数据 `t_user_reg`
+--
+
+INSERT INTO `t_user_reg` (`userid`, `username`, `pwd`, `create_time`, `status`) VALUES
+(2, 'tom', 'tompwd', 0, 0),
+(3, 'jelly', 'jellypwd', 0, 0);
+
+

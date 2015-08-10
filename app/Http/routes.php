@@ -78,4 +78,33 @@ Route::group(['prefix' => 'accounts/{account_id}'], function()
     });
 });
 
+#http://localhost/learnlaravel/public/db/test
+Route::get('db/test', function() {
+    $userinfo = App\Model\User::find(2);//通过主键id查询主键id=2的记录， 根据主键取出一条数据
 
+    $userinfo = App\Model\User::all(); //查询所有记录
+
+    #$userinfo = App\Model\User::findOrFail(3); #根据主键取出一条数据或抛出异常
+    $userinfo = App\Model\User::where('userid', '>', 1)->firstOrFail();
+    $users = $userinfo->get();//返回结果集
+    foreach ($users as $user)
+    {
+        var_dump($user->username);
+    }
+
+    #$userinfo = App\Model\User::where('userid', '>', 1)->take(10)->get(); //取前10条, 
+    $num = App\Model\User::where('userid', '>', 1)->count(); //获取记录数
+    //echo $num ;
+    #$userinfo = App\Model\User::whereRaw('userid > ? and username = "jelly"', [1])->get();
+    /**
+    $user = new App\Model\User;
+    $user->username = 'John';
+    $user->save();#保存记录
+    */
+    App\Model\User::create(['username' => 'to'.mt_rand(1,100),'pwd'=>12]);
+    #$affectedRows = App\Model\User::where('votes', '>', 100)->delete(); 删除符合条件的记录
+
+    //var_export($userinfo);
+
+
+});

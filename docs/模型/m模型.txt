@@ -1,0 +1,79 @@
+
+Laravel 的 Eloquent ORM 模型
+
+使用命令创建模型文件： php artisan make:model Model\User  此时文件生成位置/app/Model/User.php  如果类中不配置表名则是文件名+s 全小写 如users
+			
+数据库配置文件：  /config/database.php
+<?php
+	return [
+		/*
+		| PDO Fetch Style
+		*/
+
+		'fetch' => PDO::FETCH_CLASS,
+
+		/*
+		默认db连接名
+		*/
+		'default' => 'mysql',
+		/*
+		db连接配置，connections['连接名']=array(配置)
+		*/
+		'connections' => [
+			'sqlite' => [
+				'driver'   => 'sqlite',
+				'database' => storage_path().'/database.sqlite',
+				'prefix'   => '',
+			],
+
+			'mysql' => [
+				'driver'    => 'mysql',
+				'host'      => env('DB_HOST', 'localhost'),
+				'database'  => env('DB_DATABASE', 'forge'),
+				'username'  => env('DB_USERNAME', 'forge'),
+				'password'  => env('DB_PASSWORD', ''),
+				'charset'   => 'utf8',
+				'collation' => 'utf8_unicode_ci',
+				'prefix'    => '',
+				'strict'    => false,
+			],
+
+			'pgsql' => [
+				'driver'   => 'pgsql',
+				'host'     => env('DB_HOST', 'localhost'),
+				'database' => env('DB_DATABASE', 'forge'),
+				'username' => env('DB_USERNAME', 'forge'),
+				'password' => env('DB_PASSWORD', ''),
+				'charset'  => 'utf8',
+				'prefix'   => '',
+				'schema'   => 'public',
+			],
+
+			'sqlsrv' => [
+				'driver'   => 'sqlsrv',
+				'host'     => env('DB_HOST', 'localhost'),
+				'database' => env('DB_DATABASE', 'forge'),
+				'username' => env('DB_USERNAME', 'forge'),
+				'password' => env('DB_PASSWORD', ''),
+				'prefix'   => '',
+			],
+
+		],
+		'migrations' => 'migrations',
+		/*
+		redis配置
+		*/
+		'redis' => [
+
+			'cluster' => false,
+
+			'default' => [
+				'host'     => '127.0.0.1',
+				'port'     => 6379,
+				'database' => 0,
+			],
+
+		],
+
+	];
+
