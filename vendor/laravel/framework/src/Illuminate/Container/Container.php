@@ -178,7 +178,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// defined and will grab this "real" abstract class name and register this
 		// alias with the container so that it can be used as a shortcut for it.
 		if (is_array($abstract))
-		{
+		{#array($abstract=> $alias)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 
 			$this->alias($abstract, $alias);
@@ -187,7 +187,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// If no concrete type was given, we will simply set the concrete type to the
 		// abstract type. This will allow concrete type to be registered as shared
 		// without being forced to state their classes in both of the parameter.
-		$this->dropStaleInstances($abstract);
+		$this->dropStaleInstances($abstract);#删除instances[$abstract]和aliases[$abstract]属性的key
 
 		if (is_null($concrete))
 		{
@@ -198,17 +198,17 @@ class Container implements ArrayAccess, ContainerContract {
 		// is bound into this container to the abstract type and we will just wrap
 		// it up inside a Closure to make things more convenient when extending.
 		if ( ! $concrete instanceof Closure)
-		{
+		{#$concrete是闭包
 			$concrete = $this->getClosure($abstract, $concrete);
 		}
-
+		#$this->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function($app){}, 'shared'=>true )
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
 		// If the abstract type was already resolved in this container we'll fire the
 		// rebound listener so that any objects which have already gotten resolved
 		// can have their copy of the object updated via the listener callbacks.
 		if ($this->resolved($abstract))
-		{
+		{#是resolved[$abstract] 或 instances[$abstract]属性的key之一
 			$this->rebound($abstract);
 		}
 	}

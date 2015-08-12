@@ -22,3 +22,15 @@ $findme   = 'B';
 $pos = strpos($mystring, $findme);
 var_dump($pos);//false  说明strpos区分小写匹配
 
+
+
+$city  = "San Francisco";
+$state = "CA";
+$event = "";
+
+$location_vars = array("city", "state", 'jelly2');
+
+$result = compact("event", "abc_here", $location_vars); #做的事情是$enent变量定义则event作为$result数组的key，其值作为值，如果变量没有定义则丢弃，如果是数组的递归判断
+print_r($result);#Array ( [event] => '' [city] => San Francisco [state] => CA )
+
+

@@ -457,9 +457,9 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// a more convenient way of specifying your service provider classes.
 		if (is_string($provider))
 		{
-			$provider = $this->resolveProviderClass($provider);
+			$provider = $this->resolveProviderClass($provider);//实例化类 并在构造方法中传入app对象
 		}
-
+		#调用服务提供者类对象的register()方法
 		$provider->register();
 
 		// Once we have registered the service we will iterate through the options
@@ -469,7 +469,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		{
 			$this[$key] = $value;
 		}
-
+		//设置$serviceProviders和$loadedProviders属性
 		$this->markAsRegistered($provider);
 
 		// If the application has already booted, we will call this boot method on
@@ -485,7 +485,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the registered service provider instance if it exists.
-	 *
+	 * 通过类
 	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
 	 * @return \Illuminate\Support\ServiceProvider|null
 	 */

@@ -1,0 +1,134 @@
+
+
+\Illuminate\Foundation\Application
+Application类属性：
+	1.protected static $instance;
+		static::$instance=Application对象
+		获取Application对象方式：
+			1. \Illuminate\Container\Container::getInstance()
+			2. \Illuminate\Foundation\Application::getInstance()
+			3. app(); 其实执行的是\Illuminate\Container\Container::getInstance()
+			4. $app->make('app')
+
+
+	2.
+		protected $resolved = [];
+
+		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ), 
+						‘Illuminate\Contracts\Routing\ResponseFactory’=>array('concrete'=>function($app){}, 'shared'=>true
+						)这种格式
+
+
+		protected $instances = ['app'=>app对象, 
+					'Illuminate\Container\Container'=>app对象, 
+					‘path’=>项目根目录/app，
+					‘path.base’=>项目根目录，
+					‘path.config’=>项目根目录/config，
+					‘path.database’=>项目根目录/database，
+					‘path.lang’=>项目根目录/resources/lang，
+					‘path.public’=>项目根目录/public，
+					‘path.storage’=>项目根目录/storage，
+					];
+
+
+		protected $aliases = [];实例化app对象则
+					$aliases=array(
+						'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
+						'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
+						'auth'                 => 'Illuminate\Auth\AuthManager',
+						'auth.driver'          => ['Illuminate\Auth\Guard', 'Illuminate\Contracts\Auth\Guard'],
+						'auth.password.tokens' => 'Illuminate\Auth\Passwords\TokenRepositoryInterface',
+						'blade.compiler'       => 'Illuminate\View\Compilers\BladeCompiler',
+						'cache'                => ['Illuminate\Cache\CacheManager', 'Illuminate\Contracts\Cache\Factory'],
+						'cache.store'          => ['Illuminate\Cache\Repository', 'Illuminate\Contracts\Cache\Repository'],
+						'config'               => ['Illuminate\Config\Repository', 'Illuminate\Contracts\Config\Repository'],
+						'cookie'               => ['Illuminate\Cookie\CookieJar', 'Illuminate\Contracts\Cookie\Factory', 'Illuminate\Contracts\Cookie\QueueingFactory'],
+						'encrypter'            => ['Illuminate\Encryption\Encrypter', 'Illuminate\Contracts\Encryption\Encrypter'],
+						'db'                   => 'Illuminate\Database\DatabaseManager',
+						'events'               => ['Illuminate\Events\Dispatcher', 'Illuminate\Contracts\Events\Dispatcher'],
+						'files'                => 'Illuminate\Filesystem\Filesystem',
+						'filesystem'           => 'Illuminate\Contracts\Filesystem\Factory',
+						'filesystem.disk'      => 'Illuminate\Contracts\Filesystem\Filesystem',
+						'filesystem.cloud'     => 'Illuminate\Contracts\Filesystem\Cloud',
+						'hash'                 => 'Illuminate\Contracts\Hashing\Hasher',
+						'translator'           => ['Illuminate\Translation\Translator', 'Symfony\Component\Translation\TranslatorInterface'],
+						'log'                  => ['Illuminate\Log\Writer', 'Illuminate\Contracts\Logging\Log', 'Psr\Log\LoggerInterface'],
+						'mailer'               => ['Illuminate\Mail\Mailer', 'Illuminate\Contracts\Mail\Mailer', 'Illuminate\Contracts\Mail\MailQueue'],
+						'paginator'            => 'Illuminate\Pagination\Factory',
+						'auth.password'        => ['Illuminate\Auth\Passwords\PasswordBroker', 'Illuminate\Contracts\Auth\PasswordBroker'],
+						'queue'                => ['Illuminate\Queue\QueueManager', 'Illuminate\Contracts\Queue\Factory', 'Illuminate\Contracts\Queue\Monitor'],
+						'queue.connection'     => 'Illuminate\Contracts\Queue\Queue',
+						'redirect'             => 'Illuminate\Routing\Redirector',
+						'redis'                => ['Illuminate\Redis\Database', 'Illuminate\Contracts\Redis\Database'],
+						'request'              => 'Illuminate\Http\Request',
+						'router'               => ['Illuminate\Routing\Router', 'Illuminate\Contracts\Routing\Registrar'],
+						'session'              => 'Illuminate\Session\SessionManager',
+						'session.store'        => ['Illuminate\Session\Store', 'Symfony\Component\HttpFoundation\Session\SessionInterface'],
+						'url'                  => ['Illuminate\Routing\UrlGenerator', 'Illuminate\Contracts\Routing\UrlGenerator'],
+						'validator'            => ['Illuminate\Validation\Factory', 'Illuminate\Contracts\Validation\Factory'],
+						'view'                 => ['Illuminate\View\Factory', 'Illuminate\Contracts\View\Factory'],
+					);
+
+
+		protected $extenders = [];
+
+
+		protected $tags = [];
+
+		protected $buildStack = [];
+
+		public $contextual = [];
+
+		protected $reboundCallbacks = [];
+
+		protected $globalResolvingCallbacks = [];
+
+		protected $globalAfterResolvingCallbacks = [];
+
+		protected $resolvingCallbacks = [];
+
+		protected $afterResolvingCallbacks = [];
+
+		==============
+		const VERSION = '5.0.16'; app类版本
+
+		protected $basePath; 项目根目录,通过app对象->basePath();获取 或者app()->basePath()
+
+		protected $hasBeenBootstrapped = false;
+
+		protected $booted = false;
+
+		protected $bootingCallbacks = array();
+
+		protected $bootedCallbacks = array();
+
+		protected $terminatingCallbacks = array();
+
+		protected $serviceProviders = array();存放服务提供者array('服务提供者对象1', '服务提供者对象2', ‘服务提供者对象n’);
+
+		protected $loadedProviders = array();已经实例化服务提供者的类名，array('服务提供者对象对应类名'=>true,'服务提供者对象对应类名n'=>true,)
+
+		protected $deferredServices = array();
+
+		protected $storagePath;
+
+		protected $environmentFile = '.env';  可以通过 app对象->loadEnvironmentFrom(文件名);来重新设置, 通过app对象->environmentFile()获取文件名
+
+
+实例化Application类对象时，就会实例化：事件服务和路由服务
+	1. \Illuminate\Events\EventServiceProvider类  extends Illuminate\Support\ServiceProvider 构造方法接收的对象是app对象 =》构造方式只做了一件事情，就是注入app对象
+		执行该类的register()方法
+	2. \Illuminate\Routing\RoutingServiceProvider extends Illuminate\Support\ServiceProvider 构造方法接收的对象是app对象 =》构造方式只做了一件事情，就是注入app对象
+		执行该类的register()方法
+
+	3. events： $this['events']->fire($class = get_class($provider)类名, array($provider提供者对象));
+
+
+
+
+
+获取目录：
+	项目根目录,通过app对象->basePath();获取 或者app()->basePath()
+
+$this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')方法  其实是追加app对象的$bindings=array('url'=>array('concrete'=>hello, 'shared'=>true ),
+
