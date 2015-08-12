@@ -642,7 +642,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// just return an existing instance instead of instantiating new instances
 		// so the developer can keep using the same objects instance every time.
 		if (isset($this->instances[$abstract]))
-		{
+		{#存在instances属性key
 			return $this->instances[$abstract];
 		}
 
@@ -652,7 +652,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// the binding. This will instantiate the types, as well as resolve any of
 		// its "nested" dependencies recursively until all have gotten resolved.
 		if ($this->isBuildable($concrete, $abstract))
-		{
+		{#是闭包， 把当前app对象传给闭包
 			$object = $this->build($concrete, $parameters);
 		}
 		else
@@ -769,7 +769,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// hand back the results of the functions, which allows functions to be
 		// used as resolvers for more fine-tuned resolution of these objects.
 		if ($concrete instanceof Closure)
-		{
+		{#是闭包
 			return $concrete($this, $parameters);
 		}
 
@@ -1112,7 +1112,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given concrete is buildable.
-	 *
+	 * 是闭包
 	 * @param  mixed   $concrete
 	 * @param  string  $abstract
 	 * @return bool

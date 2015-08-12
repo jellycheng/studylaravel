@@ -12,10 +12,13 @@ Application类属性：
 
 
 	2.
-		protected $resolved = [];
+		protected $resolved = []; #bindings属性key被执行之后，会把这个属性key设置为真 array('xxx'=>true,'xx2'=>true)
 
-		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ), 
+		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ),  #其中shared为真则实例化对象之后会存入instances属性
 						‘Illuminate\Contracts\Routing\ResponseFactory’=>array('concrete'=>function($app){}, 'shared'=>true
+						‘Illuminate\Contracts\Http\Kernel’=>array('concrete'=>'App\Http\Kernel', 'shared'=>true
+						‘Illuminate\Contracts\Console\Kernel’=>array('concrete'=>'App\Console\Kernel', 'shared'=>true
+						‘Illuminate\Contracts\Debug\ExceptionHandler’=>array('concrete'=>'App\Exceptions\Handler', 'shared'=>true
 						)这种格式
 
 
