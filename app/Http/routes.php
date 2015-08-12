@@ -101,7 +101,7 @@ Route::get('db/test', function() {
     $user->username = 'John';
     $user->save();#保存记录
     */
-    App\Model\User::create(['username' => 'to'.mt_rand(1,100),'pwd'=>12]);
+    //App\Model\User::create(['username' => 'to'.mt_rand(1,100),'pwd'=>12]);
     #$affectedRows = App\Model\User::where('votes', '>', 100)->delete(); 删除符合条件的记录
 
     //var_export($userinfo);
