@@ -1,0 +1,2 @@
+
+xxx_require.php当前目录入口文件，其中Xxx是类名前缀和目录名

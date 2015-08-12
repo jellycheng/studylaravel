@@ -12,3 +12,13 @@ echo $uri . '<br>';#/learnlaravel/docs/t.php
 
 
 
+
+$mystring = 'abc';
+$findme   = 'a';
+$pos = strpos($mystring, $findme); //查找字符串首次出现的位置,区分大小写，未找到则返回false
+var_dump($pos);// 0 首次出现的位置  
+
+$findme   = 'B';
+$pos = strpos($mystring, $findme);
+var_dump($pos);//false  说明strpos区分小写匹配
+
