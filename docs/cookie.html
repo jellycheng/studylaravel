@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>cookie</title>
+ </head>
+ <body>
+ <fieldset>
+    <legend>cookie信息如下</legend>
+  <div id="allCookieId"></div>
+ </fieldset>
+
+ </body>
+</html>
+<script>
+function getcookie(name) {
+            var r = new RegExp("(^|;|\\s+)" + name + "=([^;]*)(;|$)");
+            var m = document.cookie.match(r);
+            return (!m ? "" : decodeURIComponent(m[2]));
+}
+
+function  addcookie(name, v, path, expire, domain) {
+	var s = name + "=" + encodeURIComponent(v) + "; path=" + (path || '/') // 默认根目录
+		+ (domain ? ("; domain=" + domain) : '');
+	if (expire > 0) {
+		var d = new Date();
+		d.setTime(d.getTime() + expire * 1000);
+		s += ";expires=" + d.toGMTString();
+	}
+	document.cookie = s;
+}
+function delcookie(name, path, domain) {
+	if (arguments.length == 2) {
+		domain = path;
+		path = "/"
+	}
+	document.cookie = name + "=;path=" + path + ";" + (domain ? ("domain=" + domain + ";") : '') + "expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+
+addcookie('abc', '123中国。。。');
+
+//获取所有cookie
+function getAll() {
+	var cAry = document.cookie.split(';');
+	var cStr = '';
+	for(var i in cAry) {
+		cStr += '<br>' + decodeURIComponent(cAry[i]);
+	}
+	document.getElementById('allCookieId').innerHTML+='' + cStr;
+}
+window.onload =function() {
+	getAll();
+}
+</script>

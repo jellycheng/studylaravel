@@ -1,36 +1,61 @@
+function getClosure($abstract, $concrete)
+{//返回闭包
+	return function($c, $parameters = []) use ($abstract, $concrete)
+	{
+		$method = ($abstract == $concrete) ? 'build' : 'make';
 
+		return $c->$method($concrete, $parameters);
+	};
+}
+$abc = getClosure("Illuminate\Contracts\Http\Kernel", 'App\Http\Kernel');
+$abc('xyz', array(参数)); #调用xyz对象->make('App\Http\Kernel', array(参数));
 
+$app->singleton(
+	'Illuminate\Contracts\Http\Kernel',
+	'App\Http\Kernel'
+);
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel'); =>执行 function(app对象, []) use ($abstract, $concrete){
+		$method = ($abstract == $concrete) ? 'build' : 'make';
+		return app对象->make($concrete是App\Http\Kernel, $parameters);
+	}
+注册服务： app对象->register(new EventServiceProvider($app对象));
 \Illuminate\Foundation\Application
 Application类属性：
 	1.protected static $instance;
 		static::$instance=Application对象
-		获取Application对象方式：
-			1. \Illuminate\Container\Container::getInstance()
-			2. \Illuminate\Foundation\Application::getInstance()
-			3. app(); 其实执行的是\Illuminate\Container\Container::getInstance()
-			4. $app->make('app')
+			在其它地方获取Application对象方式：
+				1. \Illuminate\Container\Container::getInstance()
+				2. \Illuminate\Foundation\Application::getInstance()
+				3. app(); 其实执行的是\Illuminate\Container\Container::getInstance()
+				4. $app->make('app')
 
 
 	2.
 		protected $resolved = []; #bindings属性key被执行之后，会把这个属性key设置为真 array('xxx'=>true,'xx2'=>true)
 
 		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ),  #其中shared为真则实例化对象之后会存入instances属性
-						‘Illuminate\Contracts\Routing\ResponseFactory’=>array('concrete'=>function($app){}, 'shared'=>true
-						‘Illuminate\Contracts\Http\Kernel’=>array('concrete'=>'App\Http\Kernel', 'shared'=>true
-						‘Illuminate\Contracts\Console\Kernel’=>array('concrete'=>'App\Console\Kernel', 'shared'=>true
-						‘Illuminate\Contracts\Debug\ExceptionHandler’=>array('concrete'=>'App\Exceptions\Handler', 'shared'=>true
+						'Illuminate\Contracts\Routing\ResponseFactory'=>array('concrete'=>function($app){}, 'shared'=>true),
+						'Illuminate\Contracts\Http\Kernel'=>array('concrete'=>function($c类对象, $parameters = []传给类对象make的参数) use ($abstract, $concrete如'App\Http\Kernel'){
+												$method = ($abstract == $concrete) ? 'build' : 'make';	return $c->$method($concrete如'App\Http\Kernel', $parameters);
+											}, 'shared'=>true),
+						'Illuminate\Contracts\Console\Kernel'=>array('concrete'=>'App\Console\Kernel', 'shared'=>true),
+						'Illuminate\Contracts\Debug\ExceptionHandler'=>array('concrete'=>'App\Exceptions\Handler', 'shared'=>true)
+						'redirect'=>array('concrete'=>闭包函数, 'shared'=>false)
+						'router'=>array('concrete'=>闭包函数, 'shared'=>false)
+						'url'=>array('concrete'=>闭包函数, 'shared'=>false)
+						'events'=>array('concrete'=>闭包函数, 'shared'=>false) #Illuminate\Events\EventServiceProvider
 						)这种格式
 
 
 		protected $instances = ['app'=>app对象, 
 					'Illuminate\Container\Container'=>app对象, 
-					‘path’=>项目根目录/app，
-					‘path.base’=>项目根目录，
-					‘path.config’=>项目根目录/config，
-					‘path.database’=>项目根目录/database，
-					‘path.lang’=>项目根目录/resources/lang，
-					‘path.public’=>项目根目录/public，
-					‘path.storage’=>项目根目录/storage，
+					'path'=>项目根目录/app，
+					'path.base'=>项目根目录，
+					'path.config'=>项目根目录/config，
+					'path.database'=>项目根目录/database，
+					'path.lang'=>项目根目录/resources/lang，
+					'path.public'=>项目根目录/public，
+					'path.storage'=>项目根目录/storage，
 					];
 
 
@@ -82,7 +107,7 @@ Application类属性：
 
 		public $contextual = [];
 
-		protected $reboundCallbacks = [];
+		protected $reboundCallbacks = []; #array('$abstract'=>"函数名或者\xyz\a::hello 均接收2个参数app对象和$instance");
 
 		protected $globalResolvingCallbacks = [];
 
@@ -107,7 +132,7 @@ Application类属性：
 
 		protected $terminatingCallbacks = array();
 
-		protected $serviceProviders = array();存放服务提供者array('服务提供者对象1', '服务提供者对象2', ‘服务提供者对象n’);
+		protected $serviceProviders = array();存放服务提供者array('服务提供者对象1', '服务提供者对象2', '服务提供者对象n');
 
 		protected $loadedProviders = array();已经实例化服务提供者的类名，array('服务提供者对象对应类名'=>true,'服务提供者对象对应类名n'=>true,)
 
@@ -133,5 +158,17 @@ Application类属性：
 获取目录：
 	项目根目录,通过app对象->basePath();获取 或者app()->basePath()
 
-$this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')方法  其实是追加app对象的$bindings=array('url'=>array('concrete'=>hello, 'shared'=>true ),
+$this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')方法 =》app对象的bind('url','hello',$shared=false) 其实是追加app对象的$bindings=array('url'=>array('concrete'=>hello, 'shared'=>true ),
+
+function getClosure($abstract, $concrete)
+{//返回闭包
+	return function($c, $parameters = []) use ($abstract, $concrete)
+	{
+		$method = ($abstract == $concrete) ? 'build' : 'make';
+
+		return $c->$method($concrete, $parameters);
+	};
+}
+$abc = getClosure("Illuminate\Contracts\Http\Kernel", 'App\Http\Kernel');
+$abc('xyz', array(参数)); #调用xyz对象->make('App\Http\Kernel', array(参数));
 

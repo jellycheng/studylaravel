@@ -198,7 +198,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// is bound into this container to the abstract type and we will just wrap
 		// it up inside a Closure to make things more convenient when extending.
 		if ( ! $concrete instanceof Closure)
-		{#$concrete是闭包
+		{#$concrete不是闭包
 			$concrete = $this->getClosure($abstract, $concrete);
 		}
 		#$this->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function($app){}, 'shared'=>true )
@@ -703,7 +703,7 @@ class Container implements ArrayAccess, ContainerContract {
 		{
 			if ($this->missingLeadingSlash($abstract) &&
 				isset($this->bindings['\\'.$abstract]))
-			{
+			{//字符串且不以\开头且是命名空间方式，如abc\xyz  且\abc\xyz是bindings的key则加前缀\
 				$abstract = '\\'.$abstract;
 			}
 
@@ -729,7 +729,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given abstract has a leading slash.
-	 *
+	 *  是字符串且不以\开头  如abc， abc\xyz
 	 * @param  string  $abstract
 	 * @return bool
 	 */
