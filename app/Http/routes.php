@@ -108,3 +108,7 @@ Route::get('db/test', function() {
 
 
 });
+
+
+#http://localhost/learnlaravel/public/jellyusers
+Route::controller('jellyusers', 'jelly\UserController');

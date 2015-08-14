@@ -1,0 +1,24 @@
+
+facade 类写法都是继承Illuminate\Support\Facades\Facade类 并实现静态方法getFacadeAccessor()方法，改方法只返回一个字符串
+
+<?php namespace Illuminate\Support\Facades;
+
+/**
+ * 定义
+ * @see \Illuminate\Config\Repository
+ */
+class Config extends Facade {
+
+	/**
+	 * Get the registered name of the component.
+	 * 返回服务容器绑定的名称
+	 * @return string
+	 */
+	protected static function getFacadeAccessor() { return 'config'; }
+
+}
+
+使用：
+在类先 use Config;
+	Config::get('abc'); 其实就是调用 $value = $app->make('config')->get('abc');
+
