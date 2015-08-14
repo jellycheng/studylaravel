@@ -53,21 +53,9 @@
         };
 
         function setTitle(){
-           window.paananzu.setTitle(title);
+           if(typeof window.paananzu == 'object') window.paananzu.setTitle(title);
         };
 
-
-        function headerInit(){
-            //header logic
-            var sceneId = this.sceneId,azHeaderText =  document.getElementById('J_az_header_text');
-
-            if(sceneId == 1 || sceneId ==  2){
-               azHeaderText.className += ' none';
-            }else{
-               var reg = new RegExp('(\\s|^)az_hidden(\\s|$)');
-               azHeaderText.className = azHeaderText.className.replace(reg,' ');
-            }
-        };
 
         ananzuAppApi = {
             getSceneid : getSceneid,
@@ -75,8 +63,6 @@
             setTitle:setTitle,
 
             goToApp:goToApp,
-
-            headerInit:headerInit,
 
             init:function(){
                 
