@@ -4,8 +4,23 @@
 命令： php artisan make:controller jelly\UserController
 
 Route::controller('jellyusers', 'jelly\UserController'); #匹配的url是 http://localhost/learnlaravel/public/jellyusers/xxx
+
 get 请求http://localhost/learnlaravel/public/jellyusers/tom 则对应的方法： getTom()方法
 post请求http://localhost/learnlaravel/public/jellyusers/tom 则对应的方法： postTom()方法
 	如果是post请求，最好是去app/Http/Kernel.php中去掉中间件的配置： //'App\Http\Middleware\VerifyCsrfToken',
 
 任意请求方式都执行的方法  anyLogin()  =》对应url http://localhost/learnlaravel/public/jellyusers/login
+
+
+
+
+Route::group(['prefix' => 'ananzu'], function($router) {
+    Route::controllers(
+        [
+            'auth' => 'Auth\AuthController',
+            'password' => 'Auth\PasswordController',
+        ]
+    );
+
+});
+
