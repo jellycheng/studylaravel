@@ -12,7 +12,7 @@ post请求http://localhost/learnlaravel/public/jellyusers/tom 则对应的方法
 任意请求方式都执行的方法  anyLogin()  =》对应url http://localhost/learnlaravel/public/jellyusers/login
 
 
-
+注意 Route::controller(uri，控制器) 和 Route::controllers(数组)区别
 
 Route::group(['prefix' => 'ananzu'], function($router) {
     Route::controllers(

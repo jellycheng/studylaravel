@@ -1,0 +1,10 @@
+.container{width:860px; height:500px;position:absolute;  margin-left:-430px; margin-top:-250px; top:50%;left:50%;padding:0px;font-size:14px; background:url(../images/bg.jpg); color:#414040; line-height:24px; font-family:"微软雅黑";}
+.main{ width:680px; height:320px; border:1px solid #eba25e; margin:60px auto 0;padding-left:40px; }
+.red{ color:#dd8002;}
+.main h2{ font-size:22px; text-align:center; padding-top:12px;}
+.main p a{ color:#333366;}
+.main .case { text-align:center;}
+.footer{ width:780px; _margin-top:20px;}
+.footer .logo_box{ width:780px; height:27px; background:no-repeat 698px  0;}
+.footer h2{color:#dd8002; text-align:right;font-size:20px;}
+.footer .logo_box img{ margin-left:30px; border:none\9; float:right; }
