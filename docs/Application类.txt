@@ -18,7 +18,7 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel'); =>执行 function(app�
 		$method = ($abstract == $concrete) ? 'build' : 'make';
 		return app对象->make($concrete是App\Http\Kernel, $parameters);
 	}
-注册服务： app对象->register(new EventServiceProvider($app对象));
+注册服务提供者： app对象->register(new EventServiceProvider($app对象));
 \Illuminate\Foundation\Application
 Application类属性：
 	1.protected static $instance;
@@ -120,7 +120,7 @@ Application类属性：
 		==============
 		const VERSION = '5.0.16'; app类版本
 
-		protected $basePath; 项目根目录,通过app对象->basePath();获取 或者app()->basePath()
+		protected $basePath; 项目根目录,通过app对象->basePath();获取 或者app()->basePath(), 通过app对象->setBasePath($basePath)来设置
 
 		protected $hasBeenBootstrapped = false;
 
@@ -132,7 +132,7 @@ Application类属性：
 
 		protected $terminatingCallbacks = array();
 
-		protected $serviceProviders = array();存放服务提供者array('服务提供者对象1', '服务提供者对象2', '服务提供者对象n');
+		protected $serviceProviders = array();存放服务提供者对象array('服务提供者对象1', '服务提供者对象2', '服务提供者对象n');
 
 		protected $loadedProviders = array();已经实例化服务提供者的类名，array('服务提供者对象对应类名'=>true,'服务提供者对象对应类名n'=>true,)
 

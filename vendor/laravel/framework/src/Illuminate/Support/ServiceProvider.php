@@ -102,7 +102,7 @@ abstract class ServiceProvider {
 	 */
 	protected function publishes(array $paths, $group = null)
 	{
-		$class = get_class($this);
+		$class = get_class($this);//获取对象的类名，如果是子类就是子类名
 
 		if ( ! array_key_exists($class, static::$publishes))
 		{

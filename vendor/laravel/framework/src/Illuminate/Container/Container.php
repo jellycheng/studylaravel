@@ -167,8 +167,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Register a binding with the container.
 	 *
-	 * @param  string|array  $abstract
-	 * @param  \Closure|string|null  $concrete
+	 * @param  string|array  $abstract =字符串 或者 数组
+	 * @param  \Closure|string|null  $concrete=闭包 或 字符串 或 null
 	 * @param  bool  $shared
 	 * @return void
 	 */
@@ -181,7 +181,7 @@ class Container implements ArrayAccess, ContainerContract {
 		{#array($abstract=> $alias)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 
-			$this->alias($abstract, $alias);
+			$this->alias($abstract, $alias);//$this->aliases[$alias] = $abstract;
 		}
 
 		// If no concrete type was given, we will simply set the concrete type to the
@@ -191,7 +191,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		if (is_null($concrete))
 		{
-			$concrete = $abstract;
+			$concrete = $abstract;//说明后面要执行build方法
 		}
 
 		// If the factory is not a Closure, it means it is just a class name which is
@@ -199,9 +199,9 @@ class Container implements ArrayAccess, ContainerContract {
 		// it up inside a Closure to make things more convenient when extending.
 		if ( ! $concrete instanceof Closure)
 		{#$concrete不是闭包
-			$concrete = $this->getClosure($abstract, $concrete);
+			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
-		#$this->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function($app){}, 'shared'=>true )
+		#$this->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function(对象，参数){}, 'shared'=>true )
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
 		// If the abstract type was already resolved in this container we'll fire the
@@ -218,7 +218,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @param  string  $abstract
 	 * @param  string  $concrete
-	 * @return \Closure
+	 * @return \Closure 返回闭包，调用该返回闭包是 闭包(对象，参数)即调用对象的make(参数)或者build方法（参数）
 	 */
 	protected function getClosure($abstract, $concrete)
 	{
@@ -342,10 +342,10 @@ class Container implements ArrayAccess, ContainerContract {
 		// are using the correct name when binding the type. If we get an alias it
 		// will be registered with the container so we can resolve it out later.
 		if (is_array($abstract))
-		{	//$abstract=array('key别名值'=>'val别名key');通过extractAlias提取别名，返回数组array(key名，val别名)
+		{	//$abstract=array('key别名值$abstract'=>'val别名key$alias');通过extractAlias提取别名，返回数组array(key名，val别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 
-			$this->alias($abstract, $alias);//$alias作为aliases属性的key，$abstract作为对应的值
+			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
 
 		unset($this->aliases[$abstract]);
@@ -506,7 +506,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Call the given Closure / class@method and inject its dependencies.
 	 *
-	 * @param  callable|string  $callback
+	 * @param  callable|string  $callback=方法名或者 类名@方法名
 	 * @param  array  $parameters
 	 * @param  string|null  $defaultMethod
 	 * @return mixed
@@ -514,7 +514,7 @@ class Container implements ArrayAccess, ContainerContract {
 	public function call($callback, array $parameters = [], $defaultMethod = null)
 	{
 		if ($this->isCallableWithAtSign($callback) || $defaultMethod)
-		{
+		{//$callback=字符串存在@符号或者$defaultMethod有值
 			return $this->callClass($callback, $parameters, $defaultMethod);
 		}
 
@@ -525,7 +525,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given string is in Class@method syntax.
-	 *
+	 * 判断字符串中是否存在@符号
 	 * @param  mixed  $callback
 	 * @return bool
 	 */
@@ -564,22 +564,22 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function getCallReflector($callback)
 	{
 		if (is_string($callback) && strpos($callback, '::') !== false)
-		{
+		{//abc::hello
 			$callback = explode('::', $callback);
 		}
 
 		if (is_array($callback))
-		{
+		{//反射类中方法
 			return new ReflectionMethod($callback[0], $callback[1]);
 		}
-
+		//反射函数
 		return new ReflectionFunction($callback);
 	}
 
 	/**
 	 * Get the dependency for the given call parameter.
 	 *
-	 * @param  \ReflectionParameter  $parameter
+	 * @param  \ReflectionParameter  $parameter 反射参数对象
 	 * @param  array  $parameters
 	 * @param  array  $dependencies
 	 * @return mixed
@@ -587,25 +587,25 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function addDependencyForCallParameter(ReflectionParameter $parameter, array &$parameters, &$dependencies)
 	{
 		if (array_key_exists($parameter->name, $parameters))
-		{
+		{//$parameter->name 参数名
 			$dependencies[] = $parameters[$parameter->name];
 
 			unset($parameters[$parameter->name]);
 		}
 		elseif ($parameter->getClass())
-		{
+		{//是反射类， 则可以$parameter->getClass()->name获取类名
 			$dependencies[] = $this->make($parameter->getClass()->name);
 		}
 		elseif ($parameter->isDefaultValueAvailable())
-		{
-			$dependencies[] = $parameter->getDefaultValue();
+		{//存在默认值
+			$dependencies[] = $parameter->getDefaultValue();//返回默认值
 		}
 	}
 
 	/**
 	 * Call a string reference to a class using Class@method syntax.
 	 *
-	 * @param  string  $target
+	 * @param  string  $target=类名@方法名
 	 * @param  array  $parameters
 	 * @param  string|null  $defaultMethod
 	 * @return mixed
@@ -636,7 +636,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function make($abstract, $parameters = [])
 	{
-		$abstract = $this->getAlias($abstract);
+		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
 		// If an instance of the type is currently being managed as a singleton we'll
 		// just return an existing instance instead of instantiating new instances
@@ -646,7 +646,7 @@ class Container implements ArrayAccess, ContainerContract {
 			return $this->instances[$abstract];
 		}
 
-		$concrete = $this->getConcrete($abstract);
+		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包
 
 		// We're ready to instantiate an instance of the concrete type registered for
 		// the binding. This will instantiate the types, as well as resolve any of

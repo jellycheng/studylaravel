@@ -1,0 +1,29 @@
+
+$this->app['url']
+$this->app['router']
+$this->app['redirect']
+ $this->app['config']
+	$config = $this->app['config']->get($key, []);
+$this->app['view']
+$this->app['translator']
+$this->app['events']
+
+
+
+$this->app['router'] = xxx;等价app对象->router=xxx; 设置的方式则是调用app对象的offsetSet(‘router’， ‘xxx’)方法,其实调用的是app对象的->bind(‘router’, 闭包返回‘xxx’, false);方法
+$a = $this->app['router']->xyz;获取的方式则的调用app的offsetGet('router')方法 =》其实是调用app对象的make(router, $parameters = array())方法,然后是make方法返回的对象->xyz
+$this->app['router']等价app对象-> router
+
+$app->singleton('Illuminate\Contracts\Http\Kernel', 'App\Http\Kernel' );其实是调用app对象->bind($abstract'Illuminate\Contracts\Http\Kernel', $concrete'App\Http\Kernel', true);  退出主要事情：$thisapp对象->bindings[$abstract] = compact('concrete', 'shared');
+
+#$thisapp对象->bindings['Illuminate\Contracts\Http\Kernel'] =array('concrete'=>function(对象，参数){}, 'shared'=>true )	 =》如果执行concrete闭包是(对象，参数)则实际上调用对象->make|build('App\Http\Kernel', 参数);
+
+$this->app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function($app){
+										return new ResponseFactory($app['Illuminate\Contracts\View\Factory'], $app['redirect']);
+									});
+$this->app->singleton('events', function($app) {
+			return (new Dispatcher($app))->setQueueResolver(function() use ($app) { return $app->make('Illuminate\Contracts\Queue\Queue'); });
+		     });
+
+
+

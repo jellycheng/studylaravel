@@ -1,12 +1,23 @@
 
 
 
-入口php：index.php
-	require __DIR__.'/../bootstrap/autoload.php';
-	$app = require_once __DIR__.'/../bootstrap/app.php';
+入口php：public/index.php
+	require __DIR__.'/../bootstrap/autoload.php'; #加载跟public平级目录bootstrap/目录， 是vendor的加载器
+	$app = require_once __DIR__.'/../bootstrap/app.php';#实例化app对象， 并返回app对象
 
 	$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 	$response = $kernel->handle($request = Illuminate\Http\Request::capture());
 	$response->send();
 	$kernel->terminate($request, $response);
 
+
+bootstrap/app.php{ #文件内容
+	$app = new Illuminate\Foundation\Application( realpath(__DIR__.'/../') );#参数是项目根目录, Application类在 /vendor/laravel/framework/src/Illuminate/Foundation/Application.php 
+	$app->singleton('Illuminate\Contracts\Http\Kernel',  'App\Http\Kernel');
+	$app->singleton('Illuminate\Contracts\Console\Kernel', 'App\Console\Kernel'	);
+	$app->singleton('Illuminate\Contracts\Debug\ExceptionHandler', 	'App\Exceptions\Handler' );
+
+	return $app; #返回app对象
+
+
+}

@@ -442,7 +442,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a service provider with the application.
 	 *
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
+	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
 	 * @param  array  $options
 	 * @param  bool   $force
 	 * @return \Illuminate\Support\ServiceProvider
@@ -456,27 +456,27 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// application instance automatically for the developer. This is simply
 		// a more convenient way of specifying your service provider classes.
 		if (is_string($provider))
-		{
-			$provider = $this->resolveProviderClass($provider);//实例化类 并在构造方法中传入app对象 如new $provider($this);
+		{//是字符串则实例化类，并注入app对象
+			$provider = $this->resolveProviderClass($provider);//如new $provider($this);
 		}
-		#调用服务提供者类对象的register()方法
+		#调用服务提供者类的register()方法
 		$provider->register();
 
 		// Once we have registered the service we will iterate through the options
 		// and set each of them on the application so they will be available on
 		// the actual loading of the service objects and for developer usage.
 		foreach ($options as $key => $value)
-		{	#调用app对象的offsetSet方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
+		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
 			$this[$key] = $value;
 		}
-		//设置$serviceProviders和$loadedProviders属性
+		//把已经实例化服务提供者对象存入$serviceProviders属性，标记$loadedProviders[类名]类被实例化
 		$this->markAsRegistered($provider);
 
 		// If the application has already booted, we will call this boot method on
 		// the provider class so it has an opportunity to do its boot logic and
 		// will be ready for any usage by the developer's application logics.
 		if ($this->booted)
-		{
+		{//调用$provider服务提供者的boot()方法
 			$this->bootProvider($provider);
 		}
 
@@ -486,15 +486,15 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Get the registered service provider instance if it exists.
 	 * 通过类
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider
+	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
 	 * @return \Illuminate\Support\ServiceProvider|null
 	 */
 	public function getProvider($provider)
 	{
-		$name = is_string($provider) ? $provider : get_class($provider);//类名
-		#返回类名的对象
+		$name = is_string($provider) ? $provider : get_class($provider);//服务提供者类名
+		#返回类名对应的实例化对象， 不存在则返回null
 		return array_first($this->serviceProviders, function($key, $value) use ($name)
-		{
+		{// 对象 instanceof 类名
 			return $value instanceof $name;
 		});
 	}
@@ -520,9 +520,9 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	{
 		$this['events']->fire($class = get_class($provider), array($provider));
 
-		$this->serviceProviders[] = $provider;
+		$this->serviceProviders[] = $provider;//把已经实例化的服务提供者对象存入serviceProviders属性
 
-		$this->loadedProviders[$class] = true;
+		$this->loadedProviders[$class] = true;//标记已经实例化
 	}
 
 	/**
@@ -562,7 +562,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// register it with the application and remove the service from this list
 		// of deferred services, since it will already be loaded on subsequent.
 		if ( ! isset($this->loadedProviders[$provider]))
-		{
+		{//未实例化 则
 			$this->registerDeferredProvider($provider, $service);
 		}
 	}
@@ -603,7 +603,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function make($abstract, $parameters = array())
 	{
-		$abstract = $this->getAlias($abstract);
+		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
 		if (isset($this->deferredServices[$abstract]))
 		{

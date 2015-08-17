@@ -9,8 +9,8 @@
 $app->instance($abstract, $instance); 设置app对象的instances属性值($this->instances[$abstract] = $instance;)
 
 在实例化Illuminate\Foundation\Application类时（即构造方法中执行）：
-	$this->instance('app', $this); 这个设置$this->instances['app'] = 当前app对象
-	$this->instance('Illuminate\Container\Container', $this); 这个设置$this->instances['Illuminate\Container\Container'] = 当前app对象
+	$this->instance('app', $this); 这个设置属性$this->instances['app'] = 当前app对象
+	$this->instance('Illuminate\Container\Container', $this); 这个设置属性$this->instances['Illuminate\Container\Container'] = 当前app对象
 
 $app->make('app'); 获取当前app对象
 
