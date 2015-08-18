@@ -1,5 +1,8 @@
 <?php namespace Illuminate\Foundation;
-
+/** 
+ * 单例 
+ * 注册别名并设置自动加载器 \Illuminate\Foundation\AliasLoader::getInstance($appConfig['app_aliases'])->register();
+*/
 class AliasLoader {
 
 	/**
@@ -11,7 +14,7 @@ class AliasLoader {
 
 	/**
 	 * Indicates if a loader has been registered.
-	 *
+	 * 是否设置过别名类加载器
 	 * @var bool
 	 */
 	protected $registered = false;
@@ -41,25 +44,26 @@ class AliasLoader {
 	 */
 	public static function getInstance(array $aliases = array())
 	{
+		//单例
 		if (is_null(static::$instance)) return static::$instance = new static($aliases);
 
 		$aliases = array_merge(static::$instance->getAliases(), $aliases);
 
 		static::$instance->setAliases($aliases);
-
+		//返回当前类对象，可以做链式操作
 		return static::$instance;
 	}
 
 	/**
 	 * Load a class alias if it is registered.
-	 *
-	 * @param  string  $alias
+	 * 加载器，使别名跟类名达到一样的效果 如'TestJelly1' => 'Illuminate\Support\Facades\TestJelly'
+	 * @param  string  $alias=TestJelly1
 	 * @return void
 	 */
 	public function load($alias)
 	{
 		if (isset($this->aliases[$alias]))
-		{
+		{	//为类创建一个别名 bool class_alias(string $original原类名, string $alias别名 [, bool $autoload = TRUE如果类不存在则调用自动加载 ] )
 			return class_alias($this->aliases[$alias], $alias);
 		}
 	}
@@ -85,7 +89,7 @@ class AliasLoader {
 	{
 		if ( ! $this->registered)
 		{
-			$this->prependToLoaderStack();
+			$this->prependToLoaderStack();//自动加载器
 
 			$this->registered = true;
 		}
@@ -93,7 +97,7 @@ class AliasLoader {
 
 	/**
 	 * Prepend the load method to the auto-loader stack.
-	 *
+	 * 自动加载器
 	 * @return void
 	 */
 	protected function prependToLoaderStack()
