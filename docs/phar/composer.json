@@ -1,0 +1,12 @@
+{
+  "name": "jelly/testphar",
+  "description": "jelly 测试 php phar",
+  "keywords": ["php", "phar"],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "psr-4": {"Jelly\\": "src/Jelly"},
+    "files": ["src/Jelly/helpers.php"]
+  }
+}

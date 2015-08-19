@@ -40,7 +40,7 @@ vi /usr/local/php/lib/php.ini
 	zend_extension=/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/opcache.so
 重启服务即可
 语法检测：./bin/php -l
-root@AY130925210658410045Z:/usr/local/php# ./bin/php -i|grep opcache   查看是否安装好opcache模块 或者 ./bin/php -m|grep cache
+root@AY130925210658410045Z:/usr/local/php# ./bin/php -i|grep -i opcache   查看是否安装好opcache模块 或者 ./bin/php -m|grep cache
 	opcache.blacklist_filename => no value => no value
 	opcache.consistency_checks => 0 => 0
 	opcache.dups_fix => Off => Off
@@ -102,6 +102,26 @@ php5.5版本以后安装opcache扩展：
 
 
 
+$ cat /data1/env/php-fpm/lib/phpini.d/opcache.ini
+	zend_extension=/data1/env/php-fpm/lib/php/extensions/no-debug-non-zts-20100525/opcache.so
+	opcache.memory_consumption=1280
+	opcache.interned_strings_buffer=8
+	opcache.max_accelerated_files=40000
+	opcache.revalidate_freq=0
+	opcache.fast_shutdown=1
+	opcache.enable_cli=1
 
 
-
+$ /data1/env/php-fpm/bin/php --ini 
+	Configuration File (php.ini) Path: /data1/env/php-fpm/lib
+	Loaded Configuration File:         /data1/env/php-fpm/lib/php.ini
+	Scan for additional .ini files in: /data1/env/php-fpm/lib/phpini.d
+	Additional .ini files parsed:      /data1/env/php-fpm/lib/phpini.d/amqp.ini,
+	/data1/env/php-fpm/lib/phpini.d/imagick.ini,
+	/data1/env/php-fpm/lib/phpini.d/memcached.ini,
+	/data1/env/php-fpm/lib/phpini.d/mongo.ini,
+	/data1/env/php-fpm/lib/phpini.d/msgpack.ini,
+	/data1/env/php-fpm/lib/phpini.d/opcache.ini,
+	/data1/env/php-fpm/lib/phpini.d/redis.ini,
+	/data1/env/php-fpm/lib/phpini.d/ssh2.ini,
+	/data1/env/php-fpm/lib/phpini.d/zmq.ini
