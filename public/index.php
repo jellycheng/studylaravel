@@ -46,7 +46,7 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
-$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel');//返回App\Http\Kernel类对象
 //var_export($kernel);
 $response = $kernel->handle(
 	$request = Illuminate\Http\Request::capture()

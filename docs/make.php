@@ -6,8 +6,8 @@ $app->make($abstract, $parameters = array());   #$this->app->singleton('events',
 	$abstract = $this->getAlias($abstract); //从aliases属性key中有对应的串则用对应的串否则保持不变
 
 	if (isset($this->deferredServices[$abstract]))
-	{
-		$this->loadDeferredProvider($abstract);
+	{//有延迟的服务提供者
+		$this->loadDeferredProvider($abstract);//执行服务提供者的register()方法
 	}
 
 	return parent::make($abstract, $parameters);

@@ -101,7 +101,7 @@ class Kernel implements KernelContract {
 	{
 		$this->app->instance('request', $request);
 
-		Facade::clearResolvedInstance('request');
+		Facade::clearResolvedInstance('request');//取消facade属性对象
 
 		$this->bootstrap();
 

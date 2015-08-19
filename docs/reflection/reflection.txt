@@ -1,0 +1,415 @@
+
+
+
+反射总结 todo
+
+可以反射类、接口、函数、类方法
+反射类如下：
+	Reflection
+	ReflectionClass
+
+
+#反射接口
+Reflector {
+	/* 方法 */
+	public static string export ( void )
+	public string __toString ( void )
+}
+
+
+
+ReflectionClass implements Reflector {
+	/* 常量 */
+	const integer IS_IMPLICIT_ABSTRACT = 16 ;
+	const integer IS_EXPLICIT_ABSTRACT = 32 ;
+	const integer IS_FINAL = 64 ;
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	public __construct ( mixed $argument )
+	public static string export ( mixed $argument [, bool $return = false ] )
+	public mixed getConstant ( string $name )
+	public array getConstants ( void )
+	public ReflectionMethod getConstructor ( void )
+	public array getDefaultProperties ( void )
+	public string getDocComment ( void )
+	public int getEndLine ( void )
+	public ReflectionExtension getExtension ( void )
+	public string getExtensionName ( void )
+	public string getFileName ( void )
+	public array getInterfaceNames ( void )
+	public array getInterfaces ( void )
+	public ReflectionMethod getMethod ( string $name )
+	public array getMethods ([ int $filter ] )
+	public int getModifiers ( void )
+	public string getName ( void )
+	public string getNamespaceName ( void )
+	public object getParentClass ( void )
+	public array getProperties ([ int $filter ] )
+	public ReflectionProperty getProperty ( string $name )
+	public string getShortName ( void )
+	public int getStartLine ( void )
+	public array getStaticProperties ( void )
+	public mixed getStaticPropertyValue ( string $name [, mixed &$def_value ] )
+	public array getTraitAliases ( void )
+	public array getTraitNames ( void )
+	public array getTraits ( void )
+	public bool hasConstant ( string $name )
+	public bool hasMethod ( string $name )
+	public bool hasProperty ( string $name )
+	public bool implementsInterface ( string $interface )
+	public bool inNamespace ( void )
+	public bool isAbstract ( void )
+	public bool isCloneable ( void )
+	public bool isFinal ( void )
+	public bool isInstance ( object $object ) 
+	public bool isInstantiable ( void )检查这个类是否可实例化
+	public bool isInterface ( void )
+	public bool isInternal ( void )
+	public bool isIterateable ( void )
+	public bool isSubclassOf ( string $class )
+	public bool isTrait ( void )
+	public bool isUserDefined ( void )
+	public object newInstance ( mixed $args [, mixed $... ] )
+	public object newInstanceArgs ([ array $args ] )
+	public object newInstanceWithoutConstructor ( void )
+	public void setStaticPropertyValue ( string $name , string $value )
+	public string __toString ( void )
+}
+
+
+ReflectionZendExtension implements Reflector {
+	/* 属性 */
+	public $name ;zend扩展名
+	/* 方法 */
+	final private void __clone ( void )
+	public __construct ( string $name 接收zend扩展名)
+	public static string export ( string $name [, string $return ] )
+	public string getAuthor ( void )
+	public string getCopyright ( void )
+	public string getName ( void )返回zend扩展名
+	public string getURL ( void )
+	public string getVersion ( void )
+	public string __toString ( void )
+}
+
+ReflectionExtension implements Reflector {
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	final private void __clone ( void )
+	public __construct ( string $name扩展名 )
+	public static string export ( string $name [, string $return = false ] )
+	public array getClasses ( void )
+	public array getClassNames ( void )
+	public array getConstants ( void )
+	public array getDependencies ( void )
+	public array getFunctions ( void )
+	public array getINIEntries ( void )
+	public string getName ( void )返回扩展名
+	public string getVersion ( void )
+	public void info ( void )
+	public void isPersistent ( void )
+	public void isTemporary ( void )
+	public string __toString ( void )
+}
+
+
+ReflectionFunction extends ReflectionFunctionAbstract implements Reflector {
+	/* 常量 */
+	const integer IS_DEPRECATED = 262144 ;
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	public __construct ( mixed $name )
+	public static string export ( string $name [, string $return ] )
+	public Closure getClosure ( void )
+	public mixed invoke ([ mixed $parameter [, mixed $... ]] )
+	public mixed invokeArgs ( array $args )
+	public bool isDisabled ( void )
+	public string __toString ( void )
+	/* 继承的方法 */
+	final private void ReflectionFunctionAbstract::__clone ( void )
+	public ReflectionClass ReflectionFunctionAbstract::getClosureScopeClass ( void )
+	public object ReflectionFunctionAbstract::getClosureThis ( void )
+	public string ReflectionFunctionAbstract::getDocComment ( void )
+	public int ReflectionFunctionAbstract::getEndLine ( void )
+	public ReflectionExtension ReflectionFunctionAbstract::getExtension ( void )
+	public string ReflectionFunctionAbstract::getExtensionName ( void )
+	public string ReflectionFunctionAbstract::getFileName ( void )
+	public string ReflectionFunctionAbstract::getName ( void )
+	public string ReflectionFunctionAbstract::getNamespaceName ( void )
+	public int ReflectionFunctionAbstract::getNumberOfParameters ( void )
+	public int ReflectionFunctionAbstract::getNumberOfRequiredParameters ( void )
+	public array ReflectionFunctionAbstract::getParameters ( void )
+	public string ReflectionFunctionAbstract::getShortName ( void )
+	public int ReflectionFunctionAbstract::getStartLine ( void )
+	public array ReflectionFunctionAbstract::getStaticVariables ( void )
+	public bool ReflectionFunctionAbstract::inNamespace ( void )
+	public bool ReflectionFunctionAbstract::isClosure ( void )
+	public bool ReflectionFunctionAbstract::isDeprecated ( void )
+	public bool ReflectionFunctionAbstract::isGenerator ( void )
+	public bool ReflectionFunctionAbstract::isInternal ( void )
+	public bool ReflectionFunctionAbstract::isUserDefined ( void )
+	public bool ReflectionFunctionAbstract::isVariadic ( void )
+	public bool ReflectionFunctionAbstract::returnsReference ( void )
+	abstract public void ReflectionFunctionAbstract::__toString ( void )
+}
+
+
+ReflectionFunctionAbstract implements Reflector {
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	final private void __clone ( void )
+	public ReflectionClass getClosureScopeClass ( void )
+	public object getClosureThis ( void )
+	public string getDocComment ( void )
+	public int getEndLine ( void )
+	public ReflectionExtension getExtension ( void )
+	public string getExtensionName ( void )
+	public string getFileName ( void )
+	public string getName ( void )
+	public string getNamespaceName ( void )
+	public int getNumberOfParameters ( void )
+	public int getNumberOfRequiredParameters ( void )
+	public array getParameters ( void )
+	public string getShortName ( void )
+	public int getStartLine ( void )
+	public array getStaticVariables ( void )
+	public bool inNamespace ( void )
+	public bool isClosure ( void )
+	public bool isDeprecated ( void )
+	public bool isGenerator ( void )
+	public bool isInternal ( void )
+	public bool isUserDefined ( void )
+	public bool isVariadic ( void )
+	public bool returnsReference ( void )
+	abstract public void __toString ( void )
+}
+
+
+
+ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
+	/* 常量 */
+	const integer IS_STATIC = 1 ;
+	const integer IS_PUBLIC = 256 ;
+	const integer IS_PROTECTED = 512 ;
+	const integer IS_PRIVATE = 1024 ;
+	const integer IS_ABSTRACT = 2 ;
+	const integer IS_FINAL = 4 ;
+	/* 属性 */
+	public $name ;
+	public $class ;
+	/* 方法 */
+	public __construct ( mixed $class , string $name )
+	public static string export ( string $class , string $name [, bool $return = false ] )
+	public Closure getClosure ( object $object )
+	public ReflectionClass getDeclaringClass ( void )
+	public int getModifiers ( void )
+	public ReflectionMethod getPrototype ( void )
+	public mixed invoke ( object $object [, mixed $parameter [, mixed $... ]] )
+	public mixed invokeArgs ( object $object , array $args )
+	public bool isAbstract ( void )
+	public bool isConstructor ( void )
+	public bool isDestructor ( void )
+	public bool isFinal ( void )
+	public bool isPrivate ( void )
+	public bool isProtected ( void )
+	public bool isPublic ( void )
+	public bool isStatic ( void )
+	public void setAccessible ( bool $accessible )
+	public string __toString ( void )
+	/* 继承的方法 */
+	final private void ReflectionFunctionAbstract::__clone ( void )
+	public ReflectionClass ReflectionFunctionAbstract::getClosureScopeClass ( void )
+	public object ReflectionFunctionAbstract::getClosureThis ( void )
+	public string ReflectionFunctionAbstract::getDocComment ( void )
+	public int ReflectionFunctionAbstract::getEndLine ( void )
+	public ReflectionExtension ReflectionFunctionAbstract::getExtension ( void )
+	public string ReflectionFunctionAbstract::getExtensionName ( void )
+	public string ReflectionFunctionAbstract::getFileName ( void )
+	public string ReflectionFunctionAbstract::getName ( void )
+	public string ReflectionFunctionAbstract::getNamespaceName ( void )
+	public int ReflectionFunctionAbstract::getNumberOfParameters ( void )
+	public int ReflectionFunctionAbstract::getNumberOfRequiredParameters ( void )
+	public array ReflectionFunctionAbstract::getParameters ( void )
+	public string ReflectionFunctionAbstract::getShortName ( void )
+	public int ReflectionFunctionAbstract::getStartLine ( void )
+	public array ReflectionFunctionAbstract::getStaticVariables ( void )
+	public bool ReflectionFunctionAbstract::inNamespace ( void )
+	public bool ReflectionFunctionAbstract::isClosure ( void )
+	public bool ReflectionFunctionAbstract::isDeprecated ( void )
+	public bool ReflectionFunctionAbstract::isGenerator ( void )
+	public bool ReflectionFunctionAbstract::isInternal ( void )
+	public bool ReflectionFunctionAbstract::isUserDefined ( void )
+	public bool ReflectionFunctionAbstract::isVariadic ( void )
+	public bool ReflectionFunctionAbstract::returnsReference ( void )
+	abstract public void ReflectionFunctionAbstract::__toString ( void )
+}
+
+
+
+ReflectionObject extends ReflectionClass implements Reflector {
+	/* 常量 */
+	const integer IS_IMPLICIT_ABSTRACT = 16 ;
+	const integer IS_EXPLICIT_ABSTRACT = 32 ;
+	const integer IS_FINAL = 64 ;
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	public __construct ( object $argument )
+	public static string export ( string $argument [, bool $return ] )
+	/* 继承的方法 */
+	public ReflectionClass::__construct ( mixed $argument )
+	public static string ReflectionClass::export ( mixed $argument [, bool $return = false ] )
+	public mixed ReflectionClass::getConstant ( string $name )
+	public array ReflectionClass::getConstants ( void )
+	public ReflectionMethod ReflectionClass::getConstructor ( void )
+	public array ReflectionClass::getDefaultProperties ( void )
+	public string ReflectionClass::getDocComment ( void )
+	public int ReflectionClass::getEndLine ( void )
+	public ReflectionExtension ReflectionClass::getExtension ( void )
+	public string ReflectionClass::getExtensionName ( void )
+	public string ReflectionClass::getFileName ( void )
+	public array ReflectionClass::getInterfaceNames ( void )
+	public array ReflectionClass::getInterfaces ( void )
+	public ReflectionMethod ReflectionClass::getMethod ( string $name )
+	public array ReflectionClass::getMethods ([ int $filter ] )
+	public int ReflectionClass::getModifiers ( void )
+	public string ReflectionClass::getName ( void )
+	public string ReflectionClass::getNamespaceName ( void )
+	public object ReflectionClass::getParentClass ( void )
+	public array ReflectionClass::getProperties ([ int $filter ] )
+	public ReflectionProperty ReflectionClass::getProperty ( string $name )
+	public string ReflectionClass::getShortName ( void )
+	public int ReflectionClass::getStartLine ( void )
+	public array ReflectionClass::getStaticProperties ( void )
+	public mixed ReflectionClass::getStaticPropertyValue ( string $name [, mixed &$def_value ] )
+	public array ReflectionClass::getTraitAliases ( void )
+	public array ReflectionClass::getTraitNames ( void )
+	public array ReflectionClass::getTraits ( void )
+	public bool ReflectionClass::hasConstant ( string $name )
+	public bool ReflectionClass::hasMethod ( string $name )
+	public bool ReflectionClass::hasProperty ( string $name )
+	public bool ReflectionClass::implementsInterface ( string $interface )
+	public bool ReflectionClass::inNamespace ( void )
+	public bool ReflectionClass::isAbstract ( void )
+	public bool ReflectionClass::isCloneable ( void )
+	public bool ReflectionClass::isFinal ( void )
+	public bool ReflectionClass::isInstance ( object $object )
+	public bool ReflectionClass::isInstantiable ( void )
+	public bool ReflectionClass::isInterface ( void )
+	public bool ReflectionClass::isInternal ( void )
+	public bool ReflectionClass::isIterateable ( void )
+	public bool ReflectionClass::isSubclassOf ( string $class )
+	public bool ReflectionClass::isTrait ( void )
+	public bool ReflectionClass::isUserDefined ( void )
+	public object ReflectionClass::newInstance ( mixed $args [, mixed $... ] )
+	public object ReflectionClass::newInstanceArgs ([ array $args ] )
+	public object ReflectionClass::newInstanceWithoutConstructor ( void )
+	public void ReflectionClass::setStaticPropertyValue ( string $name , string $value )
+	public string ReflectionClass::__toString ( void )
+}
+
+
+
+ReflectionParameter implements Reflector {
+	/* 属性 */
+	public $name ;
+	/* 方法 */
+	public bool allowsNull ( void )
+	public bool canBePassedByValue ( void )
+	final private void __clone ( void )
+	public __construct ( string $function , string $parameter )
+	public static string export ( string $function , string $parameter [, bool $return ] )
+	public ReflectionClass getClass ( void )
+	public ReflectionClass getDeclaringClass ( void )
+	public ReflectionFunctionAbstract getDeclaringFunction ( void )
+	public mixed getDefaultValue ( void )
+	public string getDefaultValueConstantName ( void )
+	public string getName ( void )
+	public int getPosition ( void )
+	public bool isArray ( void )
+	public bool isCallable ( void )
+	public bool isDefaultValueAvailable ( void )
+	public bool isDefaultValueConstant ( void )
+	public bool isOptional ( void )
+	public bool isPassedByReference ( void )
+	public bool isVariadic ( void )
+	public string __toString ( void )
+}
+
+
+
+ReflectionProperty implements Reflector {
+	/* 常量 */
+	const integer IS_STATIC = 1 ;
+	const integer IS_PUBLIC = 256 ;
+	const integer IS_PROTECTED = 512 ;
+	const integer IS_PRIVATE = 1024 ;
+	/* 属性 */
+	public $name ;
+	public $class ;
+	/* 方法 */
+	final private void __clone ( void )
+	public __construct ( mixed $class , string $name )
+	public static string export ( mixed $class , string $name [, bool $return ] )
+	public ReflectionClass getDeclaringClass ( void )
+	public string getDocComment ( void )
+	public int getModifiers ( void )
+	public string getName ( void )
+	public mixed getValue ([ object $object ] )
+	public bool isDefault ( void )
+	public bool isPrivate ( void )
+	public bool isProtected ( void )
+	public bool isPublic ( void )
+	public bool isStatic ( void )
+	public void setAccessible ( bool $accessible )
+	public void setValue ( object $object , mixed $value )
+	public string __toString ( void )
+}
+
+
+
+Exception {
+	/* 属性 */
+	protected string $message ;
+	protected int $code ;
+	protected string $file ;
+	protected int $line ;
+	/* 方法 */
+	public __construct ([ string $message = "" [, int $code = 0 [, Exception $previous = NULL ]]] )
+	final public string getMessage ( void )
+	final public Exception getPrevious ( void )上一个异常对象
+	final public int getCode ( void )
+	final public string getFile ( void )
+	final public int getLine ( void )
+	final public array getTrace ( void )
+	final public string getTraceAsString ( void )
+	public string __toString ( void )
+	final private void __clone ( void )
+}
+
+
+
+
+#反射异常类
+ReflectionException extends Exception {
+	/* 属性 */
+	protected string $message ;
+	protected int $code ;
+	protected string $file ;
+	protected int $line ;
+	/* 继承的方法 */
+	final public string Exception::getMessage ( void )错误信息
+	final public Exception Exception::getPrevious ( void )上一个异常对象
+	final public int Exception::getCode ( void )错误号
+	final public string Exception::getFile ( void )文件名
+	final public int Exception::getLine ( void )行
+	final public array Exception::getTrace ( void )
+	final public string Exception::getTraceAsString ( void )
+	public string Exception::__toString ( void )
+	final private void Exception::__clone ( void )
+}
+

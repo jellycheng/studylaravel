@@ -56,6 +56,7 @@ Application类属性：
 					'path.lang'=>项目根目录/resources/lang，
 					'path.public'=>项目根目录/public，
 					'path.storage'=>项目根目录/storage，
+					'request'=>$request对象
 					];
 
 
@@ -160,10 +161,9 @@ Application类属性：
 
 $this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')方法 =》app对象的bind('url','hello',$shared=false) 其实是追加app对象的$bindings=array('url'=>array('concrete'=>hello, 'shared'=>true ),
 
-function getClosure($abstract, $concrete)
-{//返回闭包
-	return function($c, $parameters = []) use ($abstract, $concrete)
-	{
+
+function getClosure($abstract, $concrete){//返回闭包
+	return function($c, $parameters = []) use ($abstract, $concrete){
 		$method = ($abstract == $concrete) ? 'build' : 'make';
 
 		return $c->$method($concrete, $parameters);
@@ -171,4 +171,20 @@ function getClosure($abstract, $concrete)
 }
 $abc = getClosure("Illuminate\Contracts\Http\Kernel", 'App\Http\Kernel');
 $abc('xyz', array(参数)); #调用xyz对象->make('App\Http\Kernel', array(参数));
+
+
+
+
+
+$this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')方法 =》app对象的bind('url','hello',$shared=false) 其实是追加app对象的$bindings=array('url'=>array('concrete'=>hello, 'shared'=>true )
+
+	bind('xx', 闭包，bool值) =》$this->bindings['events']=>array('concrete'=>闭包function(对象){}, 'shared'=>bool值 )
+	bind('xx', '字符串'，bool值) =》$this->bindings['abc']=>array('concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>bool值 )
+
+app对象->singleton($abstract, $concrete = null) =》app对象->bind($abstract, $concrete, true)
+	其中$abstract=字符串 或者 数组array($abstract=> $alias)
+
+
+$abc = $this->app['url']; 是调用application类的offsetGet('url')方法=》app对象->make($key);
+
 

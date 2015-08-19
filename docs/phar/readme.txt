@@ -6,5 +6,5 @@ PHP5.3之后支持了类似Java的jar包，名为phar。用来将多个PHP文件
 
 cd 到本目录 然后执行 composer install
 
-
+php build.php
 

@@ -201,15 +201,16 @@ class Container implements ArrayAccess, ContainerContract {
 		{#$concrete不是闭包
 			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
-		#$this->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function(对象，参数){}, 'shared'=>true )
+		#app对象->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
+		#app对象->bind('abc', 'xyz', true);  =>$this->bindings['abc']=>array('concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true )
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
 		// If the abstract type was already resolved in this container we'll fire the
 		// rebound listener so that any objects which have already gotten resolved
 		// can have their copy of the object updated via the listener callbacks.
 		if ($this->resolved($abstract))
-		{#是resolved[$abstract] 或 instances[$abstract]属性的key之一
-			$this->rebound($abstract);
+		{#isset（）是resolved[$abstract] 或 instances[$abstract]属性的key之一
+			$this->rebound($abstract);#调用一次make方法 $instance = $this->make($abstract);
 		}
 	}
 
@@ -646,17 +647,17 @@ class Container implements ArrayAccess, ContainerContract {
 			return $this->instances[$abstract];
 		}
 
-		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包
-
+		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则原样返回
 		// We're ready to instantiate an instance of the concrete type registered for
 		// the binding. This will instantiate the types, as well as resolve any of
 		// its "nested" dependencies recursively until all have gotten resolved.
+		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
-		{#是闭包， 把当前app对象传给闭包
-			$object = $this->build($concrete, $parameters);
+		{#是闭包或者$concrete == $abstract， 
+			$object = $this->build($concrete, $parameters);//返回对象，如果$concrete是闭包则接收app对象和$parameters参数并返回对象，如果$concrete=字符串则是反射出类对象
 		}
 		else
-		{
+		{//递归实例化
 			$object = $this->make($concrete, $parameters);
 		}
 
@@ -664,7 +665,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// and apply them to the object being built. This allows for the extension
 		// of services, such as changing configuration or decorating the object.
 		foreach ($this->getExtenders($abstract) as $extender)
-		{
+		{//遍历extenders[$abstract]属性值
 			$object = $extender($object, $this);
 		}
 
@@ -672,7 +673,7 @@ class Container implements ArrayAccess, ContainerContract {
 		// the instances in "memory" so we can return it later without creating an
 		// entirely new instance of an object on each subsequent request for it.
 		if ($this->isShared($abstract))
-		{
+		{#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
 		}
 
@@ -700,13 +701,13 @@ class Container implements ArrayAccess, ContainerContract {
 		// assume each type is a concrete name and will attempt to resolve it as is
 		// since the container should be able to resolve concretes automatically.
 		if ( ! isset($this->bindings[$abstract]))
-		{
+		{	//missingLeadingSlash()方法代码return is_string($abstract) && strpos($abstract, '\\') !== 0;
 			if ($this->missingLeadingSlash($abstract) &&
 				isset($this->bindings['\\'.$abstract]))
 			{//字符串且不以\开头且是命名空间方式，如abc\xyz  且\abc\xyz是bindings的key则加前缀\
 				$abstract = '\\'.$abstract;
 			}
-
+			//原样字符串返回或者加了\的
 			return $abstract;
 		}
 
@@ -772,30 +773,30 @@ class Container implements ArrayAccess, ContainerContract {
 		{#是闭包
 			return $concrete($this, $parameters);
 		}
-
+		//是字符串 则反射类
 		$reflector = new ReflectionClass($concrete);
 
 		// If the type is not instantiable, the developer is attempting to resolve
 		// an abstract type such as an Interface of Abstract Class and there is
 		// no binding registered for the abstractions so we need to bail out.
 		if ( ! $reflector->isInstantiable())
-		{
+		{#类不能被可实例化
 			$message = "Target [$concrete] is not instantiable.";
 
 			throw new BindingResolutionException($message);
 		}
-
+		//把类名存入反射堆数组中
 		$this->buildStack[] = $concrete;
-
+		//反射出构造方法 ，返回ReflectionMethod 对象
 		$constructor = $reflector->getConstructor();
 
 		// If there are no constructors, that means there are no dependencies then
 		// we can just resolve the instances of the objects right away, without
 		// resolving any other types or dependencies out of these containers.
 		if (is_null($constructor))
-		{
+		{#不存在构造方法
 			array_pop($this->buildStack);
-
+			//直接实例化例
 			return new $concrete;
 		}
 
@@ -811,9 +812,9 @@ class Container implements ArrayAccess, ContainerContract {
 		$instances = $this->getDependencies(
 			$dependencies, $parameters
 		);
-
+		//从堆中移除
 		array_pop($this->buildStack);
-
+		//返回类新对象，并把$instances参数给构造方法
 		return $reflector->newInstanceArgs($instances);
 	}
 
@@ -1029,8 +1030,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Fire all of the resolving callbacks.
 	 *
-	 * @param  string  $abstract
-	 * @param  mixed   $object
+	 * @param  string  $abstract=字符串
+	 * @param  mixed   $object=对象
 	 * @return void
 	 */
 	protected function fireResolvingCallbacks($abstract, $object)
@@ -1055,9 +1056,9 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Get all callbacks for a given type.
 	 *
-	 * @param  string  $abstract
-	 * @param  object  $object
-	 * @param  array   $callbacksPerType
+	 * @param  string  $abstract=字符串
+	 * @param  object  $object=对象
+	 * @param  array   $callbacksPerType=数组=array('$abstract类名'=>array(), )
 	 *
 	 * @return array
 	 */
@@ -1080,7 +1081,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Fire an array of callbacks with an object.
 	 *
 	 * @param  mixed  $object
-	 * @param  array  $callbacks
+	 * @param  array  $callbacks=array('函数名', '函数名2') 函数名接收参数($object, $app对象)
 	 */
 	protected function fireCallbackArray($object, array $callbacks)
 	{

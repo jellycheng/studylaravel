@@ -66,7 +66,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * All of the registered service providers.
-	 *
+	 * 存已经实例化的服务提供者对象
 	 * @var array
 	 */
 	protected $serviceProviders = array();
@@ -459,7 +459,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		{//是字符串则实例化类，并注入app对象
 			$provider = $this->resolveProviderClass($provider);//如new $provider($this);
 		}
-		#调用服务提供者类的register()方法
+		#调用执行服务提供者类的register()方法
 		$provider->register();
 
 		// Once we have registered the service we will iterate through the options
@@ -469,17 +469,17 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
 			$this[$key] = $value;
 		}
-		//把已经实例化服务提供者对象存入$serviceProviders属性，标记$loadedProviders[类名]类被实例化
+		//把已经实例化服务提供者对象存入属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true
 		$this->markAsRegistered($provider);
 
 		// If the application has already booted, we will call this boot method on
 		// the provider class so it has an opportunity to do its boot logic and
 		// will be ready for any usage by the developer's application logics.
 		if ($this->booted)
-		{//调用$provider服务提供者的boot()方法
+		{//调用指行$provider服务提供者的boot()方法
 			$this->bootProvider($provider);
 		}
-
+		//返回服务提供者对象
 		return $provider;
 	}
 
@@ -545,7 +545,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Load the provider for a deferred service.
-	 *
+	 * 执行服务提供者的register()方法
 	 * @param  string  $service
 	 * @return void
 	 */
@@ -562,7 +562,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// register it with the application and remove the service from this list
 		// of deferred services, since it will already be loaded on subsequent.
 		if ( ! isset($this->loadedProviders[$provider]))
-		{//未实例化 则
+		{//未实例化 则执行服务提供者的register()方法
 			$this->registerDeferredProvider($provider, $service);
 		}
 	}
@@ -579,15 +579,15 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// Once the provider that provides the deferred service has been registered we
 		// will remove it from our local list of the deferred services with related
 		// providers so that this container does not try to resolve it out again.
-		if ($service) unset($this->deferredServices[$service]);
+		if ($service) unset($this->deferredServices[$service]); //从延迟中移除
 
-		$this->register($instance = new $provider($this));
+		$this->register($instance = new $provider($this));//执行服务提供者的register()方法
 
 		if ( ! $this->booted)
 		{
 			$this->booting(function() use ($instance)
 			{
-				$this->bootProvider($instance);
+				$this->bootProvider($instance);//执行服务提供者的boot方法
 			});
 		}
 	}
@@ -606,8 +606,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
 		if (isset($this->deferredServices[$abstract]))
-		{
-			$this->loadDeferredProvider($abstract);
+		{//有延迟的服务提供者
+			$this->loadDeferredProvider($abstract);//执行服务提供者的register()方法
 		}
 
 		return parent::make($abstract, $parameters);
@@ -649,8 +649,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// for any listeners that need to do work after this initial booting gets
 		// finished. This is useful when ordering the boot-up processes we run.
 		$this->fireAppCallbacks($this->bootingCallbacks);
-
-		array_walk($this->serviceProviders, function($p) {
+		//serviceProviders属性存已经实例化的服务提供者对象,
+		array_walk($this->serviceProviders, function($p) {#执行所有服务提供者的boot方法
 			$this->bootProvider($p);
 		});
 
@@ -662,13 +662,13 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Boot the given service provider.
 	 *
-	 * @param  \Illuminate\Support\ServiceProvider  $provider
+	 * @param  \Illuminate\Support\ServiceProvider  $provider=服务提供者类对象
 	 * @return void
 	 */
 	protected function bootProvider(ServiceProvider $provider)
 	{
 		if (method_exists($provider, 'boot'))
-		{
+		{//调用服务类对象的boot方法
 			return $this->call([$provider, 'boot']);
 		}
 	}

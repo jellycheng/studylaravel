@@ -17,3 +17,6 @@ D:\pingan\laravel_v5\cloud\ananzu-service>git branch
   develop
   master
 
+
+切换到指定分区并拉取 git pull origin ananzu_v1.0
+只做切换： git checkout ananzu_v1.0

@@ -95,7 +95,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * Register paths to be published by the publish command.
-	 *
+	 * 注册路径由发布命令
 	 * @param  array  $paths
 	 * @param  string  $group
 	 * @return void
@@ -119,7 +119,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * Get the paths to publish.
-	 *
+	 * 路径来发布
 	 * @param  string  $provider
 	 * @param  string  $group
 	 * @return array
