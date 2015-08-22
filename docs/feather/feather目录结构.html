@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>feather目录结构</title>
+ </head>
+ <body>
+
+<pre>
+feather目录结构：
+	├── component 模板小组件目录，通用模板，在page目录下的html代码通过&lt;?php $this->component('common:header',array('showback' => 'true'));?>加载
+		|-common
+			|-header.html
+			|-footer.html
+	├── page ：page级别页面存放目录
+	│   └── index.html 首页
+	│   └── about 关于相关静态页
+	│         |-faq.html 常见问题静态页,文件中 加载通用模块如 &lt;?php $this->component('common:header',array('showback' => 'true'));?> 加载js：require.async('/static/about/faq.js');
+	├── static  page级别页面静态资源和其他静态资源存放目录,css,js,img,html,swf,docx等
+		|-about 业务js目录
+			|-faq.js
+			|-xxx.js
+		|-common 通用js、css、类库，跟业务本身没关系
+			|-base.css
+			|-reset.css
+			|-mod
+				|-zepto
+					|-zepto.js
+				|-mask
+					|-mask.js
+					|-mask.css
+		|-mod 业务通用模块
+			|-common
+				|-ananzucommon.js
+				|-log.js
+			|-app
+				|-app.js
+				|-xxx.js
+	├── test 测试文件目录
+	├── feather_conf.js 配置文件, 此文件为必须存在的文件
+	├── feather_rewrite.php 地址转发文件，php项目中使用到转发功能的可使用此文件
+	├── feather_compatible.php 兼容php调用中的错误或者执行一些php代码，比如某一个在模版中使用的php函数，本地无法模拟，可将其简单的定义在这个文件中
+
+js代码中加载模块方式：
+var $ = require('common:zepto'),
+	appApi = require(':app/app.js'),
+	log = require(":common/log.js");
+	js格式对应的目录文件：
+	    :dialog => /static/mod/dialog/dialog.js
+	    common:dialog => /static/common/mod/dialog/dialog.js
+	    common/a:dialog => /static/common/a/mod/dialog/dialog.js
+	    common/a:dialog/a => /static/common/a/mod/dialog/a/a.js
+	    common/a:dialog/a.js => /static/common/a/mod/dialog/a.js
+	    common/a.js => /static/common/a.js
+
+html中加载对应模板格式：&lt;?php $this->component('common:header',array('showback' => 'true'));?>
+	:nav => /component/nav/nav.tpl
+        common:nav => /component/common/nav/nav.tpl
+        common/a:nav => /component/common/a/nav/nav.tpl
+        common/a:nav/a => /component/common/a/nav/a/a.tpl
+        common/a:nav/a.tpl => /component/common/a/nav/a.tpl
+        common/a/b => /component/common/a/b.tpl
+        common/a/b.tpl => /component/common/a/b/tpl
+
+feather_conf.js文件内容参考：
+	feather.config.merge({
+		project: {
+			name: '项目名',
+			modulename: '模块名',
+			charset: 'utf-8编码'
+		},
+		statics: '/jelly' #默认为/static，所以生成后的url开头为/static/xxx，如果设置了则是/jelly/xxx
+	});
+
+
+
+发布到远程服务器端： feather release -opD -d remote_ananzucjs  其中 -o：优化代码和压缩  -p：合并打包 -D: 静态资源使用域名
+		
+-o：优化代码和压缩
+-p：合并打包
+-c：清空编译缓存和预览模式的文件
+-D: 静态资源使用域名
+-m：使用md5管理文件版本
+-w: 开启watch功能，自动监听文件变化，进行编译
+-L：开启livereload，自动刷新浏览器
+-d：产出至指定目录或使用deploy配置中的key
+
+</pre>
+
+</body>
+</html>
