@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>meta操作</title>
+ </head>
+ <body>
+  meta操作
+
+ </body>
+</html>
+<script type="text/javascript">
+      function setMetaInitialScale(initialScale) {
+			var oMeta = document.getElementsByTagName('meta');
+		  var len = oMeta.length;
+		  for(i=0;i<len; i++) {
+			  if(oMeta[i].getAttribute('name')=='viewport') { 
+				 var content = oMeta[i].getAttribute('content');
+				 if(!content) {
+					content = "width=device-width,initial-scale=1.0,user-scalable=yes";
+				 }
+				 content = content.replace(/initial-scale=([0-9\.]*)[^,]/i, 'initial-scale='+initialScale);
+				 
+				oMeta[i].setAttribute('content', content);
+				console.log(oMeta[i].content);
+			  }
+			
+		  }
+	  }
+
+	   function setMetaInitialScale2() {
+			var _w = window.paananzu.width();
+			var _w2 = document.body.scrollWidth;
+			var initialScale = _w/_w2;
+			var oMeta = document.getElementsByTagName('meta');
+		  var len = oMeta.length;
+		  for(i=0;i<len; i++) {
+			  if(oMeta[i].getAttribute('name')=='viewport') { 
+				 var content = oMeta[i].getAttribute('content');
+				 if(!content) {
+					content = "width=device-width,initial-scale=1.0,user-scalable=yes";
+				 }
+				 content = content.replace(/initial-scale=([0-9\.]*)[^,]/i, 'initial-scale='+initialScale);
+				 
+				oMeta[i].setAttribute('content', content);
+				console.log(oMeta[i].content);
+			  }
+			
+		  }
+	  }
+window.onload=function() {
+	 // setMetaInitialScale("2.1");
+	  setMetaInitialScale2(33);
+}
+</script>
