@@ -50,11 +50,12 @@ var $ = require('common:zepto'),appApi = require(':app/app.js'), log = require("
 		function _init() {
 			//所有页面在通用业务逻辑
 			var sceneid = $.ananzu.appApi.getSceneid();
-			if(sceneid==3) {
-				$('.J_az_header').show();
+			if(sceneid==1 || sceneid==4) {
+                //app内
+                $('.J_az_header').hide();
 			} else {
-				//app内
-				$('.J_az_header').hide();
+
+				$('.J_az_header').show();
 
 			}
 			//通过class绑定通用返回事件

@@ -53,7 +53,8 @@ key
 make
  make:command         Create a new command class
  make:console         Create a new Artisan command
- make:controller      Create a new resource controller class
+ make:controller      Create a new resource controller class创建1个控制器类，
+                    如：/usr/local/php56/bin/php artisan make:controller JellyController
  make:event           Create a new event class
  make:middleware      Create a new middleware class
  make:migration       Create a new migration file
