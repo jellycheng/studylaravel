@@ -1,0 +1,80 @@
+.form_line label.w70 {
+	text-align: right;
+}
+.select208{
+	width: 208px;
+	background-color: #ffffff;
+	border: 1px solid #d4d4d4;
+	display: inline-block;
+	vertical-align: middle;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.UserTemplate{
+	width: 60%;
+}
+.J_role_list,
+.J_org_list{
+	display: block;
+	position: absolute;
+	top: 45px;
+	right: 25px;
+	width: 39%;
+	max-height: 240px;
+	overflow-y: scroll;
+}
+.J_role_list.close,
+.J_org_list.close{
+	display: none !important;
+}
+.J_role_list .form_tree dl,
+.J_org_list .form_tree dl
+{
+	padding-left: 0;
+}
+.J_role_list .form_tree>dl
+.J_org_list .form_tree>dl{
+	margin-left: 0;
+}
+.J_role_list .form_tree>dl>dt
+.J_org_list .form_tree>dl>dt{
+	margin-left: 0;
+}
+
+/*reset table*/
+.tb_primary{
+	table-layout: fixed;
+}
+.tb_primary thead th{
+	text-align: center;
+}
+.tb_primary tbody td{
+	white-space: pre-line;
+	text-align: center;
+}
+.tb_primary thead th:nth-child(1){
+	width:15%;
+}
+.tb_primary thead th:nth-child(2){
+	width:10%;
+}
+.tb_primary thead th:nth-child(3){
+	width:25%;
+}
+.tb_primary thead th:nth-child(4){
+	width:30%;
+}
+.tb_primary thead th:nth-child(5){
+	width:20%;
+}
+
+/*reset page*/
+
+.ui-page2 .ui-page-current{
+	background: #2fa7ea !important;
+	border-color: #2fa7ea !important;
+}
+
+.ui-page2 li:hover{
+	border-color: #2fa7ea !important;
+}

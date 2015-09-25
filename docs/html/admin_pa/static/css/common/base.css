@@ -1,0 +1,339 @@
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, em, button { margin:0; padding:0; }
+html { background-color:#FFF; }
+body { background-color:#FFF; font-size:12px; line-height:1.5; font-family:Tahoma,Helvetica,arial,sans-serif; color:#333; }
+img, fieldset { margin:0; padding:0; border:0; }
+input, textarea { font-size:12px;outline:none; }
+table { border-collapse:collapse; }
+a { color:#1178ca; text-decoration:none; outline:none; }
+a:hover { text-decoration:none; color:#f5692f; }
+h1, h2, h3, h4, h5 { font-family:Helvetica Neue,Hiragino Sans GB,Microsoft Yahei,Simhei,sans-serif; }
+ul li, ol li { list-style:none; }
+input[type="button"],input[type="submit"]{-webkit-appearance:none;}
+dfn { margin-right:2px; font-style:normal; font-size:12px; font-family:Arial !important; }
+section { display:block; }
+select { padding:1px; font-family:Arial,Simsun,sans-serif; border:1px solid #BBB; background-color:#FFF; }
+.layoutfix{display:inline-block;}
+.layoutfix{display:block;overflow:hidden;}
+.basefix { *zoom:1; }
+.basefix:after { clear:both; content:'.'; display:block; height:0; overflow:hidden; }
+.inputsel { color:#b8b8b8; }
+
+.divWapper{border-bottom: 5px solid #f4682f}
+
+/*
+ * base2.0
+ * author: huangjia
+ * Date: 201408
+ * update: 20140826 竖线修改颜色
+ * update: 20150310 新增基础快捷css、copy老的base css
+ */
+
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+
+body, button, input, select, textarea {
+    font: 12px Tahoma, Helvetica Neue, Hiragino Sans GB, Microsoft Yahei, sans-serif; color: #333; line-height:1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+address, cite, dfn, em, var {
+    font-style: normal;
+}
+
+code, kbd, pre, samp {
+    font-family: courier new, courier, monospace;
+}
+
+small {
+    font-size: 12px;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+sub {
+    vertical-align: text-bottom;
+}
+
+legend {
+    color: #000;
+}
+input[type="button"], input[type="submit"] {
+    -webkit-appearance: none;
+}
+
+fieldset, img {
+    border: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+select {
+    padding: 1px;
+    font-family: Arial, Simsun, sans-serif;
+    border: 1px solid #BBB;
+    background-color: #FFF;
+}
+
+/* new clearfix */
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+* html .clearfix  {
+    zoom: 1;
+} /* IE6 */
+*:first-child+html .clearfix {
+    zoom: 1;
+} /* IE7 */
+
+
+.layoutfix {
+    display: inline-block;
+}
+
+.layoutfix {
+    display: block;
+    overflow: hidden;
+}
+
+.basefix {
+    *zoom: 1;
+}
+
+.basefix:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+
+/* 常用css样式 */
+.hide{
+    display: none;
+    overflow: hidden;
+}
+.show{
+    display: block;
+    overflow: visible;
+}
+
+/* 分割线 */
+hr.hr-slip {
+    display: block;
+    margin: 20px 0;
+    border: 0;
+    height:0;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #ffffff;
+}
+
+.fl-left{
+    float: left;
+}
+.fl-right{
+    float: right;
+}
+.clear-left{
+    clear: left;
+}
+.clear-right{
+    clear: right;
+}
+
+.fix{*zoom:1;}
+.fix:after{
+    display:block;
+    content:"clear";
+    height:0;
+    clear:both;
+    overflow:hidden;
+    visibility:hidden;
+}
+
+
+.dinl-block{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+.pos-relative{
+    position: relative;
+}
+.pos-absolute{
+    position: absolute;
+}
+
+* html .clearfix, :first-child + html .clearfix {
+    zoom: 1
+}
+
+/*超长文字截断*/
+.text-ellipsis{
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+.text-center{
+    text-align: center;
+}
+.text-left{
+    text-align: left;
+}
+.text-right{
+    text-align: right;
+}
+
+/* 竖分割线 */
+.vertical-slip{
+    margin:0 5px;
+    width: 1px;
+    height: 10px;
+    background-color: #ccc;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+.no-cursor-hander{
+    cursor:default;
+}
+
+.no-maring{
+    margin: 0!important;
+}
+.no-padding{
+    padding: 0!important;
+}
+
+/* zindex 层级控制 */
+
+/* 普通50以下 */
+.zindex-50{
+    z-index: 50;
+}
+
+/* 超普通 50 -- 100 比如屏幕幕布 */
+.zindex-100{
+    z-index: 100;
+}
+
+/* dialog */
+.zindex-500{
+    z-index: 500;
+}
+
+/* 日历 */
+.zindex-700{
+    z-index: 700;
+}
+/* 备用超高 */
+.zindex-999{
+    z-index: 999;
+}
+
+/* placeholder公用样式 */
+input, textarea { color: #000; }
+.placeholder { color: #aaa; }
+
+/* build Date:2015-01-12 6:02:47 PM author:huangjia */
+
+.color-333 {
+    color: #333
+}
+
+.color-333:hover {
+    color: #fc6800
+}
+
+.color-666-6800 {
+    color: #666
+}
+
+.color-666-6800:hover, .color-fc6800 {
+    color: #fc6800
+}
+
+.color-ff8f41:hover {
+    color: #ff8f41
+}
+
+.bg-f5f5f5 {
+    background-color: #f5f5f5
+}
+
+.bg-f9f9f9 {
+    background-color: #f9f9f9
+}
+
+.color-666:hover {
+    color: #333
+}
+
+.color-666 {
+    color: #666
+}
+
+.marg-leftright-8px {
+    margin: 0 8px
+}
+
+.pad-lr-3px {
+    padding: 0 3px
+}
+
+.bor-top-e5e5e5 {
+    border-top: 1px solid #e5e5e5
+}
+
+.noboder-right {
+    border-right: 0 !important
+}
+
+.min-1000 {
+    width: auto !important;
+    width: 1000px;
+    min-width: 1000px
+}
+
+.haofang_logo {
+    float: left;
+    width: 178px;
+    height: 60px;
+    background: url(./image/logo_haofang.png) no-repeat
+}
+
+.hf-logo {
+    float:left;
+    width: 127px;
+    height: 45px;
+    background: url('./image/hf-logo.png') no-repeat;
+}

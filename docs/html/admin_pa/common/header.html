@@ -1,0 +1,53 @@
+<!Doctype html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" id="viewport" name="viewport">
+    <link rel="stylesheet" href="<!--# include file='/admin_pa/static_domain' -->css/common/reset.css" type="text/css" />
+	<link rel="stylesheet" href="<!--# include file='/admin_pa/static_domain' -->css/common/common.css" type="text/css" />
+</head>
+<body class="body_bg">
+	<div id="J_password_modify_window" style="display:none" class="password_modify_window">
+		<form id="J_form_modify_password">
+			<div class="form_line_password">
+				<label class="password_label">用户名：</label>
+				<span id="J_logined_user_name" type="text"></span>
+				<input name="account" type="hidden" value="jelly嘛"></input>
+			</div>
+			<div class="form_line_password">
+				<label class="password_label">原密码：</label>
+				<input id="J_old_password" type="password" name="password"></input>
+			</div>
+			<div class="form_line_password">
+				<label class="password_label">新密码：</label>
+				<input id="J_new_password" type="password" name="newPassword"></input>
+			</div>
+			<div class="form_line_password">
+				<label class="password_label">确认新密码：</label>
+				<input id="J_confirm_password" type="password" name="newPassword_confirmation"></input>
+			</div>
+			<div class="form_line_password">
+				<a class="btn_password" href="javascript:;" id="J_btn_confirm_passoord">确认</a>
+			</div>
+		</form>
+	</div>
+  	<div id="header">
+		<div class="logo">安安租后台支持系统</div>
+		<div class="nav_cont">
+			<div class="nav">
+				<ul id="menu_main">
+					
+						<li class=""><a href="javascript:;" >账户管理</a></li>
+						<li class="current"><a href="javascript:;" >房源管理</a></li>
+						<li class=""><a href="javascript:;" >合同管理</a></li>
+						<li class=""><a href="javascript:;" >红包管理</a></li>
+						<li class=""><a href="javascript:;" >举报管理</a></li>
+						<li class=""><a href="javascript:;" >其它</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="login">
+			<div class="login_status">您好，<span id="J_login_user_name">我是xxx</span>&nbsp;&nbsp;&nbsp;<a href="javascript:;" id="J_modify_password">修改密码</a></div>
+			<div class="login_status"><a href="login.html">退出</a></div>
+		</div>
+	</div>

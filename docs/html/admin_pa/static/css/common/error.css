@@ -1,0 +1,48 @@
+.page_empty_box { width:100%; border-bottom:10px solid #f8733a; }
+.page_empty {
+    width: 1024px;
+    height: 570px;
+    margin: 0 auto;
+    font-family: Microsoft YaHei;
+    background-image: url('../../image/img.png');
+	  background-repeat:no-repeat;
+	  background-position:100% 100%;
+}
+
+.page_empty .tips_content {
+    padding-left: 30px;
+    padding-top: 150px;
+}
+
+
+.page_empty a {
+    color: #333;
+}
+
+.page_empty a:hover {
+    color: #F5692E;
+}
+
+.page_empty .empty_tip1 {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.page_empty .empty_tip2 {
+    font-size: 32px;
+}
+
+.page_empty .empty_tip3 {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 33px;
+}
+
+.page_empty .empty_tip4 {
+    font-size: 40px;
+}
+
+
+.haofang_footer{margin-top: 0;}
+/* end */

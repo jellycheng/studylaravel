@@ -1,0 +1,114 @@
+<!--# include file="/admin_pa/common/header.html" -->
+<link rel="stylesheet" href="<!--# include file='/admin_pa/static_domain' -->css/common/form.css">
+<!--# include file="/admin_pa/common/startnav.html" -->
+<div class="form_wrap">
+	<form id="J_search_form">
+		<div class="form_line">
+			<label>区域：</label>
+			<select name="iDistrict" id="houseArea" class="select100">
+				<option value="">全部</option>
+				<option value="">浦东新区</option>
+				<option value="">徐汇区</option>
+			</select>&nbsp;&nbsp;&nbsp;&nbsp;
+			<label>板块：</label>
+			<select name="iRegion" id="housePlate" class="select105">
+				<option value="">全部</option>
+				
+					<option value="">陆家嘴</option>
+				
+			</select>
+			<label for="houseID" class="ml20">房源编号：</label><input type="text" id="houseID" class="w100" name="iHouseCode">&nbsp;&nbsp;&nbsp;&nbsp;
+			<label for="houseName">小区名称：</label><input type="text" id="houseName" class="w100" name="iHouseName">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="houseStatus">房屋状态：</label>
+			<select name="iHouseStatus" id="houseStatus" class="select100">
+				<option value="">上架</option>
+	
+				<option value="">下架</option>
+	
+			</select>&nbsp;&nbsp;&nbsp;&nbsp;
+			<label for="startTime">发布时间：</label>
+			<input type="text" value="" id="startTime" class="w100" name="sPublicTimeStart">&nbsp;&nbsp;——&nbsp;&nbsp;<input type="text" value="" id="endTime" class="w100" name="sPublicTimeEnd">
+		</div>
+		<input type="hidden" name="iPage" value="" />
+	</form>
+	<div class="form_line">
+		<input type="button" id="J_house_query" class="btn_primary" value="搜索">
+	</div>
+	<hr />
+	<div class="form_line">
+		<table class="tb_primary"> 
+			<thead>
+				<tr>
+					<th>房源编号</th>
+					<th>业主姓名</th>
+					<th>联系电话</th>
+					<th>小区名称</th>
+					<th>租赁价格<br/>（元）</th>
+					<th>面积（平米）</th>
+					<th>区域</th>
+					<th>板块</th>
+					<th>发布时间</th>
+					<th>租赁类型</th>
+					<th>状态</th>
+					<th>备注</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="userWrap">
+					<tr>
+						<td>123</td>
+						<td>sName</td>
+						<td>($record['sMobile']</td>
+						<td>($record['sPlotName']</td>
+						<td>($record['iRentelPrice']</td>
+						<td>($record['iAcreage']</td>
+						<td>($record['sArea']</td>
+						<td>($record['sPlate']</td>
+						<td>($record['sPublished']</td>
+						<td>($record['sType']</td>
+						<td>($record['sStatus']</td>
+						<td>($record['sRemark']</td>
+						<td>
+							<a href="./detail.html" target="_blank" class="opt_item">查看</a>&nbsp;&nbsp;
+							<a href="javascript:;"  class="a_reject" >驳回</a>	
+							
+						</td>
+					</tr>
+					<tr>
+						<td>123</td>
+						<td>sName</td>
+						<td>sMobile']</td>
+						<td>sPlotName']</td>
+						<td>iRentelPrice']</td>
+						<td>iAcreage']</td>
+						<td>($record['sArea']</td>
+						<td>($record['sPlate']</td>
+						<td>($record['sPublished']</td>
+						<td>($record['sType']</td>
+						<td>($record['sStatus']</td>
+						<td>($record['sRemark']</td>
+						<td>
+							<a href="./detail.html" target="_blank" class="opt_item">查看</a>&nbsp;&nbsp;
+							<a href="javascript:;"  class="a_reject" >驳回</a>	
+							
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<form class="form_window" id="reject_window">
+			<h3>确定驳回该房源吗？</h3>
+			<input type="radio" id="false_house" name="wrong" /><label for="false_house">虚假房源</label>
+			<input type="radio" id="repeat_house" name="wrong" /><label for="repeat_house">重复房源</label>
+			<textarea placeholder="其他驳回原因？" id="reject_cause"></textarea>
+		</form>
+
+	</div>
+	<!--# include file="/admin_pa/common/page.html" -->
+</div>
+
+<!--# include file="/admin_pa/common/endnav.html" -->
+<!--# include file="/admin_pa/common/footer.html" -->
+

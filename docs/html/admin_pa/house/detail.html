@@ -1,0 +1,79 @@
+<!--# include file="/admin_pa/common/header.html" -->
+<link rel="stylesheet" href="<!--# include file="/admin_pa/static_domain" -->css/common/form.css">
+<!--# include file="/admin_pa/common/startnav.html" -->
+<div class="house_detail">
+	<h3 class="house_detail_title">房源信息</h3>
+	<p class="house_detail_text">
+		房源编号：<?php echo($iHouseID); ?><br>
+		发布时间：<?php echo ($sPublicTimeStart); ?><br>
+		小区名称：<?php echo ($sLoupanName); ?><br>
+		详细地址：<?php echo ($sLoupanAddress); ?><br>
+		楼层：<?php echo ($sFloor); ?><br>
+		户型：<?php echo ($sHouseType); ?><br>
+		租赁面积：<?php echo ($sSpace); ?><br>
+		租赁报价：<?php echo ($iPrice); ?><br>
+		区域板块：<?php echo ($sRegionPlate); ?><br>
+		
+	</p>
+	<form class="J_house_details_form">
+		<label>房间配置：<input type="checkbox" name="" checked="checked" value=""></input>床</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>独立橱柜</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>游泳池</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>电梯</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>车位</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>阳台</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" checked="checked" value=""></input>家具</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>冰箱</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>宽带</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>热水器</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>空调</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" checked="checked" value=""></input>洗衣机</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" value=""></input>电视</label>&nbsp;&nbsp;
+		<label><input type="checkbox" name="" checked="checked" value=""></input>独立卫生间</label>
+	</form>
+	<p class="finish">装修：<?php echo ($sDecoration); ?></p>
+	<div class="house_detail_video house_detail_base">
+		<span>房屋视频：</span>
+		<img src="">
+	</div>
+	<div class="house_detail_images house_detail_base">
+		<span>房屋照片：</span>
+		<img src="">
+	</div>
+</div>
+<div class="owner_detail base_detail">
+	<h3 class="house_detail_title">业主信息</h3>
+	<p class="owner_detail_text house_detail_text">
+		姓名：<?php echo ($sName); ?><br>
+		电话：<?php echo ($sMobile); ?><br>
+		身份证号：<?php echo ($sCardId); ?>
+	</p>
+	<div class="id_img house_detail_base">
+		<span>身份证照片：</span>
+		<img src="">
+	</div>
+	<div class="certificate_img house_detail_base">
+		<span>房产证照片：</span>
+		<img src="">
+	</div>
+	<div class="shareBills_img house_detail_base">
+		<span>水电煤照片：</span>
+		<img src="">
+	</div>
+</div>
+<div class="lease_detail base_detail">
+	<h3 class="house_detail_title">租赁信息</h3>
+	<p class="lease_detail_text house_detail_text">
+		付款方式：<?php echo ($sPayType); ?><br>
+		租客入住时间：<?php echo ($sRzTime); ?><br>
+		租赁类型：<?php echo ($sRentType); ?><br>
+		驳回原因：<?php echo ($sRejectCause); ?>
+	</p>
+	<div class="form_line">
+		<input type="button" id="J_house_detail_query" class="btn_primary" value="驳回">
+	</div>
+</div>
+
+<!--# include file="/admin_pa/common/endnav.html" -->
+<!--# include file="/admin_pa/common/footer.html" -->
+

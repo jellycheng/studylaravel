@@ -1,0 +1,144 @@
+<!--# include file="/admin_pa/common/header.html" -->
+<link rel="stylesheet" href="<!--# include file='/admin_pa/static_domain' -->css/common/form.css">
+<br><br>
+<!--# include file="/admin_pa/common/mianbaoxie.html" -->
+<div class="form_wrap">
+	<div class="form_line">
+		<label class="w70" for="sUmAccount">UM帐号：</label><input type="text" id="sUmAccount" class="w100">&nbsp;&nbsp;&nbsp;&nbsp;
+		<label>机构：</label>
+		<?php $this->component('system:orgselect');?>
+	</div>
+	<div class="form_line">
+		<label class="w70" for="sName">姓名：</label><input type="text" id="sName" class="w100">&nbsp;&nbsp;&nbsp;&nbsp;
+		<label for="iRoleID">角色：</label>
+		<select name="iRoleID" id="iRoleID" class="select208">
+			<option value="">请选择角色</option>
+				<option value="0">管理员</option>
+				<option value="1">市场部</option>
+		</select>
+	</div>
+	<div class="form_line">
+		<input type="button" id="J_user_create" class="btn_primary" value="新增">
+		<input type="button" id="J_user_query" class="btn_primary fr" value="查询">
+	</div>
+	<hr>
+	<div class="form_line">
+		<table class="tb_primary"> 
+			<thead>
+				<tr>
+					<th>UM帐号</th>
+					<th>姓名</th>
+					<th>机构</th>
+					<th>角色</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="userWrap">
+			</tbody>
+		</table>
+	</div>
+	<div class="form_line" id="popupPaging"></div>
+</div>
+
+<div style="display:none" id="UserTemplateWrap" data="">
+	<form class="form_wrap UserTemplate fl" id="UserTemplate"  method="post">
+		<div class="form_line">
+			<input type="hidden" name="iAutoID" class="iAutoID">
+			<label class="w70" for="sUmAccount">UM账号：</label>&nbsp;
+			<input type="text" name="sUmAccount" class="sUmAccount">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="sName">姓名：</label>&nbsp;
+			<input type="text" name="sName" class="sName">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="sMobile">手机号码：</label>&nbsp;
+			<input type="text" name="sMobile" class="sMobile">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="iOrgID">组织机构：</label>&nbsp;
+			<input type="text" readonly class="iOrgID" placeholder="点击选择组织机构" />
+			<input type="hidden" name="iOrgID" class="orgdata">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="a_aRoleID">角色：</label>&nbsp;
+			<input type="text" readonly class="a_aRoleID" placeholder="点击选择角色" />
+			<input type="hidden" name="aRoleID" class="roledata">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="iUserStatus">状态：</label>&nbsp;
+			<label>
+				<input type="radio" name="iUserStatus" value="1" checked>
+				启用</label>
+			<label>
+				<input type="radio" name="iUserStatus" value="2" class="stopUse">
+				停用
+			</label>
+		</div>
+	</form>
+	<div class="J_role_list close">
+		<div class="form_tree J_role_tree">
+
+				<dl>
+					<dt>
+						<input type="checkbox" name="aRoleID" value="<?=$role['iAutoID']?>" data="<?=$role['sName']?>" class="J_role_check">
+						角色名
+					</dt>
+				</dl>
+				<dl>
+					<dt>
+						<input type="checkbox" name="aRoleID" value="<?=$role['iAutoID']?>" data="<?=$role['sName']?>" class="J_role_check">
+						角色名
+					</dt>
+				</dl>
+		</div>
+	</div>
+	<div class="J_org_list close">
+		<div class="form_tree J_org_tree J_tree_base">	
+			<?php foreach ($aOrgList as $region) {?>
+			<dl>
+				<dt>
+				<em class="minus"></em>
+				<input type="radio" name="iOrgID" value="<?=$region['iAutoID']?>"  data="<?=$region['sName']?>" class="J_org_check" />
+				<?=$region['sName']?>
+				</dt>
+				<?php if( array_key_exists('aNodes',$region) && count($region['aNodes'])>0 ){ ?>
+				<dd>
+					<?php foreach ( $region['aNodes'] as $secondRegion) {?>
+					<dl>
+						<dt>
+							<em class="minus"></em>
+							<input type="radio" name="iOrgID" value="<?=$secondRegion['iAutoID']?>" data="<?=$secondRegion['sName']?>" class="J_org_check" /><?=$secondRegion['sName']?>
+						</dt>
+						<?php if( array_key_exists('aNodes',$secondRegion) && count($secondRegion['aNodes'])>0 ){ ?>
+						<dd>
+							<?php foreach ( $secondRegion['aNodes'] as $thirdRegion) {?>
+							<dl>
+								<dt>
+								<em class="minus"></em>
+								<input type="radio" name="iOrgID" value="<?=$thirdRegion['iAutoID']?>" data="<?=$thirdRegion['sName']?>" class="J_org_check" /><?=$thirdRegion['sName']?>
+								</dt>
+								<dd>
+									<?php foreach ( $thirdRegion['aNodes'] as $fourthRegion) {?>
+									<dl>
+										<dt>
+										<input type="radio" name="iOrgID" value="<?=$fourthRegion['iAutoID']?>" data="<?=$fourthRegion['sName']?>" class="J_org_check" /><?=$fourthRegion['sName']?>
+										</dt>
+									</dl>
+									<?php } ?>
+								</dd>
+							</dl>
+							<?php } ?>
+						</dd>
+						<?php } ?>
+					</dl>
+					<?php } ?>
+				</dd>
+				<?php } ?>
+			</dl>
+			<?php } ?>
+		</div>
+	</div>
+</div>
+
+<!--# include file="../common/footer.html" -->

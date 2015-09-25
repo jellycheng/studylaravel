@@ -1,0 +1,48 @@
+<!--# include file="./common/header.html" -->
+<!--# include file="/admin_pa/common/startnav.html" -->
+<link rel="stylesheet" href="<!--# include file='/admin_pa/static_domain' -->css/common/form.css">
+<div>
+	<form class="form_wrap UserTemplate fl" id="UserTemplate"  method="post">
+		<div class="form_line">
+			<input type="hidden" name="iAutoID" class="iAutoID">
+			<label class="w70" for="sUmAccount">UM账号：</label>&nbsp;
+			<input type="text" name="sUmAccount" class="sUmAccount">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="sName">姓名：</label>&nbsp;
+			<input type="text" name="sName" class="sName">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="sMobile">手机号码：</label>&nbsp;
+			<input type="text" name="sMobile" class="sMobile">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="iOrgID">组织机构：</label>&nbsp;
+			<input type="text" readonly class="iOrgID" placeholder="点击选择组织机构" />
+			<input type="hidden" name="iOrgID" class="orgdata">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="a_aRoleID">角色：</label>&nbsp;
+			<input type="text" readonly class="a_aRoleID" placeholder="点击选择角色" />
+			<input type="hidden" name="aRoleID" class="roledata">
+		</div>
+		<div class="form_line">
+			<label class="w70" for="iUserStatus">状态：</label>&nbsp;
+			<label>
+				<input type="radio" name="iUserStatus" value="1" checked>
+				启用</label>
+			<label>
+				<input type="radio" name="iUserStatus" value="2" class="stopUse">
+				停用
+			</label>
+		</div>
+		<div class="form_line" style="text-align:center;">
+			<input type="button"  class="btn_primary" value="新增">
+		</div>
+	</form>
+	
+
+</div>
+
+<!--# include file="/admin_pa/common/endnav.html" -->
+<!--# include file="/admin_pa/common/footer.html" -->

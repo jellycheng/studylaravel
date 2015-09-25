@@ -1,0 +1,57 @@
+<style type="text/css">
+	.ui-page {
+	  margin: 5px auto;
+	  float: right;
+	}
+	.ui-page li {
+	  list-style: none;
+	  float: left;
+	  border: 1px solid #E6E6E6;
+	  background-color: #fff;
+	  margin-left: 5px;
+	  height: 28px;
+	  line-height: 28px;
+	  font-family: verdana, "微软雅黑";
+	  font-size: 12px;
+	}
+	.ui-page li:hover {
+	  border-color: #ff5f08;
+	}
+	.ui-page li.ui-page-point {
+	  border-color: #fff !important;
+	}
+	.ui-page li a {
+	  font-family: verdana, "微软雅黑";
+	  font-size: 12px;
+	  display: block;
+	  padding: 0px 11px;
+	  text-align: center;
+	  color: #666;
+	  height: 28px;
+	  line-height: 28px;
+	  text-decoration: none;
+	}
+	.ui-page .ui-page-current {
+	  padding: 0px 12px;
+	  text-align: center;
+	  background: #F5692F;
+	  color: white;
+	  border-color: #ff5f08;
+	}
+	.ui-page .ui-page-previous {
+	  background: url(<!--# include file="/admin_pa/static_domain" -->image/page/ico_pre.png) no-repeat center center;
+	}
+	.ui-page .ui-page-next {
+	  background: url(<!--# include file="/admin_pa/static_domain" -->image/page/ico_next.png) no-repeat center center;
+	}
+</style>
+<div class="form_line" id="popupPaging">
+	<ul class="ui-page undefined ui-page2">
+		<li class="ui-page-previous"><a href="javascript:void(0);" data-page="2">&lt;</a></li>
+		<li class="ui-page-current">1</li>
+		<li><a href="javascript:void(0);" data-page="2">2</a></li>
+		<li><a href="javascript:void(0);" data-page="3">3</a></li>
+		<li><a href="javascript:void(0);" data-page="4">4</a></li>
+		<li class="ui-page-next"><a href="javascript:void(0);" data-page="2">&gt;</a></li>
+	</ul>
+</div>

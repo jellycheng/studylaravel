@@ -1,0 +1,102 @@
+html{
+    height:100%;
+}
+
+.login_div{
+    border:1px #ddd solid;
+    border-top:none;
+    padding-left: 45px;
+    padding-top: 54px;
+}
+
+.login_div_title{
+    border-bottom:2px #2078c7 solid;
+    font-size:22px;
+    height:40px;
+    line-height:36px;
+    margin-bottom:0px;
+}
+
+.login_buttom{
+	height:40px;
+    line-height:40px;
+    width: 210px;
+    font-size:16px;
+    border-radius:6px;
+}
+
+.login_div .form_line{ 
+    margin-bottom:0px;
+    height:54px;
+}
+
+body .login_div .form_line .login_buttom{
+    width:252px;
+}
+
+.forgate_password{
+    margin-bottom:52px;
+}
+
+.login_header{
+    position:relative;
+    height:70px;
+    background:#2078c7 url(./login/login_header.jpg) 0 0 no-repeat;
+    padding-left:246px;
+    .login_header_text{
+        position:absolute;
+        bottom:9px;
+        font-size:16px;
+        color:#fff;
+    }
+}
+
+.login_content{
+    height: 330px;
+    left: 50%;
+    margin: -165px auto 0 -470px;
+    position: absolute;
+    top: 50%;
+    width: 940px;
+    .login_img{
+        float:left;
+        width:514px;
+        height:300px;
+        margin-right:100px;
+        position:relative;
+        top:36px;
+    }
+}
+
+.login_footer{
+    height:116px;
+    border-top:1px #ccc solid;
+    position:absolute;
+    bottom:0px;
+    width:100%;
+    line-height: 116px;
+    text-align:center;
+    color:#999;
+}
+
+.login_form{
+    float:left;
+    width:315px;
+}
+
+
+
+#J_s_account,#J_s_passwork{
+    background:url(./login/login_input_bg.jpg) no-repeat 0 0 ;
+    padding-left:30px;
+    width:218px;
+}
+
+#J_s_account{
+    background-position:  0 0 ;
+}
+
+#J_s_passwork{
+    background-position:  0 -56px;
+}
+
