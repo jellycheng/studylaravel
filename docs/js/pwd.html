@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>密码强弱</title>
+ </head>
+ <body>
+  <pre>
+  密码强弱： 1弱，2中，3强
+
+  </pre>
+ </body>
+</html>
+<script>
+
+function getA(d){
+	var a = 0;
+	d.match(/\d/) && a++;
+	d.match(/[a-z]/) && a++;
+	d.match(/[A-Z]/) && a++;
+	return a;
+}
+alert(getA('abc'));
+alert(getA('abcA'));
+alert(getA('abcA123'));
+</script>
