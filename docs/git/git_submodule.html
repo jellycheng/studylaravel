@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>submodule操作</title>
+ </head>
+ <body>
+  <pre>
+	1. 添加submodule
+		cd /d/jellyphp/ananzu-test
+		#格式： git submodule add 仓库地址  本地目录即在当前仓库的目录
+		git submodule add git@git.ipo.com:hf-dev-fe/feather-mobile-ui.git static/commond/mod
+		此时在当前目录产生static/commond/mod文件夹及代码和 .gitmodules文件，内容如下：
+			[submodule "static/commond/mod"]
+				path = static/commond/mod
+				url = git@git.ipo.com:hf-dev-fe/feather-mobile-ui.git
+		git add .
+		git commit -m '提交代码'
+		git push origin 分支名
+	到此就完成submodule的创建
+
+	2. 另外开发用户拉取代码
+		git clone git@git.ipo.com:ananzu/ananzu-test.git
+		git submodule init
+		git submodule update
+		此时模块代码就更新下来了
+		查看模块状态 git submodule status
+	
+
+	3.删除模块
+		#git rm 本地代码模块目录 如	git rm static/commond/mod
+		删除项目根目录下.gitmodule文件中所添加的submodule配置
+		删除.git/config 文件中的配置
+			[submodule "feather-ui2"]
+				url = git@git.ipo.com:hf-dev-fe/feather-mobile-ui.git
+		git add .
+		git commit -m 'delsubmode'
+		git push origin 分支名
+
+  </pre>
+ </body>
+</html>
