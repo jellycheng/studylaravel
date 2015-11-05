@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>phpRedisAdmin</title>
+ </head>
+ <body>
+  <h1>phpRedisAdmin安装配置</h1>
+<pre>
+1. 官网： https://github.com/ErikDubbelboer/phpRedisAdmin
+2. 安装：
+	a）下载解压
+	b）进去响应目录，composer install 安装依赖代码
+	c）把includes/config.sample.inc.php 文件重名为 config.inc.php
+	d）config.inc.php文件配置参考：
+	$config = array(
+		  'servers' => array(#配置redis服务器
+			array(
+			  'name'   => 'local server', // Optional name.
+			  'host'   => '127.0.0.1',
+			  'port'   => 6379,
+			  'filter' => '*',
+			  // Optional Redis authentication.
+			  //'auth' => 'redispasswordhere' // Warning: The password is sent in plain-text to the Redis server.
+			),
+			array(
+			  'name'   => 'qa环境', // Optional name.
+			  'host'   => '10.59.72.32',
+			  'port'   => 6379,
+			  'filter' => '*',
+			  // Optional Redis authentication.
+			  //'auth' => 'redispasswordhere' // Warning: The password is sent in plain-text to the Redis server.
+			),
+			array(
+			  'name'   => 'dev环境', // Optional name.
+			  'host'   => '10.59.72.31',
+			  'port'   => 6379,
+			  'filter' => '*',
+			  // Optional Redis authentication.
+			  //'auth' => 'redispasswordhere' // Warning: The password is sent in plain-text to the Redis server.
+			),
+			/*array(
+			  'host' => 'localhost',
+			  'port' => 6380
+			),*/
+			/*array(
+			  'name'      => 'local db 2',
+			  'host'      => 'localhost',
+			  'port'      => 6379,
+			  'db'        => 1,             // Optional database number, see http://redis.io/commands/select
+			  'databases' => 1,             // Optional number of databases (prevents use of CONFIG command).
+			  'filter'    => 'something:*', // Show only parts of database for speed or security reasons.
+			  'seperator' => '/',           // Use a different seperator on this database (default uses config default).
+			  'flush'     => false,         // Set to true to enable the flushdb button for this instance.
+			  'charset'   => 'cp1251',      // Keys and values are stored in redis using this encoding (default utf-8).
+			  'keys'      => false,         // Use the old KEYS command instead of SCAN to fetch all keys for this server (default uses config default).
+			  'scansize'  => 1000           // How many entries to fetch using each SCAN command for this server (default uses config default).
+			),*/
+		  ),
+		
+			 ...
+	);
+
+
+
+//获取模块支持的所有方法
+print_r(get_extension_funcs("xml"));
+
+a.php文件内容： print_r(get_loaded_extensions()); 获取所有支持的扩展，等价 /data1/env/php-fpm/bin/php -m
+
+/data1/env/php-fpm/bin/php a.php |grep -i redis
+
+
+var_dump(extension_loaded('gd')); 判断指定的扩展是否存在及加载
+
+var_dump(class_exists('redis'));
+
+//反射类中支持的方法
+$obj = new ReflectionClass('redis');
+$method = $obj->getMethods();
+var_dump($method);
+
+#反射指定方法的参数
+$obj = new ReflectionClass('redis');
+$methodObj = $obj->getMethod('set');
+$param = $methodObj->getParameters();
+var_dump($param);
+
+
+
+redis.so扩展： https://github.com/phpredis/phpredis/blob/develop/redis.c
+	https://github.com/phpredis/phpredis
+
+
+
+php socket连接redis：  https://github.com/jdp/redisent.git
+
+</pre>
+
+ </body>
+</html>

