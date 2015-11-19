@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>你命里缺什么？</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />		
+		<link href="./css/que.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+
+<div style="text-align:center;">
+</div>
+<div class="share" id="share" onclick="document.getElementById('share').style.display='block'">
+	<img width="85%" src="./img/share.png">
+</div>
+
+		<div class="page1">
+			<div class="title">
+				你命里缺什么？				
+				<p>你知道自己命里缺什么吗？</p>
+			</div>
+			<img src="./img/cover.jpg" class="funny-img">
+			<center>
+				<form method="get" action="index.php" onsubmit="return checkSub();">
+					<input type="text" class="input-name" name="name" id="grow_name" placeholder="请输入你的名字"><br>
+					<input type="hidden" name="t" value="">
+					<input type="submit" class="btn-start" value="开始测试">
+				</form>
+			</center>		
+		</div>
+
+
+	   <div class="page2">
+			<section class="section">
+			    <div class="word-wrap"><font color="#EE7600">搜索</font>命里缺：<font color="#EE7600">安全感！</font></div>
+			</section>
+		<img src="./img/5.gif" class="funny-img">
+		<br>
+
+			
+
+			
+			<input style="width: 45%;float: left;margin-left: 3%;" type="button" class="btn-share" value="分享出去" onclick="document.getElementById('share').style.display='inline'">
+			
+			<input style="width: 45%;margin-left: 3%;" type="button" class="btn-start-r" value="更多好玩" onclick="return false;">
+
+		</div>
+
+<div style="text-align: center;margin: 0 auto;width:100%;line-height:34px;font-size:1.2em;">
+  
+
+</div>
+
+
+<div style="margin-bottom:70px;">
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+		function checkSub() { 
+			if (getId('grow_name').value == '') {
+				return false;
+			}
+			return true;
+		}
+
+		function getId(id) {
+			return document.getElementById(id);
+		}
+
+getId('share').addEventListener('click', function(){
+	getId('share').style.display = 'none';
+}, false);
+
+</script>
