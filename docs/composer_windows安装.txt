@@ -1,0 +1,25 @@
+
+
+
+window下安装：
+	方式1： php -r "readfile('https://getcomposer.org/installer');" | php
+		使用： php D:/jellytools/composer/composer.phar install 
+	方式2：  https://getcomposer.org/Composer-Setup.exe 安装这个
+		安装前设置
+			a）php环境变量： PATH=D:\php-5.6.15
+			b）配置php.ini文件：
+				extension_dir = "ext"
+				extension=php_openssl.dll
+				extension=php_curl.dll
+				extension=php_mbstring.dll
+				extension=php_pdo_mysql.dll
+				extension=php_mysql.dll
+				extension=php_mysqli.dll
+		点击 Composer-Setup.exe 安装 选择php.exe文件位置。-》点击下一步 安装位置 为：  C:\ProgramData\ComposerSetup\bin
+			其实就是三个文件：composer.phar 、 composer.bat 、 composer
+		在cmd中就可以查看版本 composer -V 
+			使用 composer install
+
+		composer.bat文件内容：
+		@ECHO OFF
+		php "%~dp0composer.phar" %*
