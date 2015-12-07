@@ -1,0 +1,7 @@
+
+
+ ulimit -n
+
+ mysql的 open_files_limit配置
+ 查看： show variables like '%open%';
+
