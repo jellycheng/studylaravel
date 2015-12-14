@@ -1,0 +1,20 @@
+
+
+ public function runCLI() {
+        if (isset($_SERVER['argv'][1])) {
+            $filename = dirname(__DIR__) . "/Command/{$_SERVER['argv'][1]}.php";
+            if (file_exists($filename)) {
+                include_once $filename;
+                $className = "App\Command\\{$_SERVER['argv'][1]}";
+                return new $className($_SERVER['argv'], $_SERVER['argc']);
+            }
+            echo "Undefined {$_SERVER['argv'][1]}";
+        }
+        echo 'Usage: php Toknot.php command
+            command :
+                CreateApp           Create a application follow one by one
+                GeneratePassword    Use current configure encrypt text
+                CreateUserTable     Create User table
+';
+    }
+
