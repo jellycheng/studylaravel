@@ -5,3 +5,5 @@
  mysql的 open_files_limit配置
  查看： show variables like '%open%';
 
+需求收集-》需求原型+prd讨论-》技术方案-》开发－》提测－》测试完毕－》合develop－》产品体验－》通过上线-》产品验收
+
