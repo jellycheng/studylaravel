@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>js函数处理</title>
+ </head>
+ <body>
+  
+ </body>
+</html>
+<script>
+function hyphen(target) {
+    //转换为连字符线风格： 在大写字母之前加-，然后全部转为小写字符串  如abcXYz =》 abc-xyz
+    return target.replace(/([a-z\d])([A-Z]+)/g, "$1-$2").toLowerCase()
+}
+
+//alert(hyphen("abcXYz")); //abcXYz =》 abc-xyz
+//alert(hyphen("中国AbcXYz"));//中国AbcXYz => 中国abc-xyz
+//alert(hyphen("中国12AbcXYz"));//中国12AbcXYz => 中国12-abc-xyz
+
+
+
+function camelize(target) {
+    //提前判断，提高getStyle等的效率
+    if (!target || target.indexOf("-") < 0 && target.indexOf("_") < 0) {
+        return target
+    }
+    //转换为驼峰风格
+    return target.replace(/[-_][^-_]/g, function (match) {
+        return match.charAt(1).toUpperCase()
+    })
+}
+
+document.writeln(camelize("abc-123"));//abc123
+document.writeln(camelize("abc-xyz-hij123"));//abcXyzHij123
+document.writeln(camelize("abc-xyz_hij123"));//abcXyzHij123 
+document.writeln(camelize("why"));//why 
+
+</script>
