@@ -1,0 +1,24 @@
+
+
+dns解析
+sudo su -
+ cd /var/named/dev/
+vi chjs_anhouse_com_cn.conf
+$ORIGIN dev.anhouse.com.cn.
+*.jellyaaz		IN	A	10.59.72.122
+*.jellyaaz.s		IN	A	10.59.72.122
+*.huhuajie		IN	A	10.59.72.122
+*.huhuajie.s		IN	A	10.59.72.122
+*.qianlong		IN	A	10.59.72.122
+*.qianlong.s		IN	A	10.59.72.122
+*.zhengshanshan		IN	A	10.59.72.122
+*.zhengshanshan.s		IN	A	10.59.72.122
+*.jchao		IN	A	10.59.72.122
+*.jchao.s		IN	A	10.59.72.122
+
+*.dongyongsheng		IN	A	10.59.72.122
+*.dongyongsheng.s		IN	A	10.59.72.122
+      
+ dig api.dongyongsheng.dev.anhouse.com.cn
+./reload.sh
+./flush_dns.sh 
