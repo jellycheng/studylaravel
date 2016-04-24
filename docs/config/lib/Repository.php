@@ -207,7 +207,7 @@ class Repository implements ArrayAccess, ConfigContract {
 
 	protected function _value($value)
 	{
-		return $value instanceof Closure ? $value() : $value;
+		return $value instanceof \Closure ? $value() : $value;
 	}
 
 }

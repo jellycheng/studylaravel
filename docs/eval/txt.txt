@@ -2,6 +2,11 @@
 <html>
 	<p>hello</p>
 	$a=123;
-	<?php $a=1; echo $a;?>
-	<?php echo $abc;?>
+	<?php
+	//error_reporting(0);
+	$a=1;
+	echo $a;
+	 echo $abc;
+
+	 ?>
 	<?php dfad; ?>

@@ -2,16 +2,13 @@
 
 
 function share(Closure $closure)
-{	//返回闭包函数
+{	//返回闭包函数,且返回的函数执行之后返回内容不是null则最多执行一次,重复执行跟第一次执行的内容一样
 	return function($container) use ($closure)
 	{
-		// We'll simply declare a static variable within the Closures and if it has
-		// not been set we will execute the given Closures to resolve this value
-		// and return it back to these consumers of the method as an instance.
+		//闭包返回的内容,共享
 		static $object;
-
 		if (is_null($object))
-		{
+		{//已经执行过,则不再执行
 			$object = $closure($container);
 		}
 
@@ -20,11 +17,11 @@ function share(Closure $closure)
 }
 //返回一个闭包函数
 $abc = share(function($app) {
-			
-			echo 'hello ' . $app;
-
+			echo 'hello ' . $app . PHP_EOL;
+			return 'ok ' . $app . PHP_EOL;
 		});
 //var_dump($abc);
 
-$abc("world"); //调用闭包函数，并传入world参数，输出 hello world
+echo $abc("world"); //调用闭包函数，输出 hello world  ok world
+echo $abc("jelly"); // 输出 ok world
 
