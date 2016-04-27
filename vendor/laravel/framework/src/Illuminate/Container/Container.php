@@ -332,9 +332,10 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register an existing instance as shared in the container.
-	 *
-	 * @param  string  $abstract
-	 * @param  mixed   $instance
+	 * $this->instance('app', $this);
+	 * $this->instance('Illuminate\Container\Container', $this);
+	 * @param  string  $abstract 字符串|数组array('abstract'=>'别名')
+	 * @param  mixed   $instance =对象
 	 * @return void
 	 */
 	public function instance($abstract, $instance)
@@ -343,23 +344,23 @@ class Container implements ArrayAccess, ContainerContract {
 		// are using the correct name when binding the type. If we get an alias it
 		// will be registered with the container so we can resolve it out later.
 		if (is_array($abstract))
-		{	//$abstract=array('key别名值$abstract'=>'val别名key$alias');通过extractAlias提取别名，返回数组array(key名，val别名)
+		{	//$abstract=array('abstract'=>'别名');通过extractAlias提取别名，返回数组array(abstract，别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
-
+		//解决 不能互为别名
 		unset($this->aliases[$abstract]);
 
 		// We'll check to determine if this type has been bound before, and if it has
 		// we will fire the rebound callbacks registered with the container and it
 		// can be updated with consuming classes that have gotten resolved here.
-		$bound = $this->bound($abstract);//$abstrace是否是bindings，instances，aliases三个属性之一的key
+		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
 
 		$this->instances[$abstract] = $instance;
 
 		if ($bound)
-		{//是上面的三个属性key之一
+		{//是上面的三个属性key之一 则执行
 			$this->rebound($abstract);
 		}
 	}
@@ -639,18 +640,14 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
-		// If an instance of the type is currently being managed as a singleton we'll
-		// just return an existing instance instead of instantiating new instances
-		// so the developer can keep using the same objects instance every time.
+		//
 		if (isset($this->instances[$abstract]))
 		{#存在instances属性key
 			return $this->instances[$abstract];
 		}
 
 		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则原样返回
-		// We're ready to instantiate an instance of the concrete type registered for
-		// the binding. This will instantiate the types, as well as resolve any of
-		// its "nested" dependencies recursively until all have gotten resolved.
+		//
 		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
 		{#是闭包或者$concrete == $abstract， 

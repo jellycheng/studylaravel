@@ -53,10 +53,10 @@ workspace
 └─storage                           // 临时目录, 无需关心，目录包含编译后的 Blade 模板、基于文件的 session、文件缓存和其他框架产生的文件，该目录一定要可读可写
 │─public                           //web 入口，项目web入口和静态资源文件 (图片、js、css，字体等等)
 │  │ index.php
-|- vendor 目录包含你的 Composer 依赖模块及laravel框架
+|- vendor 目录包含你的Composer代码 及 依赖模块及laravel框架
 |- bootstrap 目录包含几个框架启动跟自动加载配置的文件。
-		|- app.php
-		|- autoload.php
+		|- app.php   laravel初始化,返回app对象
+		|- autoload.php  是加载composer加载器
 |- tests 自动化测试目录
 |- resources 目录包含视图、原始的资源文件 (LESS、SASS、CoffeeScript) 和「语言」文件。
 	|- views 视图模板目录
@@ -65,6 +65,15 @@ workspace
 		|- less
 	|- storage 目录包含编译后的 Blade 模板、基于文件的 session、文件缓存和其他框架产生的文件，该目录一定要可读可写。
 	
+
+字符串处理: https://github.com/danielstjules/Stringy
+
+自动加载文件:
+    "src/Illuminate/Foundation/helpers.php",
+    "src/Illuminate/Support/helpers.php"
+    src/Illuminate\Support\Arr.php
+    src/Illuminate\Support\Str.php
+    src/Illuminate\Support\Collection.php
 
 
 
