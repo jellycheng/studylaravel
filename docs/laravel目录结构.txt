@@ -76,4 +76,13 @@ workspace
     src/Illuminate\Support\Collection.php
 
 
+服务提供者思想：
+	1. 服务提供者基类： Illuminate\Support\ServiceProvider 且构造方法上接收app对象
+	2. 所有服务提供者子类继承 Illuminate\Support\ServiceProvider并实现register()方法, 也可以实现boot()方法，但boot方法一般用于注册监听事件listen
+	3. 使用命令生成服务提供者： php artisan make:provider XxxServiceProvider
+	4. 服务提供者类一般在： App/Providers/ 目录下
+	5. 典型的服务提供者： 事件服务提供者Illuminate\Events\EventServiceProvider， 路由服务提供者Illuminate\Routing\RoutingServiceProvider
+	6. app启动时就注入服务提供者，可以在config/app.php文件中配置'providers' => ['App\Providers\AppServiceProvider服务提供者类', ‘其它服务提供者类’],
+	7. 服务器提供者对象在app对象serviceProviders属性中=['服务器提供者类名1'=>'对象'，'服务器提供者类名1'=>'对象']
+
 

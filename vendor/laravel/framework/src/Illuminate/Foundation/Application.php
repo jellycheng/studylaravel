@@ -108,10 +108,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function __construct($basePath = null)
 	{
 		$this->registerBaseBindings();
-
+		//注册服务提供者, 事件服务提供者和路由服务提供者
 		$this->registerBaseServiceProviders();
 
-		$this->registerCoreContainerAliases();
+		$this->registerCoreContainerAliases();//设置别名
 
 		if ($basePath) $this->setBasePath($basePath);
 	}
@@ -147,6 +147,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	protected function registerBaseServiceProviders()
 	{
+		//调用服务提供者类的register()方法
 		$this->register(new EventServiceProvider($this));
 
 		$this->register(new RoutingServiceProvider($this));
@@ -442,7 +443,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a service provider with the application.
 	 *
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
+	 * @param  $provider = 服务提供者对象或者服务提供者类名
 	 * @param  array  $options
 	 * @param  bool   $force
 	 * @return \Illuminate\Support\ServiceProvider
@@ -452,19 +453,14 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		if ($registered = $this->getProvider($provider) && ! $force)
                                      return $registered;
 
-		// If the given "provider" is a string, we will resolve it, passing in the
-		// application instance automatically for the developer. This is simply
-		// a more convenient way of specifying your service provider classes.
 		if (is_string($provider))
 		{//是字符串则实例化类，并注入app对象
-			$provider = $this->resolveProviderClass($provider);//如new $provider($this);
+			$provider = $this->resolveProviderClass($provider);//是new $provider($this);这样代码
 		}
-		#调用执行服务提供者类的register()方法
+		#调用服务提供者类的register()方法
 		$provider->register();
 
-		// Once we have registered the service we will iterate through the options
-		// and set each of them on the application so they will be available on
-		// the actual loading of the service objects and for developer usage.
+		//
 		foreach ($options as $key => $value)
 		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
 			$this[$key] = $value;
@@ -485,14 +481,14 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the registered service provider instance if it exists.
-	 * 通过类
+	 * 通过服务提供者类对象或类名在serviceProviders数组中 来获取服务提供者对象,不存在返回null
 	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
 	 * @return \Illuminate\Support\ServiceProvider|null
 	 */
 	public function getProvider($provider)
 	{
 		$name = is_string($provider) ? $provider : get_class($provider);//服务提供者类名
-		#返回类名对应的实例化对象， 不存在则返回null
+		#函数返回数组中第一个通过给定的array_first第2个参数测试为真的元素， 不存在则返回null
 		return array_first($this->serviceProviders, function($key, $value) use ($name)
 		{// 对象 instanceof 类名
 			return $value instanceof $name;
@@ -501,7 +497,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Resolve a service provider instance from the class name.
-	 *
+	 * 实例化服务提供者
 	 * @param  string  $provider
 	 * @return \Illuminate\Support\ServiceProvider
 	 */

@@ -30,6 +30,6 @@ Application类对象的instances属性
 Psy\sh\sh();方法一开始就加载了的，文件位置：/vendor/psy/psysh/src/Psy/functions.php
 Psy命名空间的类是psr-0规范： autoload_namespaces.php文件中配置 'Psy\\' => array($vendorDir . '/psy/psysh/src'), =>文件存放位置：/vendor/psy/psysh/src/
 
-Stringy命名空间开头的类是psr-4规范： autoload_psr4.php 文件中配置 'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
+Stringy命名空间开头的类是psr-4规范且上处理字符串的类： autoload_psr4.php 文件中配置 'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
 
 

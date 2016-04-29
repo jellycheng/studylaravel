@@ -6,7 +6,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * The application instance.
-	 *
+	 * app对象
 	 * @var \Illuminate\Contracts\Foundation\Application
 	 */
 	protected $app;
@@ -52,7 +52,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * Merge the given configuration with the existing configuration.
-	 *
+	 * 为$key新增配置($path上配置文件目录+文件)
 	 * @param  string  $path
 	 * @param  string  $key
 	 * @return void

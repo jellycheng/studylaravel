@@ -13,7 +13,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The current globally available container (if any).
-	 *
+	 * app对象,
 	 * @var static
 	 */
 	protected static $instance;
@@ -34,7 +34,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The container's shared instances.
-	 *
+	 * 所有类对象,['字符串'=>对象, ]
 	 * @var array
 	 */
 	protected $instances = [];
@@ -144,7 +144,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given abstract type has been resolved.
-	 *
+	 * 是否是instances属性key或resolved属性key
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -174,42 +174,34 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function bind($abstract, $concrete = null, $shared = false)
 	{
-		// If the given types are actually an array, we will assume an alias is being
-		// defined and will grab this "real" abstract class name and register this
-		// alias with the container so that it can be used as a shortcut for it.
+		//
 		if (is_array($abstract))
 		{#array($abstract=> $alias)
 			list($abstract, $alias) = $this->extractAlias($abstract);
-
+			//设置别名属性
 			$this->alias($abstract, $alias);//$this->aliases[$alias] = $abstract;
 		}
 
-		// If no concrete type was given, we will simply set the concrete type to the
-		// abstract type. This will allow concrete type to be registered as shared
-		// without being forced to state their classes in both of the parameter.
-		$this->dropStaleInstances($abstract);#删除instances[$abstract]和aliases[$abstract]属性的key
+		#删除instances[$abstract]和aliases[$abstract]属性的key
+		$this->dropStaleInstances($abstract);
 
 		if (is_null($concrete))
 		{
-			$concrete = $abstract;//说明后面要执行build方法
+			$concrete = $abstract;
 		}
 
-		// If the factory is not a Closure, it means it is just a class name which is
-		// is bound into this container to the abstract type and we will just wrap
-		// it up inside a Closure to make things more convenient when extending.
 		if ( ! $concrete instanceof Closure)
 		{#$concrete不是闭包
+			//返回闭包,闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
 			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
-		#app对象->bind('events', function($app){}, true);  =>$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
+		#app对象->bind('events', function($app){}, true);  =>则是设置$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
 		#app对象->bind('abc', 'xyz', true);  =>$this->bindings['abc']=>array('concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true )
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
-		// If the abstract type was already resolved in this container we'll fire the
-		// rebound listener so that any objects which have already gotten resolved
-		// can have their copy of the object updated via the listener callbacks.
+		//是否是instances属性key或resolved属性key
 		if ($this->resolved($abstract))
-		{#isset（）是resolved[$abstract] 或 instances[$abstract]属性的key之一
+		{//是
 			$this->rebound($abstract);#调用一次make方法 $instance = $this->make($abstract);
 		}
 	}
@@ -219,7 +211,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @param  string  $abstract
 	 * @param  string  $concrete
-	 * @return \Closure 返回闭包，调用该返回闭包是 闭包(对象，参数)即调用对象的make(参数)或者build方法（参数）
+	 * @return \Closure 返回闭包，闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
 	 */
 	protected function getClosure($abstract, $concrete)
 	{
@@ -334,15 +326,14 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Register an existing instance as shared in the container.
 	 * $this->instance('app', $this);
 	 * $this->instance('Illuminate\Container\Container', $this);
+	 * $this->instance('path', $this->path());
 	 * @param  string  $abstract 字符串|数组array('abstract'=>'别名')
-	 * @param  mixed   $instance =对象
+	 * @param  mixed   $instance =对象|字符串
 	 * @return void
 	 */
 	public function instance($abstract, $instance)
 	{
-		// First, we will extract the alias from the abstract if it is an array so we
-		// are using the correct name when binding the type. If we get an alias it
-		// will be registered with the container so we can resolve it out later.
+		//
 		if (is_array($abstract))
 		{	//$abstract=array('abstract'=>'别名');通过extractAlias提取别名，返回数组array(abstract，别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
@@ -352,9 +343,7 @@ class Container implements ArrayAccess, ContainerContract {
 		//解决 不能互为别名
 		unset($this->aliases[$abstract]);
 
-		// We'll check to determine if this type has been bound before, and if it has
-		// we will fire the rebound callbacks registered with the container and it
-		// can be updated with consuming classes that have gotten resolved here.
+		//
 		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
 
 		$this->instances[$abstract] = $instance;
@@ -507,8 +496,8 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Call the given Closure / class@method and inject its dependencies.
-	 *
-	 * @param  callable|string  $callback=方法名或者 类名@方法名
+	 * $this->call([$provider对象, 'boot']);
+	 * @param  callable|string  $callback=方法名 或者 类名@方法名 或者 [对象, '方法名']
 	 * @param  array  $parameters
 	 * @param  string|null  $defaultMethod
 	 * @return mixed
@@ -526,8 +515,8 @@ class Container implements ArrayAccess, ContainerContract {
 	}
 
 	/**
-	 * Determine if the given string is in Class@method syntax.
-	 * 判断字符串中是否存在@符号
+	 *
+	 * 判断是否字符串且字符串中包含@符号
 	 * @param  mixed  $callback
 	 * @return bool
 	 */
@@ -632,7 +621,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Resolve the given type from the container.
 	 *
-	 * @param  string  $abstract
+	 * @param  string  $abstract 字符串
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
@@ -640,7 +629,7 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
-		//
+		//其实就是启动单例作用
 		if (isset($this->instances[$abstract]))
 		{#存在instances属性key
 			return $this->instances[$abstract];
@@ -658,17 +647,13 @@ class Container implements ArrayAccess, ContainerContract {
 			$object = $this->make($concrete, $parameters);
 		}
 
-		// If we defined any extenders for this type, we'll need to spin through them
-		// and apply them to the object being built. This allows for the extension
-		// of services, such as changing configuration or decorating the object.
+		//
 		foreach ($this->getExtenders($abstract) as $extender)
 		{//遍历extenders[$abstract]属性值
 			$object = $extender($object, $this);
 		}
 
-		// If the requested type is registered as a singleton we'll want to cache off
-		// the instances in "memory" so we can return it later without creating an
-		// entirely new instance of an object on each subsequent request for it.
+		//
 		if ($this->isShared($abstract))
 		{#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
@@ -755,7 +740,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Instantiate a concrete instance of the given type.
 	 *
-	 * @param  string  $concrete
+	 * @param  string  $concrete 字符串或闭包
 	 * @param  array   $parameters
 	 * @return mixed
 	 *
@@ -773,9 +758,7 @@ class Container implements ArrayAccess, ContainerContract {
 		//是字符串 则反射类
 		$reflector = new ReflectionClass($concrete);
 
-		// If the type is not instantiable, the developer is attempting to resolve
-		// an abstract type such as an Interface of Abstract Class and there is
-		// no binding registered for the abstractions so we need to bail out.
+		//
 		if ( ! $reflector->isInstantiable())
 		{#类不能被可实例化
 			$message = "Target [$concrete] is not instantiable.";
@@ -787,9 +770,6 @@ class Container implements ArrayAccess, ContainerContract {
 		//反射出构造方法 ，返回ReflectionMethod 对象
 		$constructor = $reflector->getConstructor();
 
-		// If there are no constructors, that means there are no dependencies then
-		// we can just resolve the instances of the objects right away, without
-		// resolving any other types or dependencies out of these containers.
 		if (is_null($constructor))
 		{#不存在构造方法
 			array_pop($this->buildStack);
@@ -799,9 +779,6 @@ class Container implements ArrayAccess, ContainerContract {
 
 		$dependencies = $constructor->getParameters();
 
-		// Once we have all the constructor's parameters we can create each of the
-		// dependency instances and then use the reflection instances to make a
-		// new instance of this class, injecting the created dependencies in.
 		$parameters = $this->keyParametersByArgument(
 			$dependencies, $parameters
 		);
@@ -1232,15 +1209,13 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Set the value at a given offset.
 	 *
-	 * @param  string  $key
-	 * @param  mixed   $value
+	 * @param  string  $key 字符串
+	 * @param  mixed   $value 值或闭包
 	 * @return void
 	 */
 	public function offsetSet($key, $value)
 	{
-		// If the value is not a Closure, we will make it one. This simply gives
-		// more "drop-in" replacement functionality for the Pimple which this
-		// container's simplest functions are base modeled and built after.
+		//值不是闭包,转成闭包
 		if ( ! $value instanceof Closure)
 		{
 			$value = function() use ($value)
