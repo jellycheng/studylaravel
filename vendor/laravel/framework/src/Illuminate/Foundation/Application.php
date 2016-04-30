@@ -67,7 +67,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * All of the registered service providers.
 	 * 存已经实例化的服务提供者对象
-	 * @var array
+	 * @var array['对象1', '对象n']
 	 */
 	protected $serviceProviders = array();
 
@@ -112,7 +112,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$this->registerBaseServiceProviders();
 
 		$this->registerCoreContainerAliases();//设置别名
-
+		//本类对象->basePath()获取的是$basePath值
 		if ($basePath) $this->setBasePath($basePath);
 	}
 
@@ -181,9 +181,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function afterLoadingEnvironment(Closure $callback)
 	{
-		return $this->afterBootstrapping(
-			'Illuminate\Foundation\Bootstrap\DetectEnvironment', $callback
-		);
+		return $this->afterBootstrapping('Illuminate\Foundation\Bootstrap\DetectEnvironment', $callback );
 	}
 
 	/**
@@ -222,16 +220,14 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Set the base path for the application.
-	 *
+	 * 重新设置app目录
 	 * @param  string  $basePath
 	 * @return $this
 	 */
 	public function setBasePath($basePath)
 	{
 		$this->basePath = $basePath;
-
 		$this->bindPathsInContainer();
-
 		return $this;
 	}
 
@@ -243,7 +239,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	protected function bindPathsInContainer()
 	{
 		$this->instance('path', $this->path());
-
 		foreach (['base', 'config', 'database', 'lang', 'public', 'storage'] as $path)
 		{
 			$this->instance('path.'.$path, $this->{$path.'Path'}());
@@ -329,15 +324,13 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function useStoragePath($path)
 	{
 		$this->storagePath = $path;
-
 		$this->instance('path.storage', $path);
-
 		return $this;
 	}
 
 	/**
 	 * Set the environment file to be loaded during bootstrapping.
-	 *
+	 * 设置.env文件
 	 * @param  string  $file
 	 * @return $this
 	 */
@@ -350,7 +343,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the environment file the application is using.
-	 *
+	 * 获取.env文件
 	 * @return string
 	 */
 	public function environmentFile()
@@ -402,7 +395,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function detectEnvironment(Closure $callback)
 	{
-		$args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+		$args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;//--env=dev 取到dev值
 
 		return $this['env'] = (new EnvironmentDetector())->detect($callback, $args);
 	}
@@ -451,10 +444,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function register($provider, $options = array(), $force = false)
 	{	//服务提供者已经实例化过则直接返回对象
 		if ($registered = $this->getProvider($provider) && ! $force)
-                                     return $registered;
+             return $registered;
 
 		if (is_string($provider))
-		{//是字符串则实例化类，并注入app对象
+		{//是字符串则实例化服务提供者类，并注入app对象
 			$provider = $this->resolveProviderClass($provider);//是new $provider($this);这样代码
 		}
 		#调用服务提供者类的register()方法
@@ -472,7 +465,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		// the provider class so it has an opportunity to do its boot logic and
 		// will be ready for any usage by the developer's application logics.
 		if ($this->booted)
-		{//调用指行$provider服务提供者的boot()方法
+		{//调用$provider服务提供者类对象的boot()方法
 			$this->bootProvider($provider);
 		}
 		//返回服务提供者对象
@@ -553,10 +546,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		}
 
 		$provider = $this->deferredServices[$service];
-
-		// If the service provider has not already been loaded and registered we can
-		// register it with the application and remove the service from this list
-		// of deferred services, since it will already be loaded on subsequent.
 		if ( ! isset($this->loadedProviders[$provider]))
 		{//未实例化 则执行服务提供者的register()方法
 			$this->registerDeferredProvider($provider, $service);
@@ -572,9 +561,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function registerDeferredProvider($provider, $service = null)
 	{
-		// Once the provider that provides the deferred service has been registered we
-		// will remove it from our local list of the deferred services with related
-		// providers so that this container does not try to resolve it out again.
 		if ($service) unset($this->deferredServices[$service]); //从延迟中移除
 
 		$this->register($instance = new $provider($this));//执行服务提供者的register()方法
@@ -640,10 +626,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function boot()
 	{
 		if ($this->booted) return;
-
-		// Once the application has booted we will also fire some "booted" callbacks
-		// for any listeners that need to do work after this initial booting gets
-		// finished. This is useful when ordering the boot-up processes we run.
 		$this->fireAppCallbacks($this->bootingCallbacks);
 		//serviceProviders属性存已经实例化的服务提供者对象,
 		array_walk($this->serviceProviders, function($p) {#执行所有服务提供者的boot方法

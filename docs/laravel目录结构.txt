@@ -75,6 +75,8 @@ workspace
     src/Illuminate\Support\Str.php
     src/Illuminate\Support\Collection.php
 
+目录思想：
+	1. Illuminate\Contracts\目录下的代码都是接口 ，按业务和功能模块区分子目录 ，如 Illuminate\Contracts\Foundation\Application接口
 
 服务提供者思想：
 	1. 服务提供者基类： Illuminate\Support\ServiceProvider 且构造方法上接收app对象
@@ -84,5 +86,29 @@ workspace
 	5. 典型的服务提供者： 事件服务提供者Illuminate\Events\EventServiceProvider， 路由服务提供者Illuminate\Routing\RoutingServiceProvider
 	6. app启动时就注入服务提供者，可以在config/app.php文件中配置'providers' => ['App\Providers\AppServiceProvider服务提供者类', ‘其它服务提供者类’],
 	7. 服务器提供者对象在app对象serviceProviders属性中=['服务器提供者类名1'=>'对象'，'服务器提供者类名1'=>'对象']
+
+$app是app对象： $app['abc']等价$app->make('abc');等价$app->不存在的属性
+	$app['abc'] = 123；等价 $app->bind('abc'，function(){return 123;}, false); 等价 $app->不存在的属性 ＝ 123；
+$app对象->singleton('events', function($app){}); 等价调用 $app对象->bind('events', function($app){}, true);
+
+限制范围内
+public function bound($abstract){
+	return isset($this->bindings[$abstract]) || isset($this->instances[$abstract]) || $this->isAlias($abstract);
+}
+
+/**
+ * 已解决
+ * 是否是instances属性key或resolved属性key
+ */
+public function resolved($abstract){
+	return isset($this->resolved[$abstract]) || isset($this->instances[$abstract]);
+}
+
+/**
+ * $name是否有别名
+ */
+public function isAlias($name){
+	return isset($this->aliases[$name]);
+}
 
 

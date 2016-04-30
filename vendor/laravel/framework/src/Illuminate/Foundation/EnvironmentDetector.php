@@ -41,12 +41,10 @@ class EnvironmentDetector {
 	 */
 	protected function detectConsoleEnvironment(Closure $callback, array $args)
 	{
-		// First we will check if an environment argument was passed via console arguments
-		// and if it was that automatically overrides as the environment. Otherwise, we
-		// will check the environment as a "web" request like a typical HTTP request.
+		//
 		if ( ! is_null($value = $this->getEnvironmentArgument($args)))
-		{
-			return head(array_slice(explode('=', $value), 1));
+		{//--env=dev
+			return head(array_slice(explode('=', $value), 1));//返回dev
 		}
 
 		return $this->detectWebEnvironment($callback);
@@ -55,8 +53,8 @@ class EnvironmentDetector {
 	/**
 	 * Get the environment argument from the console.
 	 *
-	 * @param  array  $args
-	 * @return string|null
+	 * @param  array  $args 返回数组中值以--env开头的单元值
+	 * @return string|null  如 --env=dev 或null
 	 */
 	protected function getEnvironmentArgument(array $args)
 	{

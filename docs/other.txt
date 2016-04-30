@@ -23,7 +23,7 @@ Application类对象的instances属性
     instances['path.storage']=项目根目录/storage  这个属性值可以通过app对象->useStoragePath('目录')来更改
 
 
-
+http://cn2.php.net/distributions/php-5.5.31.tar.gz
 
 
 

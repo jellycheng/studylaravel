@@ -35,14 +35,26 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * The container's shared instances.
 	 * 所有类对象,['字符串'=>对象, ]
-	 * @var array
+	 *
+	 * @var array=[
+	'app'=>app对象,
+			'Illuminate\Container\Container'=>app对象,
+	 		'app'=>app对象,
+			'path'=>项目根目录/app，
+			'path.base'=>项目根目录，
+			'path.config'=>项目根目录/config，
+			'path.database'=>项目根目录/database，
+			'path.lang'=>项目根目录/resources/lang，
+			'path.public'=>项目根目录/public，
+			'path.storage'=>项目根目录/storage，
+			'request'=>$request对象
+			];
 	 */
 	protected $instances = [];
 
 	/**
-	 * The registered type aliases.
-	 *
-	 * @var array
+	 * 存放字符串=>别名
+	 * @var array=[字符串=>别名, 'Illuminate\\Foundation\\Application'=>'app']
 	 */
 	protected $aliases = [];
 
@@ -155,7 +167,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if a given string is an alias.
-	 *
+	 * $name是否有别名
 	 * @param  string  $name
 	 * @return bool
 	 */
@@ -187,7 +199,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		if (is_null($concrete))
 		{
-			$concrete = $abstract;
+			$concrete = $abstract;//build($concrete, $param)
 		}
 
 		if ( ! $concrete instanceof Closure)
@@ -195,7 +207,7 @@ class Container implements ArrayAccess, ContainerContract {
 			//返回闭包,闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
 			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
-		#app对象->bind('events', function($app){}, true);  =>则是设置$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
+		#app对象->bind('events', function($app){}, true);=>则是设置$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
 		#app对象->bind('abc', 'xyz', true);  =>$this->bindings['abc']=>array('concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true )
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
@@ -208,7 +220,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the Closure to be used when building a type.
-	 *
+	 * $abstract==$concrete相等build,不相等make
 	 * @param  string  $abstract
 	 * @param  string  $concrete
 	 * @return \Closure 返回闭包，闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
@@ -225,7 +237,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Add a contextual binding to the container.
-	 *
+	 * 添加上下文关系
 	 * @param  string  $concrete
 	 * @param  string  $abstract
 	 * @param  \Closure|string  $implementation
@@ -237,7 +249,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register a binding if it hasn't already been registered.
-	 *
+	 * 不在限制范围内则实例化
 	 * @param  string  $abstract
 	 * @param  \Closure|string|null  $concrete
 	 * @param  bool  $shared
@@ -264,8 +276,7 @@ class Container implements ArrayAccess, ContainerContract {
 	}
 
 	/**
-	 * Wrap a Closure such that it is shared.
-	 *
+	 * 返回闭包,闭包里面的代码执行之后,如果不是返回null则不再执行且只返回上一次返回的内容
 	 * @param  \Closure  $closure
 	 * @return \Closure
 	 */
@@ -273,16 +284,11 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		return function($container) use ($closure)
 		{
-			// We'll simply declare a static variable within the Closures and if it has
-			// not been set we will execute the given Closures to resolve this value
-			// and return it back to these consumers of the method as an instance.
 			static $object;
-
 			if (is_null($object))
 			{
 				$object = $closure($container);
 			}
-
 			return $object;
 		};
 	}
@@ -421,7 +427,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Bind a new callback to an abstract's rebind event.
 	 *
 	 * @param  string    $abstract
-	 * @param  \Closure  $callback
+	 * @param  \Closure  $callback = 闭包($app对象, $abstract的对象)
 	 * @return mixed
 	 */
 	public function rebinding($abstract, Closure $callback)
@@ -508,22 +514,18 @@ class Container implements ArrayAccess, ContainerContract {
 		{//$callback=字符串存在@符号或者$defaultMethod有值
 			return $this->callClass($callback, $parameters, $defaultMethod);
 		}
-
 		$dependencies = $this->getMethodDependencies($callback, $parameters);
-
 		return call_user_func_array($callback, $dependencies);
 	}
 
 	/**
-	 *
-	 * 判断是否字符串且字符串中包含@符号
+	 * 是否字符串且字符串中包含@符号
 	 * @param  mixed  $callback
 	 * @return bool
 	 */
 	protected function isCallableWithAtSign($callback)
 	{
 		if ( ! is_string($callback)) return false;
-
 		return strpos($callback, '@') !== false;
 	}
 
@@ -604,17 +606,11 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function callClass($target, array $parameters = [], $defaultMethod = null)
 	{
 		$segments = explode('@', $target);
-
-		// If the listener has an @ sign, we will assume it is being used to delimit
-		// the class name from the handle method name. This allows for handlers
-		// to run multiple handler methods in a single class for convenience.
 		$method = count($segments) == 2 ? $segments[1] : $defaultMethod;
-
 		if (is_null($method))
 		{
 			throw new InvalidArgumentException("Method not provided.");
 		}
-
 		return $this->call([$this->make($segments[0]), $method], $parameters);
 	}
 
@@ -627,6 +623,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function make($abstract, $parameters = [])
 	{
+		//通过别名获取真实的$abstract
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
 		//其实就是启动单例作用
@@ -678,10 +675,6 @@ class Container implements ArrayAccess, ContainerContract {
 		{
 			return $concrete;
 		}
-
-		// If we don't have a registered resolver or concrete for the type, we'll just
-		// assume each type is a concrete name and will attempt to resolve it as is
-		// since the container should be able to resolve concretes automatically.
 		if ( ! isset($this->bindings[$abstract]))
 		{	//missingLeadingSlash()方法代码return is_string($abstract) && strpos($abstract, '\\') !== 0;
 			if ($this->missingLeadingSlash($abstract) &&
@@ -748,9 +741,6 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function build($concrete, $parameters = [])
 	{
-		// If the concrete type is actually a Closure, we will just execute it and
-		// hand back the results of the functions, which allows functions to be
-		// used as resolvers for more fine-tuned resolution of these objects.
 		if ($concrete instanceof Closure)
 		{#是闭包
 			return $concrete($this, $parameters);
@@ -807,9 +797,6 @@ class Container implements ArrayAccess, ContainerContract {
 		{
 			$dependency = $parameter->getClass();
 
-			// If the class is null, it means the dependency is a string or some other
-			// primitive type which we can not resolve since it is not a class and
-			// we will just bomb out with an error since we have no-where to go.
 			if (array_key_exists($parameter->name, $primitives))
 			{
 				$dependencies[] = $primitives[$parameter->name];
@@ -861,10 +848,6 @@ class Container implements ArrayAccess, ContainerContract {
 		{
 			return $this->make($parameter->getClass()->name);
 		}
-
-		// If we can not resolve the class instance, we will check to see if the value
-		// is optional, and if it is we will return the optional parameter value as
-		// the value of the dependency, similarly to how we do this with scalars.
 		catch (BindingResolutionException $e)
 		{
 			if ($parameter->isOptional())
@@ -1053,7 +1036,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Fire an array of callbacks with an object.
-	 *
+	 * $callbacks数组中每个单元都执行,且函数接收$object,$app对象
 	 * @param  mixed  $object
 	 * @param  array  $callbacks=array('函数名', '函数名2') 函数名接收参数($object, $app对象)
 	 */
@@ -1087,7 +1070,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given concrete is buildable.
-	 * 是闭包
+	 * 是闭包或2个参数完全相等
 	 * @param  mixed   $concrete
 	 * @param  string  $abstract
 	 * @return bool
