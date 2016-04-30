@@ -461,9 +461,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		//把已经实例化服务提供者对象存入属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true
 		$this->markAsRegistered($provider);
 
-		// If the application has already booted, we will call this boot method on
-		// the provider class so it has an opportunity to do its boot logic and
-		// will be ready for any usage by the developer's application logics.
+
 		if ($this->booted)
 		{//调用$provider服务提供者类对象的boot()方法
 			$this->bootProvider($provider);
@@ -501,8 +499,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Mark the given provider as registered.
-	 *
-	 * @param  \Illuminate\Support\ServiceProvider
+	 * 设置serviceProviders和loadedProviders属性归档
+	 * @param  \Illuminate\Support\ServiceProvider 服务提供者对象
 	 * @return void
 	 */
 	protected function markAsRegistered($provider)
@@ -585,6 +583,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function make($abstract, $parameters = array())
 	{
+		//返回真实的$abstract
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
 
 		if (isset($this->deferredServices[$abstract]))
@@ -639,7 +638,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Boot the given service provider.
-	 *
+	 * 存在boot方法则调用
 	 * @param  \Illuminate\Support\ServiceProvider  $provider=服务提供者类对象
 	 * @return void
 	 */

@@ -145,7 +145,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given abstract type has been bound.
-	 *
+	 * 捆绑，实例，别名
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -349,13 +349,13 @@ class Container implements ArrayAccess, ContainerContract {
 		//解决 不能互为别名
 		unset($this->aliases[$abstract]);
 
-		//
+		//是否捆绑，实例，别名
 		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
 
 		$this->instances[$abstract] = $instance;
 
 		if ($bound)
-		{//是上面的三个属性key之一 则执行
+		{//是上面的三个属性key之一 则重新捆绑
 			$this->rebound($abstract);
 		}
 	}
@@ -503,17 +503,19 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Call the given Closure / class@method and inject its dependencies.
 	 * $this->call([$provider对象, 'boot']);
-	 * @param  callable|string  $callback=方法名 或者 类名@方法名 或者 [对象, '方法名']
+	 * @param  callable|string  $callback=方法名 或者 类名@方法名 或者 [对象, '方法名'] 或 ['类名', '方法名']
 	 * @param  array  $parameters
 	 * @param  string|null  $defaultMethod
 	 * @return mixed
 	 */
 	public function call($callback, array $parameters = [], $defaultMethod = null)
 	{
+		//字符串且存在@符号 或 $defaultMethod值为真
 		if ($this->isCallableWithAtSign($callback) || $defaultMethod)
 		{//$callback=字符串存在@符号或者$defaultMethod有值
 			return $this->callClass($callback, $parameters, $defaultMethod);
 		}
+		//返回$callback函数要接收的参数
 		$dependencies = $this->getMethodDependencies($callback, $parameters);
 		return call_user_func_array($callback, $dependencies);
 	}
@@ -531,7 +533,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get all dependencies for a given method.
-	 *
+	 * 返回$callback函数要接收的参数
 	 * @param  callable|string  $callback
 	 * @param  array  $parameters
 	 * @return array
@@ -572,17 +574,16 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Get the dependency for the given call parameter.
 	 *
-	 * @param  \ReflectionParameter  $parameter 反射参数对象
-	 * @param  array  $parameters
-	 * @param  array  $dependencies
+	 * @param  \ReflectionParameter  $parameter 反射出的参数对象
+	 * @param  array  $parameters 要传递给参数的值,可选
+	 * @param  array  $dependencies 函数参数要接收的值
 	 * @return mixed
 	 */
 	protected function addDependencyForCallParameter(ReflectionParameter $parameter, array &$parameters, &$dependencies)
 	{
 		if (array_key_exists($parameter->name, $parameters))
-		{//$parameter->name 参数名
+		{//$parameter->name 参数名在$parameters数组内
 			$dependencies[] = $parameters[$parameter->name];
-
 			unset($parameters[$parameter->name]);
 		}
 		elseif ($parameter->getClass())
@@ -590,8 +591,8 @@ class Container implements ArrayAccess, ContainerContract {
 			$dependencies[] = $this->make($parameter->getClass()->name);
 		}
 		elseif ($parameter->isDefaultValueAvailable())
-		{//存在默认值
-			$dependencies[] = $parameter->getDefaultValue();//返回默认值
+		{//参数存在默认值
+			$dependencies[] = $parameter->getDefaultValue();//返回参数默认值
 		}
 	}
 
@@ -632,7 +633,7 @@ class Container implements ArrayAccess, ContainerContract {
 			return $this->instances[$abstract];
 		}
 
-		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则原样返回
+		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则带\原样返回
 		//
 		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
@@ -651,8 +652,7 @@ class Container implements ArrayAccess, ContainerContract {
 		}
 
 		//
-		if ($this->isShared($abstract))
-		{#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
+		if ($this->isShared($abstract)) {#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
 		}
 
@@ -667,7 +667,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Get the concrete type for a given abstract.
 	 *
 	 * @param  string  $abstract
-	 * @return mixed   $concrete
+	 * @return mixed   $concrete 具体的
 	 */
 	protected function getConcrete($abstract)
 	{
@@ -679,7 +679,7 @@ class Container implements ArrayAccess, ContainerContract {
 		{	//missingLeadingSlash()方法代码return is_string($abstract) && strpos($abstract, '\\') !== 0;
 			if ($this->missingLeadingSlash($abstract) &&
 				isset($this->bindings['\\'.$abstract]))
-			{//字符串且不以\开头且是命名空间方式，如abc\xyz  且\abc\xyz是bindings的key则加前缀\
+			{//字符串且不以\开头，如abc\xyz  且\abc\xyz是bindings的key则加前缀\
 				$abstract = '\\'.$abstract;
 			}
 			//原样字符串返回或者加了\的
@@ -734,7 +734,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Instantiate a concrete instance of the given type.
 	 *
 	 * @param  string  $concrete 字符串或闭包
-	 * @param  array   $parameters
+	 * @param  array   $parameters [0=>'第1个参数值', '1'=>'第2个参数值', '参数名'=>'参数名对应的值']
 	 * @return mixed
 	 *
 	 * @throws BindingResolutionException
@@ -742,51 +742,43 @@ class Container implements ArrayAccess, ContainerContract {
 	public function build($concrete, $parameters = [])
 	{
 		if ($concrete instanceof Closure)
-		{#是闭包
+		{#是闭包则闭包(app对象, 参数)
 			return $concrete($this, $parameters);
 		}
 		//是字符串 则反射类
 		$reflector = new ReflectionClass($concrete);
 
-		//
-		if ( ! $reflector->isInstantiable())
-		{#类不能被可实例化
+		if ( ! $reflector->isInstantiable()) {#类不能被可实例化
 			$message = "Target [$concrete] is not instantiable.";
-
 			throw new BindingResolutionException($message);
 		}
 		//把类名存入反射堆数组中
 		$this->buildStack[] = $concrete;
-		//反射出构造方法 ，返回ReflectionMethod 对象
+		//获取类的构造方法 ，返回ReflectionMethod 对象
 		$constructor = $reflector->getConstructor();
 
-		if (is_null($constructor))
-		{#不存在构造方法
-			array_pop($this->buildStack);
+		if (is_null($constructor)) {#不存在构造方法
+			array_pop($this->buildStack);//将数组最后一个单元弹出（出栈）
 			//直接实例化例
 			return new $concrete;
 		}
 
 		$dependencies = $constructor->getParameters();
+		//如果$parameters的key是数字下标则换成参数名做下标
+		$parameters = $this->keyParametersByArgument( $dependencies, $parameters );
 
-		$parameters = $this->keyParametersByArgument(
-			$dependencies, $parameters
-		);
-
-		$instances = $this->getDependencies(
-			$dependencies, $parameters
-		);
+		$instances = $this->getDependencies( $dependencies, $parameters );
 		//从堆中移除
 		array_pop($this->buildStack);
-		//返回类新对象，并把$instances参数给构造方法
+		//返回类对象，并把$instances参数给构造方法
 		return $reflector->newInstanceArgs($instances);
 	}
 
 	/**
 	 * Resolve all of the dependencies from the ReflectionParameters.
 	 *
-	 * @param  array  $parameters
-	 * @param  array  $primitives
+	 * @param  array  $parameters 反射出来的参数对象
+	 * @param  array  $primitives = [参数名=>值, 参数名n=>值n]
 	 * @return array
 	 */
 	protected function getDependencies($parameters, array $primitives = [])
@@ -798,15 +790,15 @@ class Container implements ArrayAccess, ContainerContract {
 			$dependency = $parameter->getClass();
 
 			if (array_key_exists($parameter->name, $primitives))
-			{
+			{//存在参数值
 				$dependencies[] = $primitives[$parameter->name];
 			}
 			elseif (is_null($dependency))
-			{
+			{//不是类对象
 				$dependencies[] = $this->resolveNonClass($parameter);
 			}
 			else
-			{
+			{//参数接收的是类对象
 				$dependencies[] = $this->resolveClass($parameter);
 			}
 		}
@@ -825,7 +817,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function resolveNonClass(ReflectionParameter $parameter)
 	{
 		if ($parameter->isDefaultValueAvailable())
-		{
+		{//获取默认值
 			return $parameter->getDefaultValue();
 		}
 
@@ -837,7 +829,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Resolve a class based dependency from the container.
 	 *
-	 * @param  \ReflectionParameter  $parameter
+	 * @param  \ReflectionParameter  $parameter 反射出来的参数
 	 * @return mixed
 	 *
 	 * @throws BindingResolutionException
@@ -846,12 +838,12 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		try
 		{
-			return $this->make($parameter->getClass()->name);
+			return $this->make($parameter->getClass()->name);//参数类名进行实例化
 		}
 		catch (BindingResolutionException $e)
 		{
 			if ($parameter->isOptional())
-			{
+			{//获取默认参数值
 				return $parameter->getDefaultValue();
 			}
 
@@ -861,9 +853,9 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * If extra parameters are passed by numeric ID, rekey them by argument name.
-	 *
-	 * @param  array  $dependencies
-	 * @param  array  $parameters
+	 * 如果$parameters的key是数字下标则换成参数名做下标
+	 * @param  array  $dependencies 反射出来的参数对象
+	 * @param  array  $parameters = [0=>值, 1=>值n]
 	 * @return array
 	 */
 	protected function keyParametersByArgument(array $dependencies, array $parameters)
@@ -1012,10 +1004,10 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get all callbacks for a given type.
-	 *
+	 * 把$abstract等于type或 $object上type对象的值做合并
 	 * @param  string  $abstract=字符串
 	 * @param  object  $object=对象
-	 * @param  array   $callbacksPerType=数组=array('$abstract类名'=>array(), )
+	 * @param  array   $callbacksPerType=数组=array('type'=>array(数组值n),'typen'=>array(数组值n), )
 	 *
 	 * @return array
 	 */

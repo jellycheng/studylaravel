@@ -87,11 +87,11 @@ workspace
 	6. app启动时就注入服务提供者，可以在config/app.php文件中配置'providers' => ['App\Providers\AppServiceProvider服务提供者类', ‘其它服务提供者类’],
 	7. 服务器提供者对象在app对象serviceProviders属性中=['服务器提供者类名1'=>'对象'，'服务器提供者类名1'=>'对象']
 
-$app是app对象： $app['abc']等价$app->make('abc');等价$app->不存在的属性
+$app是app对象： $app['abc']等价$app->make('abc');等价$app->不存在的属性  ＝》返回instances['abc']属性值
 	$app['abc'] = 123；等价 $app->bind('abc'，function(){return 123;}, false); 等价 $app->不存在的属性 ＝ 123；
 $app对象->singleton('events', function($app){}); 等价调用 $app对象->bind('events', function($app){}, true);
 
-限制范围内
+限制范围内: 捆绑，实例，别名
 public function bound($abstract){
 	return isset($this->bindings[$abstract]) || isset($this->instances[$abstract]) || $this->isAlias($abstract);
 }
@@ -111,4 +111,6 @@ public function isAlias($name){
 	return isset($this->aliases[$name]);
 }
 
+build（）－》make（）
+bind（）
 

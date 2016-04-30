@@ -18,11 +18,9 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel'); =>执行 function(app�
 		$method = ($abstract == $concrete) ? 'build' : 'make';
 		return app对象->make($concrete是App\Http\Kernel, $parameters);
 	}
-注册服务提供者： app对象->register(new EventServiceProvider($app对象));
-\Illuminate\Foundation\Application
-Application类属性：
-	1.protected static $instance;
-		static::$instance=Application对象
+注册服务提供者： app对象->register(new EventServiceProvider($app对象)服务提供者对象);
+\Illuminate\Foundation\Application 类属性：
+	    protected static $instance ＝Application对象
 			在其它地方获取Application对象方式：
 				1. \Illuminate\Container\Container::getInstance()
 				2. \Illuminate\Foundation\Application::getInstance()
@@ -30,7 +28,6 @@ Application类属性：
 				4. $app->make('app')
 
 
-	2.
 		protected $resolved = []; #bindings属性key被执行之后，会把这个属性key设置为真 array('xxx'=>true,'xx2'=>true)
 
 		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ),  #其中shared为真则实例化对象之后会存入instances属性
