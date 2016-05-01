@@ -10,7 +10,7 @@ class EventServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{
+	{	//单例
 		$this->app->singleton('events', function($app)
 		{
 			return (new Dispatcher($app))->setQueueResolver(function() use ($app)

@@ -617,7 +617,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Resolve the given type from the container.
-	 *
+	 * 获取类对象,实例化类对象
 	 * @param  string  $abstract 字符串
 	 * @param  array   $parameters
 	 * @return mixed
@@ -651,7 +651,7 @@ class Container implements ArrayAccess, ContainerContract {
 			$object = $extender($object, $this);
 		}
 
-		//
+		//单例
 		if ($this->isShared($abstract)) {#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
 		}
@@ -732,9 +732,9 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Instantiate a concrete instance of the given type.
-	 *
-	 * @param  string  $concrete 字符串或闭包
-	 * @param  array   $parameters [0=>'第1个参数值', '1'=>'第2个参数值', '参数名'=>'参数名对应的值']
+	 * 实例化对象
+	 * @param  string  $concrete 字符串类名或闭包
+	 * @param  array   $parameters 传给闭包或类构造函数的参数= [0=>'第1个参数值', '1'=>'第2个参数值', '参数名'=>'参数名对应的值']
 	 * @return mixed
 	 *
 	 * @throws BindingResolutionException
@@ -1172,7 +1172,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the value at a given offset.
-	 *
+	 * 获取类对象,实例化类对象
 	 * @param  string  $key
 	 * @return mixed
 	 */

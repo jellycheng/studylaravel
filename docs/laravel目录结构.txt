@@ -87,9 +87,12 @@ workspace
 	6. app启动时就注入服务提供者，可以在config/app.php文件中配置'providers' => ['App\Providers\AppServiceProvider服务提供者类', ‘其它服务提供者类’],
 	7. 服务器提供者对象在app对象serviceProviders属性中=['服务器提供者类名1'=>'对象'，'服务器提供者类名1'=>'对象']
 
-$app是app对象： $app['abc']等价$app->make('abc');等价$app->不存在的属性  ＝》返回instances['abc']属性值
+$app是app对象： $app['abc']等价$app->make('abc');等价$app->不存在的属性  ＝》返回instances['abc']属性值 或 调用build实例化类对象 $app->make('abc类名'，［传给构造函数参数，‘’］);
 	$app['abc'] = 123；等价 $app->bind('abc'，function(){return 123;}, false); 等价 $app->不存在的属性 ＝ 123；
-$app对象->singleton('events', function($app){}); 等价调用 $app对象->bind('events', function($app){}, true);
+$app对象->singleton('events', function($app){}); 等价调用 $app对象->bind('events', function($app){}, true); ＝》设置bindings属性
+bindings['events']=['concrete'=>function(对象1,参数1){对象1->make或build(xyz,参数1)}, 'shared'=>true];
+bindings['hello']=['concrete'=>function(对象1,参数1){对象1->make或build(hello,参数1)}, 'shared'=>true];
+bindings['xyz']=['concrete'=>闭包, 'shared'=>true｜false];
 
 限制范围内: 捆绑，实例，别名
 public function bound($abstract){
