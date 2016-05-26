@@ -9,14 +9,14 @@
                 var userAgent = navigator.userAgent.split(' ');
                 for(var i=0;i< userAgent.length ;i++){
                     if(userAgent[i].indexOf('pajelly') > -1) {
-                        var aazAgent = userAgent[i].split('-');
-                        var agent = aazAgent[1].toLowerCase();
+                        var jellyAgent = userAgent[i].split('-');
+                        var agent = jellyAgent[1].toLowerCase();
                         if(agent == 'android'){
-                            appVersion = aazAgent[2];
+                            appVersion = jellyAgent[2];
                             jellyAppApi.sceneId = 1;
                             return 1;
                         }else if(agent == 'ios'){
-                            appVersion = aazAgent[2];
+                            appVersion = jellyAgent[2];
                             jellyAppApi.sceneId = 2;
                             return 2;
                         }

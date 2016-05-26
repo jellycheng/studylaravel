@@ -1,4 +1,4 @@
-<script language="javascript" src="//www.pingan.com/app_js/sdc/prd/sdc9.js"> </script>
+<script language="javascript" src="//www.xxx.com/app_js/sdc/prd/sdc9.js"> </script>
 <script type="text/javascript">
     if (typeof(_tag) != "undefined") {
     _tag.dcsid="dcsxqgp7nakqoagskruioagxc_1k3h";

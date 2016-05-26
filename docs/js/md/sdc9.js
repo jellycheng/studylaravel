@@ -1,11 +1,11 @@
 // Modify: 8/04/2015
-// Js Version: pingan.all.1.08
+// Js Version: jelly.all.1.08
 
 function WebTrends(){
 	// begin: user modifiable
 	var a=this;
 	a.dcsid="dcs82b9ujitigdu3gaykxw0hn_5p6b";
-	a.domain="sdc.pingan.com";
+	a.domain="sdc.jelly.com";
 	a.timezone=8;
 	a.enabled=true;
 	a.i18n=true;
@@ -808,7 +808,7 @@ WebTrends.prototype.dcsGetRef = function()
         if(a.length>2) r = a[2];
     }
     
-    if((r==null||r==""||r.indexOf(this.FPCConfig.domain)!=-1||r.indexOf(".pingan.com")!=-1||r.indexOf(".4008000000.com")!=-1)&&(m==null||m==""))
+    if((r==null||r==""||r.indexOf(this.FPCConfig.domain)!=-1||r.indexOf(".jelly.com")!=-1||r.indexOf(".4008000000.com")!=-1)&&(m==null||m==""))
     {
         d.pa_ref="direct";
     }
@@ -833,7 +833,7 @@ WebTrends.prototype.dcsGetRef = function()
 };
 WebTrends.prototype.dcsgetPaCookie = function() {
 	var a = this.WT;
-    if(window.location.host.toLowerCase().indexOf("pingan.com")!=-1)
+    if(window.location.host.toLowerCase().indexOf("jelly.com")!=-1)
     {
       var gUserIdName = "PA18RUM_USER_IDENTIFIER";
       var paUserId = null;
