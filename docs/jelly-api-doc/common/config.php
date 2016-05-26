@@ -1,6 +1,6 @@
 <?php
 return array(
-		'domain'=>'http://jellyphp.com/ananzu-api-doc/',
+		'domain'=>'http://jellyphp.com/jelly-api-doc/',
 		'header'=>array(
 					'nav'=>'主标题',
 					'title'=>'章节名称',

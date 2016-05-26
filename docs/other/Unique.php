@@ -5,7 +5,7 @@
  * Desc: 产生唯一值
  */
 
-namespace Ananzu\Security;
+namespace Jelly\Security;
 
 class Unique
 {

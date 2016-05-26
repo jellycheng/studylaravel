@@ -5,7 +5,7 @@
         {"type": "vcs", "url": "git@git.ipo.com:hf-dev-0/lightservice.git"},
         {"type": "vcs", "url": "git@git.ipo.com:hf-estate-specialist/estate-lib.git"},
         {
-            "name": "paf/l5-feather",
+            "name": "jellyppp/l5-feather",
             "type": "vcs",
             "url": "git@git.ipo.com:hf-dev-0/l5-feather.git"
         },
@@ -15,7 +15,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@git.ipo.com:ananzu/ananzu-vendor.git"
+            "url": "git@git.ipo.com:jelly/jelly-vendor.git"
         },
         {
             "type": "vcs",
@@ -24,11 +24,11 @@
     ],
     "type": "project",
     "require": {
-        "paf/lightservice": "~2.0",
-        "paf/estate": "~2.0",
-        "paf/l5-feather": "v0.1.0",
-        "ananzu/ananzu": "1.1.*",
-        "paf/exception": "dev-master"
+        "jellyppp/lightservice": "~2.0",
+        "jellyppp/estate": "~2.0",
+        "jellyppp/l5-feather": "v0.1.0",
+        "jelly/jelly": "1.1.*",
+        "jellyppp/exception": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +43,7 @@
     "scripts": {
         "post-update-cmd": ["rm -rf vendor/**/**/.git"],
         "post-install-cmd": ["rm -rf vendor/**/**/.git"],
-        "update-estate": ["rm -rf vendor/paf/estate/ && composer update paf/estate"]
+        "update-estate": ["rm -rf vendor/jellyppp/estate/ && composer update jellyppp/estate"]
     },
     "config": {
         "preferred-install": "dist"

@@ -14,7 +14,7 @@ post请求http://localhost/learnlaravel/public/jellyusers/tom 则对应的方法
 
 注意 Route::controller(uri，控制器) 和 Route::controllers(数组)区别
 
-Route::group(['prefix' => 'ananzu'], function($router) {
+Route::group(['prefix' => 'jelly'], function($router) {
     Route::controllers(
         [
             'auth' => 'Auth\AuthController',

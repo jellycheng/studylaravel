@@ -33,23 +33,23 @@ var $ = require('common:zepto'),appApi = require(':app/app.js'), log = require("
 			}
 
 
-			$.ananzu = {
+			$.jelly = {
 					goBack:goBack,
 					debug:debug,
 					appApi:appApi
 				
 			};
 			/**
-			 * $.ananzu.debug($.ananzu.appApi.getSceneid());
-			 * $.ananzu.debug($.ananzuAppApi.getSceneid());
-			 * $.ananzu.debug(window.ananzuAppApi.getSceneid());
+			 * $.jelly.debug($.jelly.appApi.getSceneid());
+			 * $.jelly.debug($.jellyAppApi.getSceneid());
+			 * $.jelly.debug(window.jellyAppApi.getSceneid());
 			 */
-			$.ananzuAppApi = appApi;
+			$.jellyAppApi = appApi;
 
 
 		function _init() {
 			//所有页面在通用业务逻辑
-			var sceneid = $.ananzu.appApi.getSceneid();
+			var sceneid = $.jelly.appApi.getSceneid();
 			if(sceneid==1 || sceneid==4) {
                 //app内
                 $('.J_az_header').hide();

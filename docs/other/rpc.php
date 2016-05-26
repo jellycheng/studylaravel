@@ -1,23 +1,23 @@
 <?php
 
 return [
-	'from'   => 'ananzu-api',
+	'from'   => 'Jelly-api',
     'client' => [
-        'ananzu-service' => [//服务器组
+        'Jelly-service' => [//服务器组
             'type'     => 'http',//请求类
             'protocol' => 'jsonrpc',//数据传输协议
             'conf'     => [
-                'url' => env('DOMAIN_ANANZU_SERVICE') . '/rpc',//服务器api接口
+                'url' => env('DOMAIN_Jelly_SERVICE') . '/rpc',//服务器api接口
             ],
             'accessor' => '\\App\\Services\\Accessors\\EstateServiceAccessorWithRPC',//访问器，用于发起rpc请求, 
-							#访问器App\Services\Accessors\EstateServiceAccessorWithRPC(rpc客户端对象，route路由配置，'from来自ananzu-api'，‘服务器组名如ananzu-service’)
+							#访问器App\Services\Accessors\EstateServiceAccessorWithRPC(rpc客户端对象，route路由配置，'from来自Jelly-api'，‘服务器组名如Jelly-service’)
             'route'    => [//路由配置
                 'showHousing'             => [//方法名
                     'sModule'  => 'HousingController', //rpc模块
                     'sMethod'  => 'show',//rpc方法
                     'sVersion' => '1.0', //版本号，是服务器控制器命名空间的一部分
                 ],
-				 'generateImID'            => [//方法名    $data  = AnanzuService::generateImID(业务参数array(sToken=>123))->get();
+				 'generateImID'            => [//方法名    $data  = JellyService::generateImID(业务参数array(sToken=>123))->get();
 											//$oModule      = $this->oRPCClient->module($sModule=ImController);
 		//$mResponse    = $oModule->{$sMethod=index}(['version' => $sVersion, 'from' => $this->sFrom, 'requestTime' => $iRequestTime, 'token' => $sToken, 'trackId' => app('trackId')->get()], $aParams=业务参数);
 		//=>服务器层就路由到 App\Http\Controllers\V1.0\$sModule=ImController类的index方法(请求对象)，请求对象可以用请求对象-》get（业务参数中的key）如$request->get('sToken')

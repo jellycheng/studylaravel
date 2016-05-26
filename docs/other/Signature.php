@@ -5,7 +5,7 @@ namespace Jelly\Auth;
  * 服务器签名算法类
  *
  * Class Signature
- * @package Ananzu\Auth
+ * @package Jelly\Auth
  */
 class Signature {
 
