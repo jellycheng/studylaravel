@@ -17,6 +17,6 @@ app-deviceID： 设备唯一标识， android 设备唯一标示算法：由于a
 app-channel：	渠道
 app-deviceModel	设备型号，比如 [KONKA W850]
 app-osVersion	系统版本号
-app-type： hf－－－xx房，hft－－－xx拓，gj－－－管家，gjsh－－－管家商户，aaz－－－xx
+app-type： hf－－－xx房，hft－－－xx拓，gj－－－管家，gjsh－－－管家商户，abaz－－－xx
 
 

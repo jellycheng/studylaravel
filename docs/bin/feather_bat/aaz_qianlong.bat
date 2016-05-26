@@ -1,3 +1,3 @@
-cd /d D:\jellyphp\feather-aaz
-feather release -D -d remote_qianlong
+cd /d D:\jellyphp\feather-abaz
+feather release -D -d remote_qianxxxlong
 pause

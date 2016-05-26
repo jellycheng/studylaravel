@@ -1,2 +1,2 @@
-cd /d D:\jellyphp\feather-aaz
+cd /d D:\jellyphp\feather-abaz
 feather release -opD -d local_cjs
