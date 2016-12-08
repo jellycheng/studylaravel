@@ -113,7 +113,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$this->registerBaseServiceProviders();
 
 		$this->registerCoreContainerAliases();//设置别名
-		//本类对象->basePath()获取的是$basePath值
+		//设置app类basePath属性和instance属性key[path.项目目录代号]=目录,方便后面通过本类app对象->basePath()获取的是$basePath值
 		if ($basePath) $this->setBasePath($basePath);
 	}
 
@@ -868,6 +868,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function registerCoreContainerAliases()
 	{
 		$aliases = array(
+		    //'类代号'=>['别名1', '别名N']
 			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
 			'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
 			'auth'                 => 'Illuminate\Auth\AuthManager',

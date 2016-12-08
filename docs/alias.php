@@ -4,6 +4,7 @@ class abc {
 	protected $aliases = [];
 	public function registerCoreContainerAliases() {
 		$aliases = array(
+		    //'代号'=>['别名1','别名n']
 			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
 			'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
 			'auth'                 => 'Illuminate\Auth\AuthManager',
