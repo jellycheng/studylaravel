@@ -438,8 +438,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 * Register a service provider with the application.
 	 *
 	 * @param  $provider = 服务提供者对象或者服务提供者类名
-	 * @param  array  $options
-	 * @param  bool   $force
+	 * @param  array  $options 设置bindings[$key]属性值
+	 * @param  bool   $force 是否强制重新执行regiser（）
 	 * @return \Illuminate\Support\ServiceProvider
 	 */
 	public function register($provider, $options = array(), $force = false)
@@ -454,7 +454,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		#调用服务提供者类的register()方法
 		$provider->register();
 
-		//
 		foreach ($options as $key => $value)
 		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
 			$this[$key] = $value;

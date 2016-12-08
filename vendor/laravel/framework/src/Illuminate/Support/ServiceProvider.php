@@ -45,7 +45,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * Register the service provider.
-	 *
+	 * 负责注册相关代码，不执行业务
 	 * @return void
 	 */
 	abstract public function register();
