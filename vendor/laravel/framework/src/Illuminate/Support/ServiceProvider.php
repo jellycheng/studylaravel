@@ -52,14 +52,14 @@ abstract class ServiceProvider {
 
 	/**
 	 * Merge the given configuration with the existing configuration.
-	 * 为$key新增配置($path上配置文件目录+文件)
+	 * 为$key新增配置($path上配置文件目录+文件)，但不覆盖原来的配置
 	 * @param  string  $path
 	 * @param  string  $key
 	 * @return void
 	 */
 	protected function mergeConfigFrom($path, $key)
 	{
-		$config = $this->app['config']->get($key, []);
+		$config = $this->app['config']->get($key, []);//获取现有配置
 
 		$this->app['config']->set($key, array_merge(require $path, $config));
 	}
@@ -77,7 +77,6 @@ abstract class ServiceProvider {
 		{
 			$this->app['view']->addNamespace($namespace, $appPath);
 		}
-
 		$this->app['view']->addNamespace($namespace, $path);
 	}
 
@@ -102,15 +101,14 @@ abstract class ServiceProvider {
 	 */
 	protected function publishes(array $paths, $group = null)
 	{
-		$class = get_class($this);//获取对象的类名，如果是子类就是子类名
+		$class = get_class($this);//获取本类对象的类名，如果是子类就是子类名
 
 		if ( ! array_key_exists($class, static::$publishes))
-		{
+		{//不存在，声明一个数组
 			static::$publishes[$class] = [];
 		}
 
 		static::$publishes[$class] = array_merge(static::$publishes[$class], $paths);
-
 		if ($group)
 		{
 			static::$publishGroups[$group] = $paths;
@@ -119,7 +117,7 @@ abstract class ServiceProvider {
 
 	/**
 	 * Get the paths to publish.
-	 * 路径来发布
+	 * 路径来发布，获取配置
 	 * @param  string  $provider
 	 * @param  string  $group
 	 * @return array
@@ -140,9 +138,8 @@ abstract class ServiceProvider {
 		{
 			return [];	
 		}
-
+        //获取所有配置
 		$paths = [];
-
 		foreach (static::$publishes as $class => $publish)
 		{
 			$paths = array_merge($paths, $publish);
@@ -160,14 +157,9 @@ abstract class ServiceProvider {
 	public function commands($commands)
 	{
 		$commands = is_array($commands) ? $commands : func_get_args();
-
-		// To register the commands with Artisan, we will grab each of the arguments
-		// passed into the method and listen for Artisan "start" event which will
-		// give us the Artisan console instance which we will give commands to.
 		$events = $this->app['events'];
-
 		$events->listen('artisan.start', function($artisan) use ($commands)
-		{
+		{//监听事件
 			$artisan->resolveCommands($commands);
 		});
 	}

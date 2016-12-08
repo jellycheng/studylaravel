@@ -15,7 +15,7 @@
 		|- assets
 			|- less
 	|- storage 目录包含编译后的 Blade 模板、基于文件的 session、文件缓存和其他框架产生的文件，该目录一定要可读可写。
-	|- tests 自动化测试目录
+	|- tests 单元测试代码目录
 	|- app 目录包含应用程序的核心代码
 		|- Console 是Artisan 命令
 		|- Commands 用来放置应用程序的命

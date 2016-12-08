@@ -107,8 +107,9 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function __construct($basePath = null)
 	{
+	    //注册基本绑定，设置本类对象
 		$this->registerBaseBindings();
-		//注册服务提供者, 事件服务提供者和路由服务提供者
+		//注册基础服务提供者： 1.事件服务提供者，2.路由服务提供者
 		$this->registerBaseServiceProviders();
 
 		$this->registerCoreContainerAliases();//设置别名
@@ -133,10 +134,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	protected function registerBaseBindings()
 	{
+	    //设置本类的$instance属性值为本类对象
 		static::setInstance($this);
-
+        //设置instances属性key=》值
 		$this->instance('app', $this);
-
 		$this->instance('Illuminate\Container\Container', $this);
 	}
 

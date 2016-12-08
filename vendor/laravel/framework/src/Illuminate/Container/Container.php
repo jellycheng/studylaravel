@@ -343,7 +343,6 @@ class Container implements ArrayAccess, ContainerContract {
 		if (is_array($abstract))
 		{	//$abstract=array('abstract'=>'别名');通过extractAlias提取别名，返回数组array(abstract，别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
-
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
 		//解决 不能互为别名
@@ -351,7 +350,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		//是否捆绑，实例，别名
 		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
-
+        //设置instances属性key=》值
 		$this->instances[$abstract] = $instance;
 
 		if ($bound)
@@ -461,7 +460,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	protected function rebound($abstract)
 	{
-		$instance = $this->make($abstract);
+		$instance = $this->make($abstract);//获取对象
 
 		foreach ($this->getReboundCallbacks($abstract) as $callback)
 		{
@@ -478,7 +477,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function getReboundCallbacks($abstract)
 	{
 		if (isset($this->reboundCallbacks[$abstract]))
-		{
+		{//存在值
 			return $this->reboundCallbacks[$abstract];
 		}
 
@@ -626,22 +625,18 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		//通过别名获取真实的$abstract
 		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
-
 		//其实就是启动单例作用
 		if (isset($this->instances[$abstract]))
 		{#存在instances属性key
 			return $this->instances[$abstract];
 		}
-
 		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则带\原样返回
 		//
 		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
 		{#是闭包或者$concrete == $abstract， 
 			$object = $this->build($concrete, $parameters);//返回对象，如果$concrete是闭包则接收app对象和$parameters参数并返回对象，如果$concrete=字符串则是反射出类对象
-		}
-		else
-		{//递归实例化
+		}else {//递归实例化
 			$object = $this->make($concrete, $parameters);
 		}
 
