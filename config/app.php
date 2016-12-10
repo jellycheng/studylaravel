@@ -112,6 +112,7 @@ return [
 
 		/*
 		 * Laravel Framework Service Providers...
+		 * laravel框架自带的服务提供者类
 		 */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
@@ -138,6 +139,7 @@ return [
 
 		/*
 		 * Application Service Providers...
+		 * app自带的服务提供者类
 		 */
 		'App\Providers\AppServiceProvider',
 		'App\Providers\BusServiceProvider',
@@ -149,7 +151,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Class Aliases
+	| Class Aliases  类别名配置
 	|--------------------------------------------------------------------------
 	|
 	| This array of class aliases will be registered when this application

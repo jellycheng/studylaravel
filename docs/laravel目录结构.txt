@@ -2,9 +2,9 @@
 
 workspace
 ├─app
-│  ├─Models                         // 数据模型
-│  │                                // php artisan make:model --no-migration
-│  │
+│  ├─Models                         // 数据模型，跟db打交道
+│  │                            // php artisan make:model --no-migration
+│  ├─Modules                                           //我个人抽象出来的一层，业务逻辑层，跟db和nosql打交道，封装业务，控制器层调用Modules层类
 │  ├─Commands                       // 命令 用来放置应用程序的命
 │  │      Command.php               // php artisan make:command
 │  │
@@ -24,9 +24,8 @@ workspace
 │  │  └─Events                      // php artisan handler:event
 │  │
 │  ├─Http
-│  │  │  Kernel.php
-│  │  │  routes.php
-│  │  │
+│  │  ├─ Kernel.php
+│  │  ├─ routes.php
 │  │  ├─Controllers                 // 控制器
 │  │  │      Controller.php         // php artisan make:controller
 │  │  │
@@ -36,7 +35,7 @@ workspace
 │  │  └─Requests                    // 表单验证
 │  │          Request.php           // php artisan make:request
 │  │
-│  ├─Providers                      // 服务注册
+│  ├─Providers                      // app服务注册
 │  │
 │  └─Services                       // 服务实体,目录包含各种「辅助」服务，囊括应用程序需要的功能
 │
