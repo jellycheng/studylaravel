@@ -2,6 +2,9 @@
 
 use Closure;
 
+/**
+ * 容器接口
+ */
 interface Container {
 
 	/**

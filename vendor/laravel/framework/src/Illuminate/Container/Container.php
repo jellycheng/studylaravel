@@ -60,7 +60,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The extension closures for services.
-	 *
+	 * 扩展闭包服务, ['$abstract'=>"方法(abstract对象, app对象)", ]
 	 * @var array
 	 */
 	protected $extenders = [];
@@ -179,7 +179,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Register a binding with the container.
 	 *
-	 * @param  string|array  $abstract =字符串 或者 数组
+	 * @param  string|array  $abstract =字符串 或者 数组[$abstract=> $alias]
 	 * @param  \Closure|string|null  $concrete=闭包 或 字符串 或 null
 	 * @param  bool  $shared
 	 * @return void
@@ -188,7 +188,7 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		//
 		if (is_array($abstract))
-		{#array($abstract=> $alias)
+		{   #array($abstract=> $alias)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 			//设置别名属性
 			$this->alias($abstract, $alias);//$this->aliases[$alias] = $abstract;
@@ -203,12 +203,14 @@ class Container implements ArrayAccess, ContainerContract {
 		}
 
 		if ( ! $concrete instanceof Closure)
-		{#$concrete不是闭包
+		{#不是闭包
 			//返回闭包,闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
 			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
-		#app对象->bind('events', function($app){}, true);=>则是设置$this->bindings['events']=>array('concrete'=>function(对象){}, 'shared'=>true )
-		#app对象->bind('abc', 'xyz', true);  =>$this->bindings['abc']=>array('concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true )
+		#app对象->bind('events', function($app){闭包}, true);
+		#	=>则是设置$this->bindings['events']=['concrete'=>function(对象){}, 'shared'=>true ]
+		#app对象->bind('abc', 'xyz', true);
+		#  =>则是设置$this->bindings['abc']=['concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true]
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
 		//是否是instances属性key或resolved属性key
@@ -309,7 +311,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * "Extend" an abstract type in the container.
 	 *
 	 * @param  string    $abstract
-	 * @param  \Closure  $closure
+	 * @param  \Closure  $closure 闭包接收参数(abstract对象,app对象)
 	 * @return void
 	 *
 	 * @throws \InvalidArgumentException
@@ -339,9 +341,8 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function instance($abstract, $instance)
 	{
-		//
 		if (is_array($abstract))
-		{	//$abstract=array('abstract'=>'别名');通过extractAlias提取别名，返回数组array(abstract，别名)
+		{	//分析$abstract数组,返回['abstract','别名'];
 			list($abstract, $alias) = $this->extractAlias($abstract);
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
@@ -477,7 +478,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function getReboundCallbacks($abstract)
 	{
 		if (isset($this->reboundCallbacks[$abstract]))
-		{//存在值
+		{//存在值,值是可以被call_user_func函数调用的,并接收2个参数,分别是app对象和$abstract对应的类对象
 			return $this->reboundCallbacks[$abstract];
 		}
 
@@ -623,15 +624,15 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function make($abstract, $parameters = [])
 	{
-		//通过别名获取真实的$abstract
-		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract]  || $abstract
+		//如果$abstract是别名则返回真实的$abstract
+		$abstract = $this->getAlias($abstract);// $this->aliases[$abstract] || $abstract
 		//其实就是启动单例作用
 		if (isset($this->instances[$abstract]))
-		{#存在instances属性key
+		{	#存在instances属性key
 			return $this->instances[$abstract];
 		}
 		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则带\原样返回
-		//
+
 		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
 		{#是闭包或者$concrete == $abstract， 
@@ -642,7 +643,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		//
 		foreach ($this->getExtenders($abstract) as $extender)
-		{//遍历extenders[$abstract]属性值
+		{//遍历app对象的extenders[$abstract]属性值
 			$object = $extender($object, $this);
 		}
 
@@ -652,7 +653,7 @@ class Container implements ArrayAccess, ContainerContract {
 		}
 
 		$this->fireResolvingCallbacks($abstract, $object);
-
+		//标记make过
 		$this->resolved[$abstract] = true;
 
 		return $object;
@@ -671,7 +672,7 @@ class Container implements ArrayAccess, ContainerContract {
 			return $concrete;
 		}
 		if ( ! isset($this->bindings[$abstract]))
-		{	//missingLeadingSlash()方法代码return is_string($abstract) && strpos($abstract, '\\') !== 0;
+		{	//判断是否不以\开头的字符串 且 \$abstract已经存在则返回绝对的串否则原样返回$abstract
 			if ($this->missingLeadingSlash($abstract) &&
 				isset($this->bindings['\\'.$abstract]))
 			{//字符串且不以\开头，如abc\xyz  且\abc\xyz是bindings的key则加前缀\
@@ -701,6 +702,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Determine if the given abstract has a leading slash.
 	 *  是字符串且不以\开头  如abc， abc\xyz
+	 * 判断是否不以\开头的字符串
 	 * @param  string  $abstract
 	 * @return bool
 	 */

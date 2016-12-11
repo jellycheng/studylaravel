@@ -38,7 +38,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Indicates if the application has "booted".
-	 *
+	 * app是否启动完毕
 	 * @var bool
 	 */
 	protected $booted = false;
@@ -66,7 +66,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * All of the registered service providers.
-	 * 存已经实例化的服务提供者对象
+	 * 存已经实例化且被执行过register()方法的服务提供者对象
 	 * @var array['对象1', '对象n']
 	 */
 	protected $serviceProviders = array();
@@ -443,7 +443,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 * @return \Illuminate\Support\ServiceProvider
 	 */
 	public function register($provider, $options = array(), $force = false)
-	{	//服务提供者已经实例化过则直接返回对象
+	{	//服务提供者已实例化且执行过register()方法则返回true
 		if ($registered = $this->getProvider($provider) && ! $force)
              return $registered;
 
@@ -472,14 +472,14 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the registered service provider instance if it exists.
-	 * 通过服务提供者类对象或类名在serviceProviders数组中 来获取服务提供者对象,不存在返回null
+	 * 通过服务提供者类对象(或类名)在serviceProviders属性中查找是否存在对象,存放返回true,不存在返回null
 	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
 	 * @return \Illuminate\Support\ServiceProvider|null
 	 */
 	public function getProvider($provider)
 	{
 		$name = is_string($provider) ? $provider : get_class($provider);//服务提供者类名
-		#函数返回数组中第一个通过给定的array_first第2个参数测试为真的元素， 不存在则返回null
+		#遍历app对象的serviceProviders属性,如果值是$provider服务提供者类对象则返回真， 不存在则返回null
 		return array_first($this->serviceProviders, function($key, $value) use ($name)
 		{// 对象 instanceof 类名
 			return $value instanceof $name;
@@ -573,10 +573,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	}
 
 	/**
-	 * Resolve the given type from the container.
-	 *
-	 * (Overriding Container::make)
-	 *
+	 * 覆盖了父类的make方法
 	 * @param  string  $abstract
 	 * @param  array   $parameters
 	 * @return mixed
