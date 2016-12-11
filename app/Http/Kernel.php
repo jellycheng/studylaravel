@@ -6,7 +6,7 @@ class Kernel extends HttpKernel {
 
 	/**
 	 * The application's global HTTP middleware stack.
-	 *
+	 * http中间介,均实现handle()方法
 	 * @var array
 	 */
 	protected $middleware = [
@@ -20,7 +20,7 @@ class Kernel extends HttpKernel {
 
 	/**
 	 * The application's route middleware.
-	 *
+	 * 路由中间介
 	 * @var array
 	 */
 	protected $routeMiddleware = [

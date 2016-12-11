@@ -767,7 +767,7 @@ class Container implements ArrayAccess, ContainerContract {
 		$instances = $this->getDependencies( $dependencies, $parameters );
 		//从堆中移除
 		array_pop($this->buildStack);
-		//返回类对象，并把$instances参数给构造方法
+		//返回类对象，并把$instances参数给构造方法,执行构造函数
 		return $reflector->newInstanceArgs($instances);
 	}
 
@@ -791,7 +791,7 @@ class Container implements ArrayAccess, ContainerContract {
 				$dependencies[] = $primitives[$parameter->name];
 			}
 			elseif (is_null($dependency))
-			{//不是类对象
+			{//不是类对象,则获取$parameter参数默认值
 				$dependencies[] = $this->resolveNonClass($parameter);
 			}
 			else

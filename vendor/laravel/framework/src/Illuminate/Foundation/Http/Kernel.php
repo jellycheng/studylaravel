@@ -26,7 +26,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * The bootstrap classes for the application.
-	 *
+	 *  http启动时执行的类,这些类均有bootstrap(app对象)方法
 	 * @var array
 	 */
 	protected $bootstrappers = [
@@ -66,7 +66,7 @@ class Kernel implements KernelContract {
 		$this->router = $router;
 
 		foreach ($this->routeMiddleware as $key => $middleware)
-		{
+		{   //设置路由中间介
 			$router->middleware($key, $middleware);
 		}
 	}
