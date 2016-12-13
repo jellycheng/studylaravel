@@ -13,7 +13,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The current globally available container (if any).
-	 * app对象,
+	 * app对象,容器对象
 	 * @var static
 	 */
 	protected static $instance;
@@ -179,8 +179,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Register a binding with the container.
 	 *
-	 * @param  string|array  $abstract =字符串 或者 数组[$abstract=> $alias]
-	 * @param  \Closure|string|null  $concrete=闭包 或 字符串 或 null
+	 * @param  string|array  $abstract = 字符串 或者 数组[$abstract=> $alias]  抽象
+	 * @param  \Closure|string|null  $concrete=闭包 或 字符串 或 null   具体物
 	 * @param  bool  $shared
 	 * @return void
 	 */
@@ -223,8 +223,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Get the Closure to be used when building a type.
 	 * $abstract==$concrete相等build,不相等make
-	 * @param  string  $abstract
-	 * @param  string  $concrete
+	 * @param  string  $abstract 抽象
+	 * @param  string  $concrete 具体物
 	 * @return \Closure 返回闭包，闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
 	 */
 	protected function getClosure($abstract, $concrete)
@@ -240,9 +240,9 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Add a contextual binding to the container.
 	 * 添加上下文关系
-	 * @param  string  $concrete
-	 * @param  string  $abstract
-	 * @param  \Closure|string  $implementation
+	 * @param  string  $concrete 具体物
+	 * @param  string  $abstract 抽象
+	 * @param  \Closure|string  $implementation  字符串，闭包
 	 */
 	public function addContextualBinding($concrete, $abstract, $implementation)
 	{
@@ -298,7 +298,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Bind a shared Closure into the container.
 	 *
-	 * @param  string    $abstract
+	 * @param  string    $abstract 抽象
 	 * @param  \Closure  $closure
 	 * @return void
 	 */
@@ -310,7 +310,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * "Extend" an abstract type in the container.
 	 *
-	 * @param  string    $abstract
+	 * @param  string    $abstract 抽象
 	 * @param  \Closure  $closure 闭包接收参数(abstract对象,app对象)
 	 * @return void
 	 *
@@ -1060,8 +1060,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Determine if the given concrete is buildable.
 	 * 是闭包或2个参数完全相等
-	 * @param  mixed   $concrete
-	 * @param  string  $abstract
+	 * @param  mixed   $concrete 具体物
+	 * @param  string  $abstract 抽象
 	 * @return bool
 	 */
 	protected function isBuildable($concrete, $abstract)

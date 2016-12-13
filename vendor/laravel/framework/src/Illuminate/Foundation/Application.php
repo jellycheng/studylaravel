@@ -24,7 +24,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * The base path for the Laravel installation.
-	 *
+	 * 项目目录
 	 * @var string
 	 */
 	protected $basePath;
@@ -38,7 +38,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Indicates if the application has "booted".
-	 * app是否启动完毕
+	 * 是否执行过app的boot()方法
 	 * @var bool
 	 */
 	protected $booted = false;
@@ -87,7 +87,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * The custom storage path defined by the developer.
-	 *
+	 * storage目录，一般是项目目录/storage， 可以通过useStoragePath(目录)方法改变
 	 * @var string
 	 */
 	protected $storagePath;
@@ -308,7 +308,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the path to the storage directory.
-	 *
+	 * storage目录，一般是项目目录/storage
 	 * @return string
 	 */
 	public function storagePath()
@@ -318,7 +318,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Set the storage directory.
-	 *
+	 * 重新设置storage目录，一般是项目目录/storage
 	 * @param  string  $path
 	 * @return $this
 	 */
@@ -681,7 +681,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Determine if the application configuration is cached.
-	 *
+	 * 判断storage目录下/framwwork/config.php配置文件是否存在
 	 * @return bool
 	 */
 	public function configurationIsCached()
@@ -691,7 +691,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the path to the configuration cache file.
-	 *
+	 * 获取storage目录下/framwwork/config.php配置文件
 	 * @return string
 	 */
 	public function getCachedConfigPath()
@@ -701,7 +701,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Determine if the application routes are cached.
-	 *
+	 * 判断缓存路由文件是否存在
 	 * @return bool
 	 */
 	public function routesAreCached()
@@ -711,7 +711,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the path to the routes cache file.
-	 *
+	 * 路由缓存文件
 	 * @return string
 	 */
 	public function getCachedRoutesPath()
@@ -776,7 +776,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Register a terminating callback with the application.
-	 *
+	 * 注册terminating回调
 	 * @param  \Closure  $callback
 	 * @return $this
 	 */
@@ -802,7 +802,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the service providers that have been loaded.
-	 *
+	 * 获取加载的服务提供者
 	 * @return array
 	 */
 	public function getLoadedProviders()
@@ -813,7 +813,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Set the application's deferred services.
 	 *
-	 * @param  array  $services
+	 * @param  array  $services = [服务代号=>'', 服务代号2=>'',]
 	 * @return void
 	 */
 	public function setDeferredServices(array $services)
