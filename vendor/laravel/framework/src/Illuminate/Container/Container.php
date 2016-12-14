@@ -1195,7 +1195,6 @@ class Container implements ArrayAccess, ContainerContract {
 				return $value;
 			};
 		}
-
 		$this->bind($key, $value);
 	}
 
@@ -1212,7 +1211,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Dynamically access container services.
-	 *
+	 * 其实是调用本类的offsetGet($key)
 	 * @param  string  $key
 	 * @return mixed
 	 */
@@ -1223,7 +1222,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Dynamically set container services.
-	 *
+	 * 其实是调用本类的offsetSet($key, $value)
 	 * @param  string  $key
 	 * @param  mixed   $value
 	 * @return void

@@ -40,7 +40,7 @@ $this->bindings = [
 $this->instances = ['代号如path'=>'值'，'代号2'=>对象];
 $this->loadedProviders['provider类名'] = true;
 $this->serviceProviders[]=服务提供者对象
-$this->deferredServices = ['$abstract'=>'',]
+$this->deferredServices = ['$abstract'=>'provider类名',]
 $this->bootingCallbacks[] = 闭包
 $this->bootedCallbacks[] =
 $this->terminatingCallbacks[]=

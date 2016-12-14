@@ -31,7 +31,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Indicates if the application has been bootstrapped before.
-	 *
+	 * 是否批量执行$bootstrapper对象的bootstrap(app对象)方法
 	 * @var bool
 	 */
 	protected $hasBeenBootstrapped = false;
@@ -156,8 +156,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Run the given array of bootstrap classes.
-	 *
-	 * @param  array  $bootstrappers
+	 * 批量执行$bootstrapper对象的bootstrap(app对象)方法
+	 * @param  array  $bootstrappers=[$bootstrapper1对象, $bootstrapper2,$bootstrapperN]
 	 * @return void
 	 */
 	public function bootstrapWith(array $bootstrappers)
@@ -354,7 +354,9 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get or check the current application environment.
-	 *
+	 * app对象->environment()返回所有环境
+     * app对象->environment('环境代号1');返回是否存在环境代号1
+     * app对象->environment('环境代号1','环境代号2', '环境代号N');返回是否存在环境代号1或2或N，其中的一个
 	 * @param  mixed
 	 * @return string
 	 */
@@ -390,8 +392,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Detect the application's current environment.
-	 *
-	 * @param  \Closure  $callback
+	 *  设置环境值， 如果cli方式则先分析参数中是否存在--env=环境代号，没有则通过回调闭包函数获取环境代号
+	 * @param  \Closure  $callback  闭包，提供给call_user_func（$callback）调用
 	 * @return string
 	 */
 	public function detectEnvironment(Closure $callback)
@@ -403,7 +405,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Determine if we are running in the console.
-	 *
+	 * 是否cli执行
 	 * @return bool
 	 */
 	public function runningInConsole()
@@ -413,7 +415,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Determine if we are running unit tests.
-	 *
+	 * 环境是否为执行单元测试
 	 * @return bool
 	 */
 	public function runningUnitTests()
@@ -423,7 +425,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Register all of the configured providers.
-	 *
+	 * 把服务提供者类cache到指定json文件中
 	 * @return void
 	 */
 	public function registerConfiguredProviders()
@@ -436,7 +438,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Register a service provider with the application.
-	 *
+	 * 注册服务提供者并执行其register()方法
 	 * @param  $provider = 服务提供者对象或者服务提供者类名
 	 * @param  array  $options 设置bindings[$key]属性值
 	 * @param  bool   $force 是否强制重新执行regiser（）
@@ -519,9 +521,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function loadDeferredProviders()
 	{
-		// We will simply spin through each of the deferred providers and register each
-		// one and boot them if the application has booted. This should make each of
-		// the remaining services available to this application for immediate use.
 		foreach ($this->deferredServices as $service => $provider)
 		{
 			$this->loadDeferredProvider($service);
@@ -542,7 +541,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		{
 			return;
 		}
-
 		$provider = $this->deferredServices[$service];
 		if ( ! isset($this->loadedProviders[$provider]))
 		{//未实例化 则执行服务提供者的register()方法
@@ -553,7 +551,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a deferred provider and service.
 	 *
-	 * @param  string  $provider
+	 * @param  string  $provider 服务提供者类
 	 * @param  string  $service
 	 * @return void
 	 */
@@ -616,7 +614,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Boot the application's service providers.
-	 *
+	 * 一个app对象该方法只会执行一次
 	 * @return void
 	 */
 	public function boot()
@@ -635,7 +633,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Boot the given service provider.
-	 * 存在boot方法则调用
+	 * 服务提供者类存在boot方法则调用其boot方法
 	 * @param  \Illuminate\Support\ServiceProvider  $provider=服务提供者类对象
 	 * @return void
 	 */
@@ -756,7 +754,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Throw an HttpException with the given data.
-	 *
+	 * 抛异常
 	 * @param  int     $code
 	 * @param  string  $message
 	 * @param  array   $headers
@@ -834,7 +832,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the current application locale.
-	 *
+	 * 获取config/app.php中locale配置key对应的值
 	 * @return string
 	 */
 	public function getLocale()
