@@ -134,7 +134,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if a given string is resolvable.
-	 *
+	 * 等价本类bound($abstract)方法
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -194,7 +194,7 @@ class Container implements ArrayAccess, ContainerContract {
 			$this->alias($abstract, $alias);//$this->aliases[$alias] = $abstract;
 		}
 
-		#删除instances[$abstract]和aliases[$abstract]属性的key
+		#删除以前实例化或绑定的，instances[$abstract]和aliases[$abstract]属性的key
 		$this->dropStaleInstances($abstract);
 
 		if (is_null($concrete))
@@ -251,7 +251,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register a binding if it hasn't already been registered.
-	 * 不在限制范围内则实例化
+	 * 如果没有bind则bind
 	 * @param  string  $abstract
 	 * @param  \Closure|string|null  $concrete
 	 * @param  bool  $shared
@@ -267,7 +267,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register a shared binding in the container.
-	 *
+	 * 单例方式绑定
 	 * @param  string  $abstract
 	 * @param  \Closure|string|null  $concrete
 	 * @return void
@@ -297,7 +297,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Bind a shared Closure into the container.
-	 *
+	 * 绑定一个共享闭包结果
 	 * @param  string    $abstract 抽象
 	 * @param  \Closure  $closure
 	 * @return void
