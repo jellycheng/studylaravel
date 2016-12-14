@@ -463,7 +463,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 
 		if ($this->booted)
-		{//调用$provider服务提供者类对象的boot()方法
+		{//调用过app对象的boot()方法，则调用$provider服务提供者类对象的boot()方法
 			$this->bootProvider($provider);
 		}
 		//返回服务提供者对象

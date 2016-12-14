@@ -349,7 +349,7 @@ class Container implements ArrayAccess, ContainerContract {
 		//解决 不能互为别名
 		unset($this->aliases[$abstract]);
 
-		//是否捆绑，实例，别名
+		//是否捆绑，实例，别名， 如果$abstract一样重复调用则一定是返回true
 		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
         //设置instances属性key=》值
 		$this->instances[$abstract] = $instance;

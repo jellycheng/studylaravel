@@ -1,5 +1,4 @@
 ## learn Laravel PHP Framework
-
 ### Laravel项目目录结构说明：
 	|- vendor 目录包含你的 Composer 依赖模块及laravel框架。
 	|- bootstrap 目录包含几个框架启动跟自动加载配置的文件。
@@ -31,7 +30,13 @@
 		|- Exceptions 应用程序的异常处理进程，
 		|- Services 目录包含各种「辅助」服务，囊括应用程序需要的功能。
 		|- Providers 
+		|- Model  开发自加的，存放db模型类，一个表一个文件，一个db一个文件夹
+		|- Modules 业务聚合类
     |-artisan 是cli脚本入口
 
 
+
+https://cs.laravel-china.org/
+PHP 标准规范中文版: https://psr.phphub.org/
+http://www.php-fig.org/
 

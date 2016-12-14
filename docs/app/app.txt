@@ -38,8 +38,8 @@ $this->bindings = [
                     $abstract3=>['concrete'=>function(对象){ }, 'shared'=>false ],
                     ];
 $this->instances = ['代号如path'=>'值'，'代号2'=>对象];
-$this->loadedProviders[] = '';
-$this->serviceProviders[]=
+$this->loadedProviders['provider类名'] = true;
+$this->serviceProviders[]=服务提供者对象
 $this->deferredServices = ['$abstract'=>'',]
 $this->bootingCallbacks[] = 闭包
 $this->bootedCallbacks[] =
