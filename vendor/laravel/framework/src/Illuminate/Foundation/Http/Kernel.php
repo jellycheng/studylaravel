@@ -66,8 +66,8 @@ class Kernel implements KernelContract {
 		$this->router = $router;
 
 		foreach ($this->routeMiddleware as $key => $middleware)
-		{   //设置路由中间介
-			$router->middleware($key, $middleware);
+		{   //设置路由对象的属性middleware（把在kernel中配置的中间介传给路由属性）
+			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
 		}
 	}
 
@@ -185,7 +185,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Bootstrap the application for HTTP requests.
-	 *
+	 * 启动http
 	 * @return void
 	 */
 	public function bootstrap()

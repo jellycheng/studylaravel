@@ -20,7 +20,7 @@ class Kernel extends HttpKernel {
 
 	/**
 	 * The application's route middleware.
-	 * 路由中间介
+	 * 路由中间介，会传递给router类对象的middleware属性中
 	 * @var array
 	 */
 	protected $routeMiddleware = [

@@ -155,7 +155,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	}
 
 	/**
-	 * Run the given array of bootstrap classes.
+	 * Run the given array of bootstrap classes.在http类的bootstrap90方法中调用这个方法
 	 * 批量执行$bootstrapper对象的bootstrap(app对象)方法
 	 * @param  array  $bootstrappers=[$bootstrapper1对象, $bootstrapper2,$bootstrapperN]
 	 * @return void
