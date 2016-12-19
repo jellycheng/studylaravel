@@ -268,8 +268,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Register a shared binding in the container.
 	 * 单例方式绑定
-	 * @param  string  $abstract
-	 * @param  \Closure|string|null  $concrete
+	 * @param  string  $abstract抽象
+	 * @param  \Closure|string|null  $concrete实现物
 	 * @return void
 	 */
 	public function singleton($abstract, $concrete = null)

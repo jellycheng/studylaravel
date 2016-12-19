@@ -109,9 +109,9 @@ class Router implements RegistrarContract {
 	 */
 	public function __construct(Dispatcher $events, Container $container = null)
 	{
-		$this->events = $events;
+		$this->events = $events;//事件对象
 		$this->routes = new RouteCollection;
-		$this->container = $container ?: new Container;
+		$this->container = $container ?: new Container;//app对象，容器对象
 	}
 
 	/**

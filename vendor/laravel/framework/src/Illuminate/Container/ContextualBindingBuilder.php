@@ -1,7 +1,7 @@
 <?php namespace Illuminate\Container;
 
 use Illuminate\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;
-
+//上下文构建对象
 class ContextualBindingBuilder implements ContextualBindingBuilderContract {
 
 	/**
@@ -21,8 +21,8 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract {
 	/**
 	 * Create a new contextual binding builder.
 	 *
-	 * @param  \Illuminate\Container\Container  $container
-	 * @param  string  $concrete
+	 * @param  \Illuminate\Container\Container  $container容器对象
+	 * @param  string  $concrete 实现物,具体物
 	 * @return void
 	 */
 	public function __construct(Container $container, $concrete)
@@ -46,7 +46,7 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract {
 
 	/**
 	 * Define the implementation for the contextual binding.
-	 *
+	 * 设置容器的上下文属性：$this->contextual[$concrete][$abstract] = $implementation;
 	 * @param  \Closure|string  $implementation
 	 * @return void
 	 */

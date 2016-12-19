@@ -53,7 +53,7 @@ class Dispatcher implements DispatcherContract {
 	/**
 	 * Create a new event dispatcher instance.
 	 *
-	 * @param  \Illuminate\Contracts\Container\Container  $container
+	 * @param  \Illuminate\Contracts\Container\Container  $container容器对象，app对象
 	 * @return void
 	 */
 	public function __construct(ContainerContract $container = null)
@@ -462,7 +462,7 @@ class Dispatcher implements DispatcherContract {
 
 	/**
 	 * Get the queue implementation from the resolver.
-	 *
+	 * 执行闭包，队列解决者
 	 * @return \Illuminate\Contracts\Queue\Queue
 	 */
 	protected function resolveQueue()
@@ -473,7 +473,7 @@ class Dispatcher implements DispatcherContract {
 	/**
 	 * Set the queue resolver implementation.
 	 *
-	 * @param  callable  $resolver
+	 * @param  callable  $resolver 队列解决者，闭包
 	 * @return $this
 	 */
 	public function setQueueResolver(callable $resolver)

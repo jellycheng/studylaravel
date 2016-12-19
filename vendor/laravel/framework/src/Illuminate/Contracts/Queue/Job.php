@@ -1,5 +1,5 @@
 <?php namespace Illuminate\Contracts\Queue;
-
+//job接口
 interface Job {
 
 	/**

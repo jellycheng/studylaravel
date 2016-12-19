@@ -342,8 +342,8 @@ if ( ! function_exists('class_uses_recursive'))
 {
 	/**
 	 * Returns all traits used by a class, it's subclasses and trait of their traits
-	 *
-	 * @param  string  $class
+	 * 获取当前类名及父类名中引用的所有trait名 ，数组格式
+	 * @param  string  $class 类名
 	 * @return array
 	 */
 	function class_uses_recursive($class)

@@ -1,0 +1,3 @@
+
+laravel使用的事件类库
+EventServiceProvider 事件服务提供者，在app实例化时执行
