@@ -1,7 +1,7 @@
 <?php namespace Illuminate\Foundation\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Contracts\Routing\Middleware; //路由中间介接口
 use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -28,14 +28,14 @@ class CheckForMaintenanceMode implements Middleware {
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
+	 * @param  \Illuminate\Http\Request  $request 请求对象
+	 * @param  \Closure  $next 闭包
 	 * @return mixed
 	 */
 	public function handle($request, Closure $next)
 	{
 		if ($this->app->isDownForMaintenance())
-		{
+		{//判断是否在维护中
 			throw new HttpException(503);
 		}
 

@@ -54,3 +54,19 @@ function demo1($callback) {
 }
 
 
+//反射方法 or 类名::方法名
+function getCallReflector($callback)
+{
+    if (is_string($callback) && strpos($callback, '::') !== false)
+    {//abc类名::hello方法名
+        $callback = explode('::', $callback);
+    }
+
+    if (is_array($callback))
+    {//反射类中方法
+        return new ReflectionMethod($callback[0], $callback[1]);
+    }
+    //反射函数
+    return new ReflectionFunction($callback);
+}
+

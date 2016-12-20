@@ -1,0 +1,36 @@
+
+
+App\Http\Kernel类
+
+a)构造函数做以下事情:
+    1. 注入app对象(容器对象)
+    2. 注入路由对象(Illuminate\Routing\Router)
+    3. 把在App\Http\Kernel类中$routeMiddleware属性配置的路由中间介注入路由对象的middleware属性中(路由对象->middleware[中间件名] = 类名;)
+
+
+b) 返回响应对象
+$response=App\Http\Kernel类对象->->handle(
+                    	$request = Illuminate\Http\Request::capture()
+                    );做以下事情:
+    1. 设置app对象的instances['request']=请求对象
+    2. 执行kernel类的bootstrap()方法:
+        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+        'Illuminate\Foundation\Bootstrap\LoadConfiguration',
+        'Illuminate\Foundation\Bootstrap\ConfigureLogging',
+        'Illuminate\Foundation\Bootstrap\HandleExceptions',
+        'Illuminate\Foundation\Bootstrap\RegisterFacades',
+        'Illuminate\Foundation\Bootstrap\RegisterProviders',
+        'Illuminate\Foundation\Bootstrap\BootProviders'
+        调用这些类的bootstrap(app对象)方法
+    3. 执行(new Pipeline($this->app容器))
+                            ->send($request请求对象) //设置passable属性
+                            ->through($this->middleware是http中间介) //设置pipes属性
+                            ->then($this->dispatchToRouter()是kernel类的方法);代码,返回$response对象
+        先执行路由对象->dispatch($request请求对象)方法,然后批量调用配置的http中间介的handle(请求对象, 闭包)方法
+
+c) $response->send(); 调用请求对象的send方法
+
+d)
+$kernel->terminate($request, $response);
+
+

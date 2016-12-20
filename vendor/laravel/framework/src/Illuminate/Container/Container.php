@@ -7,7 +7,7 @@ use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionParameter;
 use InvalidArgumentException;
-use Illuminate\Contracts\Container\Container as ContainerContract;
+use Illuminate\Contracts\Container\Container as ContainerContract; //容器接口
 
 class Container implements ArrayAccess, ContainerContract {
 
@@ -34,10 +34,10 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The container's shared instances.
-	 * 所有类对象,['字符串'=>对象, ]
+	 * 所有类对象,单例,['字符串1'=>对象, '字符串2'=>值1]
 	 *
 	 * @var array=[
-	'app'=>app对象,
+			'app'=>app对象,
 			'Illuminate\Container\Container'=>app对象,
 	 		'app'=>app对象,
 			'path'=>项目根目录/app，
@@ -47,7 +47,8 @@ class Container implements ArrayAccess, ContainerContract {
 			'path.lang'=>项目根目录/resources/lang，
 			'path.public'=>项目根目录/public，
 			'path.storage'=>项目根目录/storage，
-			'request'=>$request对象
+			'request'=>$request对象,
+	 * 		'env'=>当前环境值,
 			];
 	 */
 	protected $instances = [];
@@ -123,7 +124,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Define a contextual binding.
-	 *
+	 * 实例化上下文构建对象
 	 * @param  string  $concrete
 	 * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
 	 */
@@ -134,7 +135,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if a given string is resolvable.
-	 * 等价本类bound($abstract)方法
+	 * 等价本类bound($abstract)方法,返回bool值
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -425,7 +426,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Bind a new callback to an abstract's rebind event.
-	 *
+	 * 设置reboundCallbacks属性并返回对象
 	 * @param  string    $abstract
 	 * @param  \Closure  $callback = 闭包($app对象, $abstract的对象)
 	 * @return mixed
@@ -447,10 +448,11 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	public function refresh($abstract, $target, $method)
 	{
-		return $this->rebinding($abstract, function($app, $instance) use ($target, $method)
-		{
-			$target->{$method}($instance);
-		});
+		return $this->rebinding($abstract,
+								function($app, $instance) use ($target, $method)
+								{
+									$target->{$method}($instance);
+								});
 	}
 
 	/**
@@ -478,7 +480,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function getReboundCallbacks($abstract)
 	{
 		if (isset($this->reboundCallbacks[$abstract]))
-		{//存在值,值是可以被call_user_func函数调用的,并接收2个参数,分别是app对象和$abstract对应的类对象
+		{//存在值,值是可被call_user_func函数调用(接收2个参数,分别是app对象和$abstract对应的类对象)
 			return $this->reboundCallbacks[$abstract];
 		}
 
@@ -487,9 +489,9 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Wrap the given closure such that its dependencies will be injected when executed.
-	 *
-	 * @param  \Closure  $callback
-	 * @param  array  $parameters
+	 * 返回闭包
+	 * @param  \Closure  $callback 闭包1
+	 * @param  array  $parameters 闭包1接收的参数
 	 * @return \Closure
 	 */
 	public function wrap(Closure $callback, array $parameters = [])
@@ -505,14 +507,14 @@ class Container implements ArrayAccess, ContainerContract {
 	 * $this->call([$provider对象, 'boot']);
 	 * @param  callable|string  $callback=方法名 或者 类名@方法名 或者 [对象, '方法名'] 或 ['类名', '方法名']
 	 * @param  array  $parameters
-	 * @param  string|null  $defaultMethod
+	 * @param  string|null  $defaultMethod =类的默认方法
 	 * @return mixed
 	 */
 	public function call($callback, array $parameters = [], $defaultMethod = null)
 	{
 		//字符串且存在@符号 或 $defaultMethod值为真
 		if ($this->isCallableWithAtSign($callback) || $defaultMethod)
-		{//$callback=字符串存在@符号或者$defaultMethod有值
+		{//$callback=存在@字符 或者$defaultMethod类的默认方法
 			return $this->callClass($callback, $parameters, $defaultMethod);
 		}
 		//返回$callback函数要接收的参数
@@ -521,7 +523,7 @@ class Container implements ArrayAccess, ContainerContract {
 	}
 
 	/**
-	 * 是否字符串且字符串中包含@符号
+	 * 是否存在@字符
 	 * @param  mixed  $callback
 	 * @return bool
 	 */
@@ -534,8 +536,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Get all dependencies for a given method.
 	 * 返回$callback函数要接收的参数
-	 * @param  callable|string  $callback
-	 * @param  array  $parameters
+	 * @param  callable|string  $callback 方法名or类名::类方法名
+	 * @param  array  $parameters 传递给方法的参数
 	 * @return array
 	 */
 	protected function getMethodDependencies($callback, $parameters = [])
@@ -552,14 +554,14 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the proper reflection instance for the given callback.
-	 *
-	 * @param  callable|string  $callback
+	 * 反射函数or反射类方法
+	 * @param  callable|string  $callback 方法名or类名::类方法名 or [类对象,方法名] or [类名, 方法名]
 	 * @return \ReflectionFunctionAbstract
 	 */
 	protected function getCallReflector($callback)
 	{
 		if (is_string($callback) && strpos($callback, '::') !== false)
-		{//abc::hello
+		{//abc类名::hello方法名
 			$callback = explode('::', $callback);
 		}
 
@@ -576,7 +578,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @param  \ReflectionParameter  $parameter 反射出的参数对象
 	 * @param  array  $parameters 要传递给参数的值,可选
-	 * @param  array  $dependencies 函数参数要接收的值
+	 * @param  array  $dependencies 函数参数要接收(依赖)的值['类对象','参数值1','默认值']
 	 * @return mixed
 	 */
 	protected function addDependencyForCallParameter(ReflectionParameter $parameter, array &$parameters, &$dependencies)
@@ -600,7 +602,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Call a string reference to a class using Class@method syntax.
 	 *
 	 * @param  string  $target=类名@方法名
-	 * @param  array  $parameters
+	 * @param  array  $parameters 传给类方法的参数
 	 * @param  string|null  $defaultMethod
 	 * @return mixed
 	 */
@@ -739,7 +741,7 @@ class Container implements ArrayAccess, ContainerContract {
 	public function build($concrete, $parameters = [])
 	{
 		if ($concrete instanceof Closure)
-		{#是闭包则闭包(app对象, 参数)
+		{#是闭包则调用闭包(app对象, 参数)
 			return $concrete($this, $parameters);
 		}
 		//是字符串 则反射类
@@ -756,10 +758,10 @@ class Container implements ArrayAccess, ContainerContract {
 
 		if (is_null($constructor)) {#不存在构造方法
 			array_pop($this->buildStack);//将数组最后一个单元弹出（出栈）
-			//直接实例化例
+			//直接实例化类
 			return new $concrete;
 		}
-
+		//反射构造函数可接收的所有参数
 		$dependencies = $constructor->getParameters();
 		//如果$parameters的key是数字下标则换成参数名做下标
 		$parameters = $this->keyParametersByArgument( $dependencies, $parameters );
@@ -767,7 +769,7 @@ class Container implements ArrayAccess, ContainerContract {
 		$instances = $this->getDependencies( $dependencies, $parameters );
 		//从堆中移除
 		array_pop($this->buildStack);
-		//返回类对象，并把$instances参数给构造方法,执行构造函数
+		//实例化类返回类对象，并把$instances参数给构造方法,执行构造函数
 		return $reflector->newInstanceArgs($instances);
 	}
 

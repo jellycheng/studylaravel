@@ -156,7 +156,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Run the given array of bootstrap classes.在http类的bootstrap90方法中调用这个方法
-	 * 批量执行$bootstrapper对象的bootstrap(app对象)方法
+	 * 批量执行$bootstrapper对象->bootstrap(app对象);
 	 * @param  array  $bootstrappers=[$bootstrapper1对象, $bootstrapper2,$bootstrapperN]
 	 * @return void
 	 */
@@ -392,13 +392,13 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Detect the application's current environment.
-	 *  设置环境值， 如果cli方式则先分析参数中是否存在--env=环境代号，没有则通过回调闭包函数获取环境代号
-	 * @param  \Closure  $callback  闭包，提供给call_user_func（$callback）调用
+	 * 设置当前env环境值， 如果cli方式则先分析参数中是否存在--env=环境代号，没有则通过回调闭包函数获取环境代号
+	 * @param  \Closure  $callback  闭包，如果在cli参数中分析不出环境则调用闭包获取环境,提供给call_user_func（$callback）调用
 	 * @return string
 	 */
 	public function detectEnvironment(Closure $callback)
 	{
-		$args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;//--env=dev 取到dev值
+		$args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;//有值则是cli方式,如--env=dev 无值则是http方式
 
 		return $this['env'] = (new EnvironmentDetector())->detect($callback, $args);
 	}

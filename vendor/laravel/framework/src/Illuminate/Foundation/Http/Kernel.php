@@ -114,8 +114,8 @@ class Kernel implements KernelContract {
 	/**
 	 * Call the terminate method on any terminable middleware.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Illuminate\Http\Response  $response
+	 * @param  \Illuminate\Http\Request  $request 请求对象
+	 * @param  \Illuminate\Http\Response  $response 响应对象
 	 * @return void
 	 */
 	public function terminate($request, $response)
@@ -127,7 +127,7 @@ class Kernel implements KernelContract {
 			$instance = $this->app->make($middleware);
 
 			if ($instance instanceof TerminableMiddleware)
-			{
+			{//http中间介和路由中间是路由的terminate类
 				$instance->terminate($request, $response);
 			}
 		}
