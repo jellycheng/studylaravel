@@ -3,11 +3,17 @@
 
 反射总结 todo
 
-可以反射类、接口、函数、类方法
+反射类&方法&类常量&构造函数、反射接口、反射函数、反射类方法,反射php扩展
 反射类如下：
 	Reflection
-	ReflectionClass
-
+	ReflectionClass 反射类
+	ReflectionMethod 反射类的方法
+	ReflectionProperty 反射类属性
+    ReflectionFunction 反射函数
+    ReflectionParameter 反射参数
+    ReflectionExtension 反射php扩展
+    ReflectionObject 通过类对象反射
+    ReflectionException 反射时发生类异常
 
 #反射接口
 Reflector {
@@ -397,10 +403,10 @@ Exception {
 #反射异常类
 ReflectionException extends Exception {
 	/* 属性 */
-	protected string $message ;
-	protected int $code ;
-	protected string $file ;
-	protected int $line ;
+	protected string $message ; 错误信息
+	protected int $code ;       发生异常代号
+	protected string $file ;    发生异常文件
+	protected int $line ;       发生异常代码行
 	/* 继承的方法 */
 	final public string Exception::getMessage ( void )错误信息
 	final public Exception Exception::getPrevious ( void )上一个异常对象

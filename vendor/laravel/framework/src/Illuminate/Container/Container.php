@@ -95,28 +95,28 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * All of the global resolving callbacks.
-	 *
+	 * ['方法名或闭包1', '方法名或闭包2']  且每个方法和闭包均接收2个参数($object, app对象容器)
 	 * @var array
 	 */
 	protected $globalResolvingCallbacks = [];
 
 	/**
 	 * All of the global after resolving callbacks.
-	 *
+	 * ['方法名或闭包1', '方法名或闭包2']  且每个方法和闭包均接收2个参数($object, app对象容器)
 	 * @var array
 	 */
 	protected $globalAfterResolvingCallbacks = [];
 
 	/**
 	 * All of the after resolving callbacks by class type.
-	 *
+	 * ['方法名或闭包1', '方法名或闭包2']  且每个方法和闭包均接收2个参数($object, app对象容器)
 	 * @var array
 	 */
 	protected $resolvingCallbacks = [];
 
 	/**
 	 * All of the after resolving callbacks by class type.
-	 *
+	 * ['方法名或闭包1', '方法名或闭包2']  且每个方法和闭包均接收2个参数($object, app对象容器)
 	 * @var array
 	 */
 	protected $afterResolvingCallbacks = [];
@@ -774,9 +774,9 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Resolve all of the dependencies from the ReflectionParameters.
 	 *
-	 * @param  array  $parameters 反射出来的参数对象
+	 * @param  array  $parameters=['反射参数对象1', '反射参数对象n']
 	 * @param  array  $primitives = [参数名=>值, 参数名n=>值n]
-	 * @return array
+	 * @return array = [值1,'对象1', '...']
 	 */
 	protected function getDependencies($parameters, array $primitives = [])
 	{
@@ -787,7 +787,7 @@ class Container implements ArrayAccess, ContainerContract {
 			$dependency = $parameter->getClass();
 
 			if (array_key_exists($parameter->name, $primitives))
-			{//存在参数值
+			{//类名在参数值中
 				$dependencies[] = $primitives[$parameter->name];
 			}
 			elseif (is_null($dependency))
@@ -795,7 +795,7 @@ class Container implements ArrayAccess, ContainerContract {
 				$dependencies[] = $this->resolveNonClass($parameter);
 			}
 			else
-			{//参数接收的是类对象
+			{//实例化参数类返回类对象或返回默认值
 				$dependencies[] = $this->resolveClass($parameter);
 			}
 		}
@@ -805,7 +805,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Resolve a non-class hinted dependency.
-	 *
+	 * 获取参数默认值,无默认值抛异常
 	 * @param  \ReflectionParameter  $parameter
 	 * @return mixed
 	 *
@@ -814,7 +814,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function resolveNonClass(ReflectionParameter $parameter)
 	{
 		if ($parameter->isDefaultValueAvailable())
-		{//获取默认值
+		{//存在默认值,返回参数默认值
 			return $parameter->getDefaultValue();
 		}
 
@@ -825,8 +825,8 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Resolve a class based dependency from the container.
-	 *
-	 * @param  \ReflectionParameter  $parameter 反射出来的参数
+	 * 实例化参数类返回类对象或返回默认值
+	 * @param  \ReflectionParameter  $parameter 反射参数对象
 	 * @return mixed
 	 *
 	 * @throws BindingResolutionException
@@ -840,7 +840,7 @@ class Container implements ArrayAccess, ContainerContract {
 		catch (BindingResolutionException $e)
 		{
 			if ($parameter->isOptional())
-			{//获取默认参数值
+			{//获取参数默认值
 				return $parameter->getDefaultValue();
 			}
 
@@ -851,7 +851,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * If extra parameters are passed by numeric ID, rekey them by argument name.
 	 * 如果$parameters的key是数字下标则换成参数名做下标
-	 * @param  array  $dependencies 反射出来的参数对象
+	 * @param  array  $dependencies=['参数对象1', '参数对象2'] 反射出来的参数对象
 	 * @param  array  $parameters = [0=>值, 1=>值n]
 	 * @return array
 	 */
@@ -950,7 +950,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the type hint for this closure's first argument.
-	 *
+	 * 如果$callback闭包第1个参数是类对象,则返回第1个参数对应的类名 否则null
 	 * @param  \Closure  $callback
 	 * @return mixed
 	 */
@@ -983,28 +983,28 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function fireResolvingCallbacks($abstract, $object)
 	{
 		$this->fireCallbackArray($object, $this->globalResolvingCallbacks);
-
+		//['方法名或闭包1', '方法名或闭包2']  且每个方法和闭包均接收2个参数($object, app对象容器)
 		$this->fireCallbackArray(
-			$object, $this->getCallbacksForType(
-				$abstract, $object, $this->resolvingCallbacks
-			)
-		);
+								$object, $this->getCallbacksForType(
+									$abstract, $object, $this->resolvingCallbacks
+								)
+								);
 
 		$this->fireCallbackArray($object, $this->globalAfterResolvingCallbacks);
 
 		$this->fireCallbackArray(
-			$object, $this->getCallbacksForType(
-				$abstract, $object, $this->afterResolvingCallbacks
-			)
-		);
+								$object, $this->getCallbacksForType(
+									$abstract, $object, $this->afterResolvingCallbacks
+								)
+								);
 	}
 
 	/**
 	 * Get all callbacks for a given type.
-	 * 把$abstract等于type或 $object上type对象的值做合并
-	 * @param  string  $abstract=字符串
+	 * 返回符合条件的值,条件: $abstract参数值等于type key对应的值 或 $object参数值是type key对应类的对象
+	 * @param  string  $abstract=字符串|抽象
 	 * @param  object  $object=对象
-	 * @param  array   $callbacksPerType=数组=array('type'=>array(数组值n),'typen'=>array(数组值n), )
+	 * @param  array   $callbacksPerType=['type'=>['值1','值n'],'typen'=>['值1','值n'], ]
 	 *
 	 * @return array
 	 */
@@ -1059,7 +1059,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given concrete is buildable.
-	 * 是闭包或2个参数完全相等
+	 * 是闭包或2个参数完全相等 则返回true
 	 * @param  mixed   $concrete 具体物
 	 * @param  string  $abstract 抽象
 	 * @return bool
@@ -1092,7 +1092,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Drop all of the stale instances and aliases.
-	 *
+	 * 删除对应属性的$abstract key
 	 * @param  string  $abstract
 	 * @return void
 	 */
@@ -1169,7 +1169,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the value at a given offset.
-	 * 获取类对象,实例化类对象
+	 * 获取类对象,实例化类对象, $a = app对象['key'];
 	 * @param  string  $key
 	 * @return mixed
 	 */
@@ -1180,7 +1180,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Set the value at a given offset.
-	 *
+	 * app对象['key'] = 字符串or闭包;
 	 * @param  string  $key 字符串
 	 * @param  mixed   $value 值或闭包
 	 * @return void
