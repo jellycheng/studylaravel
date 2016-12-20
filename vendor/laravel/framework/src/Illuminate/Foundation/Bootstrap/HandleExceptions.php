@@ -33,7 +33,7 @@ class HandleExceptions {
 		register_shutdown_function([$this, 'handleShutdown']);
 
 		if ( ! $app->environment('testing'))
-		{
+		{//不是testing环境
 			ini_set('display_errors', 'Off');
 		}
 	}

@@ -30,13 +30,13 @@ class Kernel implements KernelContract {
 	 * @var array
 	 */
 	protected $bootstrappers = [
-		'Illuminate\Foundation\Bootstrap\DetectEnvironment',
-		'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-		'Illuminate\Foundation\Bootstrap\ConfigureLogging',
-		'Illuminate\Foundation\Bootstrap\HandleExceptions',
-		'Illuminate\Foundation\Bootstrap\RegisterFacades',
-		'Illuminate\Foundation\Bootstrap\RegisterProviders',
-		'Illuminate\Foundation\Bootstrap\BootProviders',
+		'Illuminate\Foundation\Bootstrap\DetectEnvironment',//分析.env文件，并设置当前环境
+		'Illuminate\Foundation\Bootstrap\LoadConfiguration',//加载config配置文件，设置时区,
+		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志
+		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置
+		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器
+		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法
 	];
 
 	/**
@@ -82,11 +82,10 @@ class Kernel implements KernelContract {
 		try
 		{
 			return $this->sendRequestThroughRouter($request);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
+		    //上报异常log
 			$this->reportException($e);
-
+            //渲染异常页面
 			return $this->renderException($request, $e);
 		}
 	}
@@ -153,7 +152,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Add a new middleware to beginning of the stack if it does not already exist.
-	 *
+	 * 新增中间介
 	 * @param  string  $middleware
 	 * @return $this
 	 */
@@ -169,7 +168,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Add a new middleware to end of the stack if it does not already exist.
-	 *
+	 * 新增中间介
 	 * @param  string  $middleware
 	 * @return $this
 	 */
@@ -206,7 +205,7 @@ class Kernel implements KernelContract {
 		return function($request)
 		{
 			$this->app->instance('request', $request);
-
+            //分析请求，路由
 			return $this->router->dispatch($request);
 		};
 	}
@@ -223,7 +222,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Report the exception to the exception handler.
-	 *
+	 * 上报异常log
 	 * @param  \Exception  $e
 	 * @return void
 	 */
@@ -234,7 +233,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Render the exception to a response.
-	 *
+	 * 渲染异常结果
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \Exception  $e
 	 * @return \Symfony\Component\HttpFoundation\Response
@@ -246,7 +245,7 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Get the Laravel application instance.
-	 *
+	 * 获取app对象，容器对象
 	 * @return \Illuminate\Contracts\Foundation\Application
 	 */
 	public function getApplication()

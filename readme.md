@@ -34,9 +34,12 @@
 		|- Modules 业务聚合类
     |-artisan 是cli脚本入口
 
-
-
-https://cs.laravel-china.org/
+```
+laravel中文手册：
+    https://cs.laravel-china.org/
 PHP 标准规范中文版: https://psr.phphub.org/
 http://www.php-fig.org/
 
+env环境设置类： https://github.com/vlucas/phpdotenv
+
+```

@@ -679,7 +679,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Determine if the application configuration is cached.
-	 * 判断storage目录下/framwwork/config.php配置文件是否存在
+	 * 判断storage/framwwork/config.php配置文件是否存在
 	 * @return bool
 	 */
 	public function configurationIsCached()
@@ -689,7 +689,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the path to the configuration cache file.
-	 * 获取storage目录下/framwwork/config.php配置文件
+	 * 获取storage/framwwork/config.php配置文件
 	 * @return string
 	 */
 	public function getCachedConfigPath()
@@ -732,8 +732,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	}
 
 	/**
-	 * Determine if the application is currently down for maintenance.
-	 *
+	 * 维护模式响应的默认模板放在 resources/views/errors/503.blade.php
+	 * 监测项目是否在维护模式： 判断storage/framework/down文件是否存在，存在则是维护模式
+     * 可以使用命令 php artisan down 开启维护模式
+     * 使用命令 php artisan up 关闭维护模式
 	 * @return bool
 	 */
 	public function isDownForMaintenance()

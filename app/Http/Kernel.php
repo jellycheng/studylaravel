@@ -10,7 +10,7 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $middleware = [
-		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
+		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode', //监测项目是否在维护模式，维护模式抛httpexception异常
 		'Illuminate\Cookie\Middleware\EncryptCookies',
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',

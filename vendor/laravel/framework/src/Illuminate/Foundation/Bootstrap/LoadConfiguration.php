@@ -18,26 +18,20 @@ class LoadConfiguration {
 	{
 		$items = [];
 
-		// First we will see if we have a cache configuration file. If we do, we'll load
-		// the configuration items from that file so that it is very quick. Otherwise
-		// we will need to spin through every configuration file and load them all.
 		if (file_exists($cached = $app->getCachedConfigPath()))
-		{
+		{//存在storage/framwwork/config.php文件则加载
 			$items = require $cached;
 
-			$loadedFromCache = true;
+			$loadedFromCache = true;//标记加载过cache文件
 		}
-
+        //把config对象注入app对象容器中
 		$app->instance('config', $config = new Repository($items));
 
-		// Next we will spin through all of the configuration files in the configuration
-		// directory and load each one into the repository. This will make all of the
-		// options available to the developer for use in various parts of this app.
 		if ( ! isset($loadedFromCache))
-		{
+		{//没有加载cache文件，遍历config目录设置好所有配置
 			$this->loadConfigurationFiles($app, $config);
 		}
-
+        //设置时区
 		date_default_timezone_set($config['app.timezone']);
 
 		mb_internal_encoding('UTF-8');
@@ -53,7 +47,7 @@ class LoadConfiguration {
 	protected function loadConfigurationFiles(Application $app, RepositoryContract $config)
 	{
 		foreach ($this->getConfigurationFiles($app) as $key => $path)
-		{
+		{//加载配置文件，文件名作为key，文件配置作为值
 			$config->set($key, require $path);
 		}
 	}
@@ -69,7 +63,7 @@ class LoadConfiguration {
 		$files = [];
 
 		foreach (Finder::create()->files()->name('*.php')->in($app->configPath()) as $file)
-		{
+		{//在config/目录下查找所有.php的文件
 			$nesting = $this->getConfigurationNesting($file);
 
 			$files[$nesting.basename($file->getRealPath(), '.php')] = $file->getRealPath();

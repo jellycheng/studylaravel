@@ -2,7 +2,7 @@
 
 use ArrayAccess;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
-
+//配置管理类
 class Repository implements ArrayAccess, ConfigContract {
 
 	/**

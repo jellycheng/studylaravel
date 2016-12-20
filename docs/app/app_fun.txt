@@ -1,0 +1,7 @@
+
+
+
+获取当前环境方式：
+1. $environment = app()->environment();
+2. $environment = App::environment();
+3. $environment = env('APP_ENV');

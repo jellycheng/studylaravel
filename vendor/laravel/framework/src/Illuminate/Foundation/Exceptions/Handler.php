@@ -26,7 +26,7 @@ class Handler implements ExceptionHandlerContract {
 	/**
 	 * Create a new exception handler instance.
 	 *
-	 * @param  \Psr\Log\LoggerInterface  $log
+	 * @param  \Psr\Log\LoggerInterface  $log 日志对象
 	 * @return void
 	 */
 	public function __construct(LoggerInterface $log)
@@ -43,13 +43,13 @@ class Handler implements ExceptionHandlerContract {
 	public function report(Exception $e)
 	{
 		if ($this->shouldntReport($e)) return;
-
+        //错误log
 		$this->log->error((string) $e);
 	}
 
 	/**
 	 * Determine if the exception should be reported.
-	 *
+	 * 异常对象是否在上报异常类内
 	 * @param  \Exception  $e
 	 * @return bool
 	 */
@@ -60,7 +60,7 @@ class Handler implements ExceptionHandlerContract {
 
 	/**
 	 * Determine if the exception is in the "do not report" list.
-	 *
+	 * 异常对象是否在不上报异常类内
 	 * @param  \Exception  $e
 	 * @return bool
 	 */
@@ -82,7 +82,7 @@ class Handler implements ExceptionHandlerContract {
 	public function render($request, Exception $e)
 	{
 		if ($this->isHttpException($e))
-		{
+		{//http异常
 			return $this->renderHttpException($e);
 		}
 		else
@@ -111,10 +111,10 @@ class Handler implements ExceptionHandlerContract {
 	 */
 	protected function renderHttpException(HttpException $e)
 	{
-		$status = $e->getStatusCode();
+		$status = $e->getStatusCode();//异常码
 
 		if (view()->exists("errors.{$status}"))
-		{
+		{//errors.403
 			return response()->view("errors.{$status}", [], $status);
 		}
 		else
@@ -125,8 +125,8 @@ class Handler implements ExceptionHandlerContract {
 
 	/**
 	 * Determine if the given exception is an HTTP exception.
-	 *
-	 * @param  \Exception  $e
+	 * 是否HttpException异常类对象
+     * @param  \Exception  $e
 	 * @return bool
 	 */
 	protected function isHttpException(Exception $e)
