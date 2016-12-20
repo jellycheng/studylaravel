@@ -1,9 +1,6 @@
 <html>
 	<head>
 		<title>Laravel</title>
-		
-		
-
 		<style>
 			body {
 				margin: 0;
@@ -42,6 +39,8 @@
 			<div class="content">
 				<div class="title">Laravel 5</div>
 				<div class="quote">{{ Inspiring::quote() }}</div>
+				<div class="quote">调用的是Illuminate\Foundation\Inspiring类的quote()方法,随机取一个单元值</div>
+				<div class="quote">在config/app.php中配置了别名:'Inspiring' => 'Illuminate\Foundation\Inspiring'</div>
 			</div>
 		</div>
 	</body>

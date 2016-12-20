@@ -12,14 +12,14 @@ class Inspiring {
 	 * @return string
 	 */
 	public static function quote()
-	{
+	{	//从集合数组中随机取一个单元
 		return Collection::make([
 
-			'When there is no desire, all things are at peace. - Laozi',
-			'Simplicity is the ultimate sophistication. - Leonardo da Vinci',
-			'Simplicity is the essence of happiness. - Cedric Bledsoe',
-			'Smile, breathe, and go slowly. - Thich Nhat Hanh',
-			'Simplicity is an acquired taste. - Katharine Gerould',
+			'1.When there is no desire, all things are at peace. - Laozi',
+			'2.Simplicity is the ultimate sophistication. - Leonardo da Vinci',
+			'3.Simplicity is the essence of happiness. - Cedric Bledsoe',
+			'4.Smile, breathe, and go slowly. - Thich Nhat Hanh',
+			'5.Simplicity is an acquired taste. - Katharine Gerould',
 
 		])->random();
 	}
