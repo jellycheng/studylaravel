@@ -1,7 +1,7 @@
 ## learn Laravel PHP Framework
 ### Laravel项目目录结构说明：
 	|- vendor 目录包含你的 Composer 依赖模块及laravel框架。
-	|- bootstrap 目录包含几个框架启动跟自动加载配置的文件。
+	|- bootstrap 目录:主要包含包含框架启动跟自动加载配置的文件。
 		|- app.php
 		|- autoload.php
 	|- config 应用程序的配置文件。
