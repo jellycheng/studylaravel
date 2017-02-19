@@ -1,9 +1,13 @@
 
-
+http://www.golaravel.com/laravel/docs/5.0/artisan/
 #在cmd中执行命令，显示命令使用： php artisan help 命令名 如：php artisan help env
 # 查看laravel版本： php artisan --version 等价 php artisan -V
 #在cmd中执行命令： php artisan list 列出所有命令
 
+```
+定时调用artisan任务：
+* * * * * php /path/to/artisan schedule:run 1>> /dev/null 2>&1
+```
 Laravel Framework version 5.0.16
 Usage:
  [options] command [arguments]
