@@ -17,7 +17,7 @@
 | loading any of our classes later on. It feels nice to relax.
 |
 */
-
+//composer加载器
 require __DIR__.'/../bootstrap/autoload.php';
 
 /*
@@ -31,7 +31,7 @@ require __DIR__.'/../bootstrap/autoload.php';
 | the responses back to the browser and delight our users.
 |
 */
-
+//返回laravel app对象
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 /*

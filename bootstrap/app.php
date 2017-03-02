@@ -12,7 +12,7 @@
 */
 //实例化app对象
 $app = new Illuminate\Foundation\Application(
-	realpath(__DIR__.'/../')
+	realpath(__DIR__.'/../')   //项目代码跟目录
 );
 
 /*

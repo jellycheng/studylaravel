@@ -239,16 +239,17 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	protected function bindPathsInContainer()
 	{
-		$this->instance('path', $this->path());
+		$this->instance('path', $this->path()); //app目录
 		foreach (['base', 'config', 'database', 'lang', 'public', 'storage'] as $path)
-		{
+		{   //path.base=项目代码根目录
+            //path.config=项目代码根目录/config
 			$this->instance('path.'.$path, $this->{$path.'Path'}());
 		}
 	}
 
 	/**
 	 * Get the path to the application "app" directory.
-	 *
+	 * 代码app目录
 	 * @return string
 	 */
 	public function path()
@@ -258,7 +259,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the base path of the Laravel installation.
-	 *
+	 * 项目代码根目录
 	 * @return string
 	 */
 	public function basePath()
@@ -331,20 +332,19 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Set the environment file to be loaded during bootstrapping.
-	 * 设置.env文件
+	 * 设置.env文件名
 	 * @param  string  $file
 	 * @return $this
 	 */
 	public function loadEnvironmentFrom($file)
 	{
 		$this->environmentFile = $file;
-
 		return $this;
 	}
 
 	/**
 	 * Get the environment file the application is using.
-	 * 获取.env文件
+	 * 获取.env文件名
 	 * @return string
 	 */
 	public function environmentFile()
@@ -365,7 +365,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		if (func_num_args() > 0)
 		{
 			$patterns = is_array(func_get_arg(0)) ? func_get_arg(0) : func_get_args();
-
 			foreach ($patterns as $pattern)
 			{
 				if (str_is($pattern, $this['env']))
@@ -373,10 +372,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 					return true;
 				}
 			}
-
 			return false;
 		}
-
 		return $this['env'];
 	}
 
@@ -508,9 +505,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	protected function markAsRegistered($provider)
 	{
 		$this['events']->fire($class = get_class($provider), array($provider));
-
 		$this->serviceProviders[] = $provider;//把已经实例化的服务提供者对象存入serviceProviders属性
-
 		$this->loadedProviders[$class] = true;//标记已经实例化
 	}
 
@@ -851,9 +846,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function setLocale($locale)
 	{
 		$this['config']->set('app.locale', $locale);
-
 		$this['translator']->setLocale($locale);
-
 		$this['events']->fire('locale.changed', array($locale));
 	}
 
@@ -865,7 +858,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function registerCoreContainerAliases()
 	{
 		$aliases = array(
-		    //'类代号'=>['别名1', '别名N']
+		    //'类代号即$abstract'=>['别名1即aliases属性的key名', '别名N']
 			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
 			'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
 			'auth'                 => 'Illuminate\Auth\AuthManager',
@@ -919,7 +912,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function flush()
 	{
 		parent::flush();
-
 		$this->loadedProviders = [];
 	}
 

@@ -4,7 +4,7 @@
 	|- bootstrap 目录:主要包含包含框架启动跟自动加载配置的文件。
 		|- app.php
 		|- autoload.php
-	|- config 应用程序的配置文件。
+	|- config 应用程序的配置文件，每个配置文件均返回数组格式。
 	|- database 数据库迁移与数据填充文件。
 	|- public 项目web入口和静态资源文件 (图片、js、css，字体等等)。
 	    |-index.php 入口

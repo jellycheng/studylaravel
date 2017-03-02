@@ -332,25 +332,26 @@ class Container implements ArrayAccess, ContainerContract {
 	}
 
 	/**
-	 * Register an existing instance as shared in the container.
+	 * Register an existing instance as shared in the container.注册一个已经存在的实例以便app容器共享
 	 * $this->instance('app', $this);
 	 * $this->instance('Illuminate\Container\Container', $this);
 	 * $this->instance('path', $this->path());
-	 * @param  string  $abstract 字符串|数组array('abstract'=>'别名')
+     * $this->instance('path.config', $this->configPath());
+	 * @param  string  $abstract 字符串|数组array('abstract即key'=>'别名')
 	 * @param  mixed   $instance =对象|字符串
 	 * @return void
 	 */
 	public function instance($abstract, $instance)
 	{
 		if (is_array($abstract))
-		{	//分析$abstract数组,返回['abstract','别名'];
-			list($abstract, $alias) = $this->extractAlias($abstract);
+		{
+			list($abstract, $alias) = $this->extractAlias($abstract);//分析$abstract数组,返回['abstract','别名'];
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
 		//解决 不能互为别名
 		unset($this->aliases[$abstract]);
 
-		//是否捆绑，实例，别名， 如果$abstract一样重复调用则一定是返回true
+		//是否为本类bindings捆绑，instances实例，aliases别名三者属性数组key之一， 如果存在返回true
 		$bound = $this->bound($abstract);//$abstrace是本类的bindings，instances，aliases三个属性之一的key
         //设置instances属性key=》值
 		$this->instances[$abstract] = $instance;
@@ -415,9 +416,9 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Extract the type and alias from a given definition.
-	 *
+	 * 返回数组的key和值
 	 * @param  array  $definition
-	 * @return array
+	 * @return array = [key名， 值]
 	 */
 	protected function extractAlias(array $definition)
 	{

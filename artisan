@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-
+//cli 脚步入口文件
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -13,8 +13,9 @@
 |
 */
 
+//composer加载器
 require __DIR__.'/bootstrap/autoload.php';
-
+//返回laravel app对象
 $app = require_once __DIR__.'/bootstrap/app.php';
 
 /*
