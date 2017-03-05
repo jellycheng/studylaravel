@@ -103,8 +103,8 @@ class Router implements RegistrarContract {
 	/**
 	 * Create a new Router instance.
 	 *
-	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
-	 * @param  \Illuminate\Container\Container  $container
+	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events Dispatcher类对象
+	 * @param  \Illuminate\Container\Container  $container app类对象
 	 * @return void
 	 */
 	public function __construct(Dispatcher $events, Container $container = null)
@@ -607,24 +607,16 @@ class Router implements RegistrarContract {
 	public function dispatch(Request $request)
 	{
 		$this->currentRequest = $request;
-
-		// If no response was returned from the before filter, we will call the proper
-		// route instance to get the response. If no route is found a response will
-		// still get returned based on why no routes were found for this request.
+		//
 		$response = $this->callFilter('before', $request);
-
 		if (is_null($response))
 		{
 			$response = $this->dispatchToRoute($request);
 		}
 
-		// Once this route has run and the response has been prepared, we will run the
-		// after filter to do any last work on the response or for this application
-		// before we will return the response back to the consuming code for use.
+		//
 		$response = $this->prepareResponse($request, $response);
-
 		$this->callFilter('after', $request, $response);
-
 		return $response;
 	}
 

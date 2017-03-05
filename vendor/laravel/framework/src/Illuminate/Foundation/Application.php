@@ -157,7 +157,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Run the given array of bootstrap classes.在http类的bootstrap90方法中调用这个方法
 	 * 批量执行$bootstrapper对象->bootstrap(app对象);
-	 * @param  array  $bootstrappers=[$bootstrapper1对象, $bootstrapper2,$bootstrapperN]
+	 * @param  array  $bootstrappers=[$bootstrapper1对象1, $bootstrapper2,$bootstrapperN]
 	 * @return void
 	 */
 	public function bootstrapWith(array $bootstrappers)
@@ -170,7 +170,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 			$this['events']->fire('bootstrapped: '.$bootstrapper, [$this]);
 		}
-
+		//标记app启动完毕
 		$this->hasBeenBootstrapped = true;
 	}
 

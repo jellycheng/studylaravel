@@ -78,7 +78,7 @@ class AliasLoader {
 
 	/**
 	 * Register the loader on the auto-loader stack.
-	 *
+	 * 注册加载器
 	 * @return void
 	 */
 	public function register()

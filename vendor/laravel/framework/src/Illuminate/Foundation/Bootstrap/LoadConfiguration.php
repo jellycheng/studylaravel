@@ -21,7 +21,6 @@ class LoadConfiguration {
 		if (file_exists($cached = $app->getCachedConfigPath()))
 		{//存在storage/framwwork/config.php文件则加载
 			$items = require $cached;
-
 			$loadedFromCache = true;//标记加载过cache文件
 		}
         //把config对象注入app对象容器中
@@ -33,7 +32,6 @@ class LoadConfiguration {
 		}
         //设置时区
 		date_default_timezone_set($config['app.timezone']);
-
 		mb_internal_encoding('UTF-8');
 	}
 
@@ -61,11 +59,10 @@ class LoadConfiguration {
 	protected function getConfigurationFiles(Application $app)
 	{
 		$files = [];
-
 		foreach (Finder::create()->files()->name('*.php')->in($app->configPath()) as $file)
 		{//在config/目录下查找所有.php的文件
 			$nesting = $this->getConfigurationNesting($file);
-
+			//$files['app.log'] = app/log.php文件的内容  $files['abc.xyz.xxx'] = abc/xyz/xxx.php文件的内容
 			$files[$nesting.basename($file->getRealPath(), '.php')] = $file->getRealPath();
 		}
 
@@ -81,12 +78,10 @@ class LoadConfiguration {
 	private function getConfigurationNesting(SplFileInfo $file)
 	{
 		$directory = dirname($file->getRealPath());
-
 		if ($tree = trim(str_replace(config_path(), '', $directory), DIRECTORY_SEPARATOR))
 		{
-			$tree = str_replace(DIRECTORY_SEPARATOR, '.', $tree).'.';
+			$tree = str_replace(DIRECTORY_SEPARATOR, '.', $tree).'.';// abc/xyz 替换为abc.xyz
 		}
-
 		return $tree;
 	}
 

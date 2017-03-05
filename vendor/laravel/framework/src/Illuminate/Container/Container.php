@@ -205,7 +205,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		if ( ! $concrete instanceof Closure)
 		{#不是闭包
-			//返回闭包,闭包接收参数(对象c，参数1)即调用对象c的make($concrete,参数1)或者build方法（$concrete,参数1）
+			//返回闭包,且闭包接收参数(对象c，参数1)即调用"对象c"->make($concrete,参数1)或者build方法($concrete,参数1)
 			$concrete = $this->getClosure($abstract, $concrete);//返回闭包
 		}
 		#app对象->bind('events', function($app){闭包}, true);
@@ -643,22 +643,18 @@ class Container implements ArrayAccess, ContainerContract {
 		}else {//递归实例化
 			$object = $this->make($concrete, $parameters);
 		}
-
 		//
 		foreach ($this->getExtenders($abstract) as $extender)
 		{//遍历app对象的extenders[$abstract]属性值
 			$object = $extender($object, $this);
 		}
-
 		//单例
 		if ($this->isShared($abstract)) {#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
 		}
-
 		$this->fireResolvingCallbacks($abstract, $object);
 		//标记make过
 		$this->resolved[$abstract] = true;
-
 		return $object;
 	}
 
@@ -666,7 +662,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * Get the concrete type for a given abstract.
 	 *
 	 * @param  string  $abstract
-	 * @return mixed   $concrete 具体的
+	 * @return mixed   $concrete 具体的,实现物
 	 */
 	protected function getConcrete($abstract)
 	{
@@ -685,7 +681,7 @@ class Container implements ArrayAccess, ContainerContract {
 			return $abstract;
 		}
 
-		return $this->bindings[$abstract]['concrete'];
+		return $this->bindings[$abstract]['concrete'];//实现物
 	}
 
 	/**
@@ -697,7 +693,7 @@ class Container implements ArrayAccess, ContainerContract {
 	protected function getContextualConcrete($abstract)
 	{
 		if (isset($this->contextual[end($this->buildStack)][$abstract]))
-		{
+		{//end($ary)获取数组最后一个单元值
 			return $this->contextual[end($this->buildStack)][$abstract];
 		}
 	}
@@ -733,7 +729,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Instantiate a concrete instance of the given type.
 	 * 实例化对象
-	 * @param  string  $concrete 字符串类名或闭包
+	 * @param  string  $concrete 字符串类名或闭包,具体实现物
 	 * @param  array   $parameters 传给闭包或类构造函数的参数= [0=>'第1个参数值', '1'=>'第2个参数值', '参数名'=>'参数名对应的值']
 	 * @return mixed
 	 *
@@ -836,17 +832,13 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	protected function resolveClass(ReflectionParameter $parameter)
 	{
-		try
-		{
+		try {
 			return $this->make($parameter->getClass()->name);//参数类名进行实例化
-		}
-		catch (BindingResolutionException $e)
-		{
+		} catch (BindingResolutionException $e) {
 			if ($parameter->isOptional())
 			{//获取参数默认值
 				return $parameter->getDefaultValue();
 			}
-
 			throw $e;
 		}
 	}
@@ -865,11 +857,9 @@ class Container implements ArrayAccess, ContainerContract {
 			if (is_numeric($key))
 			{
 				unset($parameters[$key]);
-
 				$parameters[$dependencies[$key]->name] = $value;
 			}
 		}
-
 		return $parameters;
 	}
 
@@ -885,9 +875,7 @@ class Container implements ArrayAccess, ContainerContract {
 		if ($callback === null && $abstract instanceof Closure)
 		{
 			$this->resolvingCallback($abstract);
-		}
-		else
-		{
+		} else {
 			$this->resolvingCallbacks[$abstract][] = $callback;
 		}
 	}
@@ -904,9 +892,7 @@ class Container implements ArrayAccess, ContainerContract {
 		if ($abstract instanceof Closure && $callback === null)
 		{
 			$this->afterResolvingCallback($abstract);
-		}
-		else
-		{
+		} else {
 			$this->afterResolvingCallbacks[$abstract][] = $callback;
 		}
 	}
@@ -924,9 +910,7 @@ class Container implements ArrayAccess, ContainerContract {
 		if ($abstract)
 		{
 			$this->resolvingCallbacks[$abstract][] = $callback;
-		}
-		else
-		{
+		} else {
 			$this->globalResolvingCallbacks[] = $callback;
 		}
 	}

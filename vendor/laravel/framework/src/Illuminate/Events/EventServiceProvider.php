@@ -12,7 +12,7 @@ class EventServiceProvider extends ServiceProvider {
 	public function register()
 	{	//单例
 		$this->app->singleton('events', function($app)
-		{
+		{//返回Dispatcher类对象
 			return (new Dispatcher($app))->setQueueResolver(function() use ($app)
 			{
 				return $app->make('Illuminate\Contracts\Queue\Queue');

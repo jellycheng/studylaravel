@@ -9,7 +9,7 @@ class UrlGenerator implements UrlGeneratorContract {
 
 	/**
 	 * The route collection.
-	 *
+	 * 路由集合类对象
 	 * @var \Illuminate\Routing\RouteCollection
 	 */
 	protected $routes;
@@ -74,14 +74,13 @@ class UrlGenerator implements UrlGeneratorContract {
 	/**
 	 * Create a new URL Generator instance.
 	 *
-	 * @param  \Illuminate\Routing\RouteCollection  $routes
+	 * @param  \Illuminate\Routing\RouteCollection  $routes 路由集合类对象
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return void
 	 */
 	public function __construct(RouteCollection $routes, Request $request)
 	{
 		$this->routes = $routes;
-
 		$this->setRequest($request);
 	}
 
@@ -626,7 +625,6 @@ class UrlGenerator implements UrlGeneratorContract {
 	public function setRoutes(RouteCollection $routes)
 	{
 		$this->routes = $routes;
-
 		return $this;
 	}
 
@@ -661,7 +659,6 @@ class UrlGenerator implements UrlGeneratorContract {
 	public function setSessionResolver(callable $sessionResolver)
 	{
 		$this->sessionResolver = $sessionResolver;
-
 		return $this;
 	}
 

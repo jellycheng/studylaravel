@@ -17,14 +17,12 @@ class DetectEnvironment {
 		try
 		{   //分析.env文件
 			Dotenv::load($app['path.base'], $app->environmentFile());
-		}
-		catch (InvalidArgumentException $e)
-		{
+		} catch (InvalidArgumentException $e) {
 			//
 		}
-        //设置当前环境
+
 		$app->detectEnvironment(function()
-		{
+		{//设置当前环境值,注入app对象['env']=中
 			return env('APP_ENV', 'production');
 		});
 	}

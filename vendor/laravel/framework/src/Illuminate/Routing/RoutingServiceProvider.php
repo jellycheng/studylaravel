@@ -11,18 +11,15 @@ class RoutingServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->registerRouter();
-
-		$this->registerUrlGenerator();
-
-		$this->registerRedirector();
-
-		$this->registerResponseFactory();
+		$this->registerRouter(); //设置Router类对象
+		$this->registerUrlGenerator();//设置UrlGenerator类对象
+		$this->registerRedirector();//设置Redirector类对象
+		$this->registerResponseFactory();//注册一个响应工厂
 	}
 
 	/**
 	 * Register the router instance.
-	 *
+	 * 注册路由实例
 	 * @return void
 	 */
 	protected function registerRouter()
@@ -42,40 +39,28 @@ class RoutingServiceProvider extends ServiceProvider {
 	{
 		$this->app['url'] = $this->app->share(function($app)
 		{
-			$routes = $app['router']->getRoutes();
-
-			// The URL generator needs the route collection that exists on the router.
-			// Keep in mind this is an object, so we're passing by references here
-			// and all the registered routes will be available to the generator.
+			$routes = $app['router']->getRoutes();//获取RouteCollection类对象即路由集合对象
 			$app->instance('routes', $routes);
-
 			$url = new UrlGenerator(
 				$routes, $app->rebinding(
 					'request', $this->requestRebinder()
 				)
 			);
-
+			//设置session解决者
 			$url->setSessionResolver(function()
 			{
 				return $this->app['session'];
 			});
-
-			// If the route collection is "rebound", for example, when the routes stay
-			// cached for the application, we will need to rebind the routes on the
-			// URL generator instance so it has the latest version of the routes.
-			$app->rebinding('routes', function($app, $routes)
-			{
+			//
+			$app->rebinding('routes', function($app, $routes) {
 				$app['url']->setRoutes($routes);
 			});
-
 			return $url;
 		});
 	}
 
 	/**
-	 * Get the URL generator request rebinder.
-	 *
-	 * @return \Closure
+	 * @return \Closure  返回闭包(app对象, 请求对象)
 	 */
 	protected function requestRebinder()
 	{
@@ -95,22 +80,17 @@ class RoutingServiceProvider extends ServiceProvider {
 		$this->app['redirect'] = $this->app->share(function($app)
 		{
 			$redirector = new Redirector($app['url']);
-
-			// If the session is set on the application instance, we'll inject it into
-			// the redirector instance. This allows the redirect responses to allow
-			// for the quite convenient "with" methods that flash to the session.
+			//
 			if (isset($app['session.store']))
 			{
 				$redirector->setSession($app['session.store']);
 			}
-
 			return $redirector;
 		});
 	}
 
 	/**
-	 * Register the response factory implementation.
-	 *
+	 * Register the response factory implementation.注册一个响应工厂
 	 * @return void
 	 */
 	protected function registerResponseFactory()

@@ -479,7 +479,6 @@ class Dispatcher implements DispatcherContract {
 	public function setQueueResolver(callable $resolver)
 	{
 		$this->queueResolver = $resolver;
-
 		return $this;
 	}
 
