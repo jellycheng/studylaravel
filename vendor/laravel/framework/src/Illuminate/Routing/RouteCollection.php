@@ -112,24 +112,21 @@ class RouteCollection implements Countable, IteratorAggregate {
 
 	/**
 	 * Find the first route matching a given request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * 匹配路由
+	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return \Illuminate\Routing\Route
 	 *
 	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function match(Request $request)
 	{
-		$routes = $this->get($request->getMethod());
+		$routes = $this->get($request->getMethod());//根据请求方式，获取所有路由
 
-		// First, we will see if we can find a matching route for this current request
-		// method. If we can, great, we can just return it so that it can be called
-		// by the consumer. Otherwise we will check for routes with another verb.
-		$route = $this->check($routes, $request);
+		$route = $this->check($routes, $request);//返回匹配的Route对象，没有返回null
 
 		if ( ! is_null($route))
-		{
-			return $route->bind($request);
+		{//已匹配，存在Route类对象
+			return $route->bind($request);//返回Route类对象
 		}
 
 		// If no route was found, we will check if a matching is route is specified on
@@ -141,7 +138,7 @@ class RouteCollection implements Countable, IteratorAggregate {
 		{
 			return $this->getRouteForMethods($request, $others);
 		}
-
+        //没有匹配路由抛异常
 		throw new NotFoundHttpException;
 	}
 
@@ -209,9 +206,9 @@ class RouteCollection implements Countable, IteratorAggregate {
 
 	/**
 	 * Determine if a route in the array matches the request.
-	 *
-	 * @param  array  $routes
-	 * @param  \Illuminate\http\Request  $request
+	 * 返回匹配的Route对象
+	 * @param  array  $routes  路由数组
+	 * @param  \Illuminate\http\Request  $request 请求对象
 	 * @param  bool  $includingMethod
 	 * @return \Illuminate\Routing\Route|null
 	 */

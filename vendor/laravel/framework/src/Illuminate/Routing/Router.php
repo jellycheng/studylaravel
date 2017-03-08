@@ -606,15 +606,14 @@ class Router implements RegistrarContract {
 	 */
 	public function dispatch(Request $request)
 	{
-		$this->currentRequest = $request;
+		$this->currentRequest = $request;//设置请求对象
 		//
 		$response = $this->callFilter('before', $request);
 		if (is_null($response))
 		{
 			$response = $this->dispatchToRoute($request);
 		}
-
-		//
+		//处理相关响应头，返回响应对象
 		$response = $this->prepareResponse($request, $response);
 		$this->callFilter('after', $request, $response);
 		return $response;
@@ -623,16 +622,13 @@ class Router implements RegistrarContract {
 	/**
 	 * Dispatch the request to a route and return the response.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return mixed
 	 */
 	public function dispatchToRoute(Request $request)
 	{
-		// First we will find a route that matches this request. We will also set the
-		// route resolver on the request so middlewares assigned to the route will
-		// receive access to this route instance for checking of the parameters.
-		$route = $this->findRoute($request);
-
+		//
+		$route = $this->findRoute($request);//返回Route类对象
 		$request->setRouteResolver(function() use ($route)
 		{
 			return $route;
@@ -707,12 +703,10 @@ class Router implements RegistrarContract {
 	 * @return \Illuminate\Routing\Route
 	 */
 	protected function findRoute($request)
-	{
-		$this->current = $route = $this->routes->match($request);
-
-		$this->container->instance('Illuminate\Routing\Route', $route);
-
-		return $this->substituteBindings($route);
+	{   //路由集合中匹配路由
+		$this->current = $route = $this->routes->match($request);//返回Route类对象
+		$this->container->instance('Illuminate\Routing\Route', $route);//注入app对象中
+		return $this->substituteBindings($route);//返回Route类对象
 	}
 
 	/**
@@ -1177,10 +1171,9 @@ class Router implements RegistrarContract {
 	{
 		if ( ! $response instanceof SymfonyResponse)
 		{
-			$response = new Response($response);
+			$response = new Response($response);//实例化SymfonyResponse类对象，$response=响应内容
 		}
-
-		return $response->prepare($request);
+		return $response->prepare($request);//设置相关响应头，返回响应对象
 	}
 
 	/**

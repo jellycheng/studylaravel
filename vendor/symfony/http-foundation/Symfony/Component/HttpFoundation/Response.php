@@ -188,7 +188,7 @@ class Response
     /**
      * Constructor.
      *
-     * @param mixed $content The response content, see setContent()
+     * @param mixed $content The response content, see setContent() 响应内容
      * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
@@ -260,7 +260,7 @@ class Response
      * compliant with RFC 2616. Most of the changes are based on
      * the Request that is "associated" with this Response.
      *
-     * @param Request $request A Request instance
+     * @param Request $request A Request instance  请求对象
      *
      * @return Response The current response.
      */
