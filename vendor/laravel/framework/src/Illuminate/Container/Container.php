@@ -405,8 +405,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Alias a type to a different name.
 	 *
-	 * @param  string  $abstract
-	 * @param  string  $alias
+	 * @param  string  $abstract 抽象
+	 * @param  string  $alias 抽象别名
 	 * @return void
 	 */
 	public function alias($abstract, $alias)
@@ -417,7 +417,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Extract the type and alias from a given definition.
 	 * 返回数组的key和值
-	 * @param  array  $definition
+	 * @param  array  $definition = array(key名=>值)
 	 * @return array = [key名， 值]
 	 */
 	protected function extractAlias(array $definition)
@@ -435,7 +435,6 @@ class Container implements ArrayAccess, ContainerContract {
 	public function rebinding($abstract, Closure $callback)
 	{
 		$this->reboundCallbacks[$abstract][] = $callback;
-
 		if ($this->bound($abstract)) return $this->make($abstract);
 	}
 
@@ -471,20 +470,16 @@ class Container implements ArrayAccess, ContainerContract {
 			call_user_func($callback, $this, $instance);
 		}
 	}
-
 	/**
 	 * Get the rebound callbacks for a given type.
-	 *
 	 * @param  string  $abstract
 	 * @return array
 	 */
-	protected function getReboundCallbacks($abstract)
-	{
+	protected function getReboundCallbacks($abstract) {
 		if (isset($this->reboundCallbacks[$abstract]))
-		{//存在值,值是可被call_user_func函数调用(接收2个参数,分别是app对象和$abstract对应的类对象)
+		{//存在值,值可被call_user_func函数调用(接收2个参数,分别是app对象和$abstract对应的类对象)
 			return $this->reboundCallbacks[$abstract];
 		}
-
 		return [];
 	}
 

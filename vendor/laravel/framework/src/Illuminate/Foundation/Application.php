@@ -109,7 +109,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	{
 	    //注册基本绑定，设置本类对象
 		$this->registerBaseBindings();
-		//注册基础服务提供者： 1.事件服务提供者，2.路由服务提供者
+		//注册服务提供者： 1.事件服务提供者，2.路由服务提供者
 		$this->registerBaseServiceProviders();
 
 		$this->registerCoreContainerAliases();//设置别名
@@ -155,7 +155,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	}
 
 	/**
-	 * Run the given array of bootstrap classes.在http类的bootstrap90方法中调用这个方法
+	 * Run the given array of bootstrap classes.在http类的bootstrap()方法中调用这个方法
 	 * 批量执行$bootstrapper对象->bootstrap(app对象);
 	 * @param  array  $bootstrappers=[$bootstrapper1对象1, $bootstrapper2,$bootstrapperN]
 	 * @return void
@@ -459,7 +459,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		}
 		//把已经实例化服务提供者对象存入属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true
 		$this->markAsRegistered($provider);
-
 
 		if ($this->booted)
 		{//调用过app对象的boot()方法，则调用$provider服务提供者类对象的boot()方法
