@@ -518,7 +518,7 @@ class Container implements ArrayAccess, ContainerContract {
 		{//$callback=存在@字符 或者$defaultMethod类的默认方法
 			return $this->callClass($callback, $parameters, $defaultMethod);
 		}
-		//返回$callback函数要接收的参数
+		//返回$callback函数实际接收的参数
 		$dependencies = $this->getMethodDependencies($callback, $parameters);
 		return call_user_func_array($callback, $dependencies);
 	}
@@ -543,10 +543,10 @@ class Container implements ArrayAccess, ContainerContract {
 	 */
 	protected function getMethodDependencies($callback, $parameters = [])
 	{
-		$dependencies = [];
+		$dependencies = [];//$callback方法接收的实际参数值
 
 		foreach ($this->getCallReflector($callback)->getParameters() as $key => $parameter)
-		{
+		{//循环反射的方法参数(反射参数对象， &形参，&依赖参)
 			$this->addDependencyForCallParameter($parameter, $parameters, $dependencies);
 		}
 
@@ -579,7 +579,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 *
 	 * @param  \ReflectionParameter  $parameter 反射出的参数对象
 	 * @param  array  $parameters 要传递给参数的值,可选
-	 * @param  array  $dependencies 函数参数要接收(依赖)的值['类对象','参数值1','默认值']
+	 * @param  array  $dependencies 函数参数要接收(依赖)的值['类对象','传入参数值1','参数默认值']
 	 * @return mixed
 	 */
 	protected function addDependencyForCallParameter(ReflectionParameter $parameter, array &$parameters, &$dependencies)
@@ -591,7 +591,7 @@ class Container implements ArrayAccess, ContainerContract {
 		}
 		elseif ($parameter->getClass())
 		{//是反射类， 则可以$parameter->getClass()->name获取类名
-			$dependencies[] = $this->make($parameter->getClass()->name);
+			$dependencies[] = $this->make($parameter->getClass()->name);//获取类对象
 		}
 		elseif ($parameter->isDefaultValueAvailable())
 		{//参数存在默认值
@@ -602,9 +602,9 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Call a string reference to a class using Class@method syntax.
 	 *
-	 * @param  string  $target=类名@方法名
+	 * @param  string  $target=类名@方法名 或者 =类名
 	 * @param  array  $parameters 传给类方法的参数
-	 * @param  string|null  $defaultMethod
+	 * @param  string|null  $defaultMethod 默认调用类的方法
 	 * @return mixed
 	 */
 	protected function callClass($target, array $parameters = [], $defaultMethod = null)
@@ -643,22 +643,18 @@ class Container implements ArrayAccess, ContainerContract {
 		}else {//递归实例化
 			$object = $this->make($concrete, $parameters);
 		}
-
 		//
 		foreach ($this->getExtenders($abstract) as $extender)
 		{//遍历app对象的extenders[$abstract]属性值
 			$object = $extender($object, $this);
 		}
-
 		//单例
 		if ($this->isShared($abstract)) {#是instances[$abstract]属性值 或者 bindings[$abstract]['shared']=true
 			$this->instances[$abstract] = $object;
 		}
-
 		$this->fireResolvingCallbacks($abstract, $object);
 		//标记make过
 		$this->resolved[$abstract] = true;
-
 		return $object;
 	}
 

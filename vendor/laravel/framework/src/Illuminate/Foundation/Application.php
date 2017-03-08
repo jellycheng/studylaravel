@@ -473,7 +473,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 * Get the registered service provider instance if it exists.
 	 * 通过服务提供者类对象(或类名)在serviceProviders属性中查找是否存在对象,存放返回true,不存在返回null
 	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
-	 * @return \Illuminate\Support\ServiceProvider|null
+	 * @return \Illuminate\Support\ServiceProvider|null 已经是服务器提供者返回对象，否则返回nulll
 	 */
 	public function getProvider($provider)
 	{
@@ -898,7 +898,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		foreach ($aliases as $key => $aliases)
 		{
 			foreach ((array) $aliases as $alias)
-			{
+			{   //$key=view, $alias=Illuminate\View\Factory
+                //=>$this->aliases['Illuminate\View\Factory '] = 'view';$abstract=view;
 				$this->alias($key, $alias);
 			}
 		}
