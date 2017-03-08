@@ -6,7 +6,7 @@ class RegisterProviders {
 
 	/**
 	 * Bootstrap the given application.
-	 *
+	 * 调用app对象->registerConfiguredProviders()
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
 	 * @return void
 	 */

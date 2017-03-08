@@ -33,8 +33,8 @@ class Kernel implements KernelContract {
 		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志
 		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置
 		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器
-		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()
-		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法
+		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（其实是执行所有服务提供者的boot()方法）
 	];
 
 	/**
@@ -63,7 +63,7 @@ class Kernel implements KernelContract {
 		$this->app = $app;
 		$this->router = $router;
 		foreach ($this->routeMiddleware as $key => $middleware)
-		{   //设置路由对象的属性middleware（把在kernel中配置的中间介传给路由属性）
+		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）
 			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
 		}
 	}

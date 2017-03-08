@@ -45,7 +45,7 @@ class LoadConfiguration {
 	protected function loadConfigurationFiles(Application $app, RepositoryContract $config)
 	{
 		foreach ($this->getConfigurationFiles($app) as $key => $path)
-		{//加载配置文件，文件名作为key，文件配置作为值
+		{//遍历config目录，加载配置文件，文件名作为key，文件配置作为值
 			$config->set($key, require $path);
 		}
 	}

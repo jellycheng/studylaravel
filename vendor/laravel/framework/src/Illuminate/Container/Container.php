@@ -211,7 +211,7 @@ class Container implements ArrayAccess, ContainerContract {
 		#app对象->bind('events', function($app){闭包}, true);
 		#	=>则是设置$this->bindings['events']=['concrete'=>function(对象){}, 'shared'=>true ]
 		#app对象->bind('abc', 'xyz', true);
-		#  =>则是设置$this->bindings['abc']=['concrete'=>function(对象1,参数1){对象1->make(xyz,参数1)}, 'shared'=>true]
+		#  =>则是设置$this->bindings['abc']=['concrete'=>function(对象1,参数1=[]){对象1->make(xyz,参数1)}, 'shared'=>true]
 		$this->bindings[$abstract] = compact('concrete', 'shared');
 
 		//是否是instances属性key或resolved属性key

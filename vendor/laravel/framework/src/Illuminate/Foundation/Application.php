@@ -428,7 +428,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function registerConfiguredProviders()
 	{
 		$manifestPath = $this->basePath().'/vendor/services.json';
-
+		//有的laravel框架版本，这个缓存文件是在 $manifestPath = $this->storagePath().DIRECTORY_SEPARATOR.'framework'.DIRECTORY_SEPARATOR.'services.json';
 		(new ProviderRepository($this, new Filesystem, $manifestPath))
 		            ->load($this->config['app.providers']);
 	}
