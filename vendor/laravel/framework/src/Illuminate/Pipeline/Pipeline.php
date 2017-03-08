@@ -15,7 +15,7 @@ class Pipeline implements PipelineContract {
 
 	/**
 	 * The object being passed through the pipeline.
-	 *
+	 * 请求对象
 	 * @var mixed
 	 */
 	protected $passable;
@@ -37,7 +37,7 @@ class Pipeline implements PipelineContract {
 	/**
 	 * Create a new class instance.
 	 *
-	 * @param  \Illuminate\Contracts\Container\Container  $container
+	 * @param  \Illuminate\Contracts\Container\Container  $container 容器app对象
 	 * @return void
 	 */
 	public function __construct(Container $container)
@@ -48,26 +48,24 @@ class Pipeline implements PipelineContract {
 	/**
 	 * Set the object being sent through the pipeline.
 	 *
-	 * @param  mixed  $passable
+	 * @param  mixed  $passable  请求对象
 	 * @return $this
 	 */
 	public function send($passable)
 	{
 		$this->passable = $passable;
-
 		return $this;
 	}
 
 	/**
 	 * Set the array of pipes.
-	 *
+	 * 管道，所有中间介
 	 * @param  dynamic|array  $pipes
 	 * @return $this
 	 */
 	public function through($pipes)
 	{
 		$this->pipes = is_array($pipes) ? $pipes : func_get_args();
-
 		return $this;
 	}
 
@@ -80,31 +78,27 @@ class Pipeline implements PipelineContract {
 	public function via($method)
 	{
 		$this->method = $method;
-
 		return $this;
 	}
 
 	/**
 	 * Run the pipeline with a final destination callback.
-	 *
 	 * @param  \Closure  $destination
 	 * @return mixed
 	 */
 	public function then(Closure $destination)
 	{
 		$firstSlice = $this->getInitialSlice($destination);
-
-		$pipes = array_reverse($this->pipes);
+		$pipes = array_reverse($this->pipes);//中间介颠倒顺序
 		//调用所有中间介类的handle方法
 		return call_user_func(
 							array_reduce($pipes, $this->getSlice(), $firstSlice),
-							$this->passable
+							$this->passable //请求对象
 						);
 	}
 
 	/**
 	 * Get a Closure that represents a slice of the application onion.
-	 *
 	 * @return \Closure
 	 */
 	protected function getSlice()
@@ -117,6 +111,7 @@ class Pipeline implements PipelineContract {
 				{
 					return call_user_func($pipe, $passable, $stack);
 				} else {
+				    //执行管道的handle(请求对象, 闭包)  此闭包接收请求对象
 					return $this->container->make($pipe)->{$this->method}($passable, $stack);
 				}
 			};
@@ -125,7 +120,6 @@ class Pipeline implements PipelineContract {
 
 	/**
 	 * Get the initial slice to begin the stack call.
-	 *
 	 * @param  \Closure  $destination
 	 * @return \Closure
 	 */

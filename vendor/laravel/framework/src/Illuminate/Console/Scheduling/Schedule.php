@@ -1,7 +1,7 @@
 <?php namespace Illuminate\Console\Scheduling;
 
 use Illuminate\Contracts\Foundation\Application;
-
+//时间表类
 class Schedule {
 
 	/**

@@ -88,17 +88,15 @@ class Command
      */
     public function setApplication(Application $application = null)
     {
-        $this->application = $application;
+        $this->application = $application;//设置console app对象
         if ($application) {
             $this->setHelperSet($application->getHelperSet());
         } else {
             $this->helperSet = null;
         }
     }
-
     /**
      * Sets the helper set.
-     *
      * @param HelperSet $helperSet A HelperSet instance
      */
     public function setHelperSet(HelperSet $helperSet)
@@ -130,7 +128,7 @@ class Command
 
     /**
      * Checks whether the command is enabled or not in the current environment.
-     *
+     * 标记命令是否开启
      * Override this to check for x or y and return false if the command can not
      * run properly under the current conditions.
      *

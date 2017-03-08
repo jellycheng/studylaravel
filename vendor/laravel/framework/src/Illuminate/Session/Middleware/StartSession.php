@@ -52,9 +52,8 @@ class StartSession implements TerminableMiddleware {
 		// so that the data is ready for an application. Note that the Laravel sessions
 		// do not make use of PHP "native" sessions in any way since they are crappy.
 		if ($this->sessionConfigured())
-		{
+		{//有配置session
 			$session = $this->startSession($request);
-
 			$request->setSession($session);
 		}
 
@@ -212,7 +211,7 @@ class StartSession implements TerminableMiddleware {
 
 	/**
 	 * Determine if a session driver has been configured.
-	 *
+	 * 是否配置session，判定方式是config/session.php文件中是否driver值不为null
 	 * @return bool
 	 */
 	protected function sessionConfigured()

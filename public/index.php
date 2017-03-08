@@ -49,9 +49,9 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $kernel = $app->make('Illuminate\Contracts\Http\Kernel');//返回App\Http\Kernel类对象
 //var_export($kernel);
 $response = $kernel->handle(
-	$request = Illuminate\Http\Request::capture()
+	$request = Illuminate\Http\Request::capture()  //请求对象
 );
 
-$response->send();
+$response->send();//响应内容: 设置响应头和输出响应内容
 
-$kernel->terminate($request, $response);
+$kernel->terminate($request, $response);//执行terminate类型中间介的terminate()方法

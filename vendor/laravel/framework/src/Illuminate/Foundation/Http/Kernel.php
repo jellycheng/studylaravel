@@ -117,10 +117,9 @@ class Kernel implements KernelContract {
 
 		foreach (array_merge($routeMiddlewares, $this->middleware) as $middleware)
 		{
-			$instance = $this->app->make($middleware);
-
+			$instance = $this->app->make($middleware);//获取terminate类型的中间介对象
 			if ($instance instanceof TerminableMiddleware)
-			{//http中间介和路由中间是路由的terminate类
+			{//http中间介和路由中间介中是terminate类型的中间介则执行其terminate()方法
 				$instance->terminate($request, $response);
 			}
 		}
@@ -198,7 +197,7 @@ class Kernel implements KernelContract {
 	{
 		return function($request)
 		{
-			$this->app->instance('request', $request);
+			$this->app->instance('request', $request);//注入请求对象
             //分析请求，路由
 			return $this->router->dispatch($request);
 		};

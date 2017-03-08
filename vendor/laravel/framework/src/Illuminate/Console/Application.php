@@ -36,7 +36,7 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	 * Create a new Artisan console application.
 	 *
 	 * @param  \Illuminate\Contracts\Foundation\Application  $laravel
-	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events 事件对象
 	 * @return void
 	 */
 	public function __construct(LaravelApplication $laravel, Dispatcher $events)
@@ -86,16 +86,16 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	public function add(SymfonyCommand $command)
 	{
 		if ($command instanceof Command)
-		{
+		{//是Illuminate\Console\Command类对象则注入app对象
 			$command->setLaravel($this->laravel);
 		}
-
+        //设置本类commands属性值
 		return $this->addToParent($command);
 	}
 
 	/**
 	 * Add the command to the parent instance.
-	 *
+	 * 设置本类commands属性值
 	 * @param  \Symfony\Component\Console\Command\Command  $command
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
@@ -111,25 +111,23 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
 	public function resolve($command)
-	{
+	{   //实例化命令类
 		return $this->add($this->laravel->make($command));
 	}
 
 	/**
 	 * Resolve an array of commands through the application.
-	 *
+	 * 批量设置本类commands属性值
 	 * @param  array|mixed  $commands
 	 * @return $this
 	 */
 	public function resolveCommands($commands)
 	{
 		$commands = is_array($commands) ? $commands : func_get_args();
-
 		foreach ($commands as $command)
-		{
+		{//循环每个命令
 			$this->resolve($command);
 		}
-
 		return $this;
 	}
 

@@ -85,7 +85,7 @@ class Kernel implements KernelContract {
 	{
 		try
 		{
-			$this->bootstrap();
+			$this->bootstrap();//启动初始化
 
 			return $this->getArtisan()->run($input, $output);
 		}
@@ -133,9 +133,6 @@ class Kernel implements KernelContract {
 	{
 		$this->bootstrap();
 
-		// If we are calling a arbitary command from within the application, we will load
-		// all of the available deferred providers which will make all of the commands
-		// available to an application. Otherwise the command will not be available.
 		$this->app->loadDeferredProviders();
 
 		return $this->getArtisan()->call($command, $parameters);
@@ -187,16 +184,15 @@ class Kernel implements KernelContract {
 	public function bootstrap()
 	{
 		if ( ! $this->app->hasBeenBootstrapped())
-		{
-			$this->app->bootstrapWith($this->bootstrappers());
+		{//app未启动完毕
+			$this->app->bootstrapWith($this->bootstrappers());//调用启动执行的类,且这些类均有bootstrap($app对象)方法
 		}
-
-		$this->app->loadDeferredProviders();
+		$this->app->loadDeferredProviders();//执行延迟服务提供者
 	}
 
 	/**
 	 * Get the Artisan application instance.
-	 *
+	 * 获取Artisan类对象并匹配设置本类commands属性值
 	 * @return \Illuminate\Console\Application
 	 */
 	protected function getArtisan()

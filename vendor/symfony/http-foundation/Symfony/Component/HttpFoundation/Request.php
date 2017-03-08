@@ -272,7 +272,7 @@ class Request
 
     /**
      * Creates a new request with values from PHP's super globals.
-     *
+     * 实例化symfony request请求类并清洗php全局变量
      * @return Request A new request
      *
      * @api
@@ -1484,7 +1484,7 @@ class Request
 
     /**
      * Returns the request body content.
-     *
+     * 获取请求内容
      * @param bool $asResource If true, a resource will be returned
      *
      * @return string|resource The request body content or a resource to read the body stream.

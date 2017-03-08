@@ -365,7 +365,7 @@ class Command extends \Symfony\Component\Console\Command\Command {
 
 	/**
 	 * Get the Laravel application instance.
-	 *
+	 * 获取laravel app对象
 	 * @return \Illuminate\Contracts\Foundation\Application
 	 */
 	public function getLaravel()
@@ -375,7 +375,7 @@ class Command extends \Symfony\Component\Console\Command\Command {
 
 	/**
 	 * Set the Laravel application instance.
-	 *
+	 * 设置laravel app对象
 	 * @param  \Illuminate\Contracts\Foundation\Application  $laravel
 	 * @return void
 	 */

@@ -176,7 +176,7 @@ class SessionManager extends Manager {
 
 	/**
 	 * Get the session configuration.
-	 *
+	 * 获取session配置，配置文件是config/session.php,返回数组
 	 * @return array
 	 */
 	public function getSessionConfig()

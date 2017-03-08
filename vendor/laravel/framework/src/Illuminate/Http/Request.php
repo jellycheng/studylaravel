@@ -6,7 +6,7 @@ use SplFileInfo;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-
+//请求对象
 class Request extends SymfonyRequest implements ArrayAccess {
 
 	/**
@@ -603,25 +603,21 @@ class Request extends SymfonyRequest implements ArrayAccess {
 
 	/**
 	 * Create an Illuminate request from a Symfony instance.
-	 *
-	 * @param  \Symfony\Component\HttpFoundation\Request  $request
+	 * 请求对象
+	 * @param  \Symfony\Component\HttpFoundation\Request  $request symfony request请求类对象并清洗php全局变量
 	 * @return \Illuminate\Http\Request
 	 */
 	public static function createFromBase(SymfonyRequest $request)
 	{
 		if ($request instanceof static) return $request;
 
-		$content = $request->content;
-
+		$content = $request->content;//请求内容
+        //复制本类对象
 		$request = (new static)->duplicate(
-
 			$request->query->all(), $request->request->all(), $request->attributes->all(),
-
 			$request->cookies->all(), $request->files->all(), $request->server->all()
 		);
-
-		$request->content = $content;
-
+		$request->content = $content;//设置请求内容
 		$request->request = $request->getInputSource();
 
 		return $request;
@@ -631,7 +627,7 @@ class Request extends SymfonyRequest implements ArrayAccess {
 	 * {@inheritdoc}
 	 */
 	public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)
-	{
+	{//复制本类
 		return parent::duplicate($query, $request, $attributes, $cookies, array_filter((array) $files), $server);
 	}
 

@@ -338,15 +338,13 @@ class Application
         if ('UNKNOWN' !== $this->getName() && 'UNKNOWN' !== $this->getVersion()) {
             return sprintf('<info>%s</info> version <comment>%s</comment>', $this->getName(), $this->getVersion());
         }
-
         return '<info>Console Tool</info>';
     }
 
     /**
      * Registers a new command.
-     *
+     * 新增本类commands属性key值
      * @param string $name The command name
-     *
      * @return Command The newly created command
      *
      * @api
@@ -358,7 +356,7 @@ class Application
 
     /**
      * Adds an array of command objects.
-     *
+     * 批量设置本类commands属性值
      * @param Command[] $commands An array of commands
      *
      * @api
@@ -371,12 +369,8 @@ class Application
     }
 
     /**
-     * Adds a command object.
-     *
-     * If a command with the same name already exists, it will be overridden.
-     *
-     * @param Command $command A Command object
-     *
+     * Adds a command object.设置本类commands属性值
+     * @param Command $command A Command object 具体命令对象
      * @return Command The registered command
      *
      * @api
@@ -384,23 +378,17 @@ class Application
     public function add(Command $command)
     {
         $command->setApplication($this);
-
-        if (!$command->isEnabled()) {
-            $command->setApplication(null);
-
+        if (!$command->isEnabled()) {//命令未开启
+            $command->setApplication(null); //清空console app对象
             return;
         }
-
         if (null === $command->getDefinition()) {
             throw new \LogicException(sprintf('Command class "%s" is not correctly initialized. You probably forgot to call the parent constructor.', get_class($command)));
         }
-
         $this->commands[$command->getName()] = $command;
-
         foreach ($command->getAliases() as $alias) {
             $this->commands[$alias] = $command;
         }
-
         return $command;
     }
 
