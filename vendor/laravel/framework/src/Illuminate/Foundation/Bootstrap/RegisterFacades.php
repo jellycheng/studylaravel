@@ -15,9 +15,8 @@ class RegisterFacades {
 	public function bootstrap(Application $app)
 	{
 		Facade::clearResolvedInstances();
-
 		Facade::setFacadeApplication($app);
-
+		//设置类别名，且设置自动加载器
 		AliasLoader::getInstance($app['config']['app.aliases'])->register();
 	}
 

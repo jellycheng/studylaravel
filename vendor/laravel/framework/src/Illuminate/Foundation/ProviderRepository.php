@@ -21,7 +21,7 @@ class ProviderRepository {
 
 	/**
 	 * The path to the manifest file.
-	 *
+	 * 服务提供者的json文件
 	 * @var string
 	 */
 	protected $manifestPath;
@@ -31,7 +31,7 @@ class ProviderRepository {
 	 *
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
 	 * @param  \Illuminate\Filesystem\Filesystem  $files
-	 * @param  string  $manifestPath
+	 * @param  string  $manifestPath  服务提供者的json文件
 	 * @return void
 	 */
 	public function __construct(ApplicationContract $app, Filesystem $files, $manifestPath)
@@ -49,50 +49,36 @@ class ProviderRepository {
 	 */
 	public function load(array $providers)
 	{
-		$manifest = $this->loadManifest();
-
-		// First we will load the service manifest, which contains information on all
-		// service providers registered with the application and which services it
-		// provides. This is used to know which services are "deferred" loaders.
+		$manifest = $this->loadManifest();//配置文件存在，返回数组内容，否则返回null
 		if ($this->shouldRecompile($manifest, $providers))
 		{//需要重新编译
 			$manifest = $this->compileManifest($providers);
 		}
-
-		// Next, we will register events to load the providers for each of the events
-		// that it has requested. This allows the service provider to defer itself
-		// while still getting automatically loaded when a certain event occurs.
 		foreach ($manifest['when'] as $provider => $events)
 		{
 			$this->registerLoadEvents($provider, $events);
 		}
-
-		// We will go ahead and register all of the eagerly loaded providers with the
-		// application so their services can be registered with the application as
-		// a provided service. Then we will set the deferred service list on it.
 		foreach ($manifest['eager'] as $provider)
-		{
+		{//注册服务提供者并执行其register()方法
 			$this->app->register($this->createProvider($provider));
 		}
-
+		//设置app类的setDeferredServices属性值
 		$this->app->setDeferredServices($manifest['deferred']);
 	}
 
 	/**
 	 * Register the load events for the given provider.
 	 *
-	 * @param  string  $provider
-	 * @param  array  $events
+	 * @param  string  $provider 提供者类
+	 * @param  array  $events 事件数组
 	 * @return void
 	 */
 	protected function registerLoadEvents($provider, array $events)
 	{
 		if (count($events) < 1) return;
-
 		$app = $this->app;
-
 		$app->make('events')->listen($events, function() use ($app, $provider)
-		{
+		{	//监听事件，事件触发则注册服务提供者
 			$app->register($provider);
 		});
 	}
@@ -105,11 +91,10 @@ class ProviderRepository {
 	 */
 	protected function compileManifest($providers)
 	{
-		$manifest = $this->freshManifest($providers);
-
+		$manifest = $this->freshManifest($providers);//获取最新结构
 		foreach ($providers as $provider)
 		{
-			$instance = $this->createProvider($provider);
+			$instance = $this->createProvider($provider);//实例化服务提供者类
 			if ($instance->isDeferred())
 			{
 				foreach ($instance->provides() as $service)
@@ -140,7 +125,7 @@ class ProviderRepository {
 
 	/**
 	 * Determine if the manifest should be compiled.
-	 *
+	 * $manifest为空，或者 $manifest!=$providers
 	 * @param  array  $manifest
 	 * @param  array  $providers
 	 * @return bool
@@ -152,16 +137,13 @@ class ProviderRepository {
 
 	/**
 	 * Load the service provider manifest JSON file.
-	 * 加载配置文件
+	 * 加载配置文件=项目目录/vendor/services.json
 	 * @return array
 	 */
 	public function loadManifest()
 	{
-		// The service manifest is a file containing a JSON representation of every
-		// service provided by the application and whether its provider is using
-		// deferred loading or should be eagerly loaded on each request to us.
 		if ($this->files->exists($this->manifestPath))
-		{
+		{//文件存在，获取文件内容
 			$manifest = json_decode($this->files->get($this->manifestPath), true);
 
 			return array_merge(['when' => []], $manifest);

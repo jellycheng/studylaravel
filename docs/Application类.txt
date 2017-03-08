@@ -1,9 +1,9 @@
+
 function getClosure($abstract, $concrete)
 {//返回闭包
 	return function($c, $parameters = []) use ($abstract, $concrete)
 	{
 		$method = ($abstract == $concrete) ? 'build' : 'make';
-
 		return $c->$method($concrete, $parameters);
 	};
 }
@@ -11,12 +11,13 @@ $abc = getClosure("Illuminate\Contracts\Http\Kernel", 'App\Http\Kernel');
 $abc('xyz', array(参数)); #调用xyz对象->make('App\Http\Kernel', array(参数));
 
 $app->singleton(
-	'Illuminate\Contracts\Http\Kernel',
-	'App\Http\Kernel'
+	'Illuminate\Contracts\Http\Kernel',  //$abstract
+	'App\Http\Kernel'                   //$concrete实现物
 );
-$kernel = $app->make('Illuminate\Contracts\Http\Kernel'); =>执行 function(app对象, []) use ($abstract, $concrete){
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
+        =>执行 function(app对象, []) use ($abstract, $concrete){
 		$method = ($abstract == $concrete) ? 'build' : 'make';
-		return app对象->make($concrete是App\Http\Kernel, $parameters);
+		return app对象->make($concrete是App\Http\Kernel即实现物, $parameters);
 	}
 注册服务提供者： app对象->register(new EventServiceProvider($app对象)服务提供者对象);
 \Illuminate\Foundation\Application 类属性：
@@ -126,7 +127,6 @@ $this->app['url'] = "hello" 是调用application类的offsetSet('url', 'hello')�
 function getClosure($abstract, $concrete){//返回闭包
 	return function($c, $parameters = []) use ($abstract, $concrete){
 		$method = ($abstract == $concrete) ? 'build' : 'make';
-
 		return $c->$method($concrete, $parameters);
 	};
 }

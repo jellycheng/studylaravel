@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+
+use Log;
 use App;
 class WelcomeController extends Controller {
 
@@ -25,12 +27,14 @@ class WelcomeController extends Controller {
 	}
 
 	/**
-	 * Show the application welcome screen to the user.
-	 *
+	 * http://localhost:8889/?open_log=1
 	 * @return Response
 	 */
 	public function index()
 	{
+		if(isset($_GET['open_log']) && $_GET['open_log']==1) {
+			Log::info('这是我写的日志，日志文件在storage/logs/laravel-年-月-日.log');
+		}
 		return view('welcome');
 	}
 

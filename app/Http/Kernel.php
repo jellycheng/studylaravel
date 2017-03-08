@@ -20,7 +20,7 @@ class Kernel extends HttpKernel {
 
 	/**
 	 * The application's route middleware.
-	 * 路由中间介，会传递给router类对象的middleware属性中
+	 * 路由中间介，会传递给router类对象的middleware属性中(在实例化本类时注入Router类中)
 	 * 一般新的项目不配置这个属性,把该属性值变为空数组,如何根据业务再自行配置路由中间介
 	 * @var array
 	 */

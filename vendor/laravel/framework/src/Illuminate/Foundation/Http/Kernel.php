@@ -11,22 +11,20 @@ use Illuminate\Contracts\Http\Kernel as KernelContract;
 class Kernel implements KernelContract {
 
 	/**
-	 * The application implementation.
-	 *
+	 * The application implementation. app对象
 	 * @var \Illuminate\Contracts\Foundation\Application
 	 */
 	protected $app;
 
 	/**
-	 * The router instance.
-	 *
+	 * The router instance.路由者对象
 	 * @var \Illuminate\Routing\Router
 	 */
 	protected $router;
 
 	/**
 	 * The bootstrap classes for the application.
-	 *  http启动时执行的类,这些类均有bootstrap(app对象)方法
+	 *  http启动时执行的类,这些类均有bootstrap(app对象)方法且构造函数接收app对象
 	 * @var array
 	 */
 	protected $bootstrappers = [
@@ -35,20 +33,20 @@ class Kernel implements KernelContract {
 		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志
 		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置
 		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器
-		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()
-		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法
+		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（其实是执行所有服务提供者的boot()方法）
 	];
 
 	/**
 	 * The application's middleware stack.
-	 *
+	 * http中间介,均实现handle()方法
 	 * @var array
 	 */
 	protected $middleware = [];
 
 	/**
 	 * The application's route middleware.
-	 *
+	 * 路由中间介
 	 * @var array
 	 */
 	protected $routeMiddleware = [];
@@ -64,9 +62,8 @@ class Kernel implements KernelContract {
 	{
 		$this->app = $app;
 		$this->router = $router;
-
 		foreach ($this->routeMiddleware as $key => $middleware)
-		{   //设置路由对象的属性middleware（把在kernel中配置的中间介传给路由属性）
+		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）
 			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
 		}
 	}
@@ -92,17 +89,14 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Send the given request through the middleware / router.
-	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
 	protected function sendRequestThroughRouter($request)
 	{
 		$this->app->instance('request', $request);
-
 		Facade::clearResolvedInstance('request');//取消facade属性对象
-
-		$this->bootstrap();
+		$this->bootstrap();//调用启动执行的类,且这些类均有bootstrap($app对象)方法
 
 		return (new Pipeline($this->app))
 		            ->send($request)
@@ -190,7 +184,7 @@ class Kernel implements KernelContract {
 	public function bootstrap()
 	{
 		if ( ! $this->app->hasBeenBootstrapped())
-		{
+		{//app未启动执行完毕
 			$this->app->bootstrapWith($this->bootstrappers());
 		}
 	}
@@ -198,7 +192,7 @@ class Kernel implements KernelContract {
 	/**
 	 * Get the route dispatcher callback.
 	 *
-	 * @return \Closure
+	 * @return \Closure  返回闭包
 	 */
 	protected function dispatchToRouter()
 	{

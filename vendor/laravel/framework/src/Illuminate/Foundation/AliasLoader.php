@@ -52,14 +52,14 @@ class AliasLoader {
 
 	/**
 	 * Load a class alias if it is registered.
-	 *
+	 * 自动加载器，使用到类时，设置类别名
 	 * @param  string  $alias
 	 * @return void
 	 */
 	public function load($alias)
 	{
 		if (isset($this->aliases[$alias]))
-		{
+		{	//为一个类创建别名, bool class_alias(string $original原类, string $alias别名[,bool $autoload = TRUE ])
 			return class_alias($this->aliases[$alias], $alias);
 		}
 	}
@@ -78,7 +78,7 @@ class AliasLoader {
 
 	/**
 	 * Register the loader on the auto-loader stack.
-	 *
+	 * 注册加载器
 	 * @return void
 	 */
 	public function register()
