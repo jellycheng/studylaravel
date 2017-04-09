@@ -13,8 +13,9 @@ class DatabaseServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
+		//向Model类注入连接管理类对象: \Illuminate\Database\DatabaseManager 类对象
 		Model::setConnectionResolver($this->app['db']);
-
+		//向Model类注入事件对象: Illuminate\Events\Dispatcher类对象
 		Model::setEventDispatcher($this->app['events']);
 	}
 
@@ -27,17 +28,13 @@ class DatabaseServiceProvider extends ServiceProvider {
 	{
 		$this->registerQueueableEntityResolver();
 
-		// The connection factory is used to create the actual connection instances on
-		// the database. We will inject the factory into the manager so that it may
-		// make the connections while they are actually needed and not of before.
+		//Illuminate\Database\Connectors\ConnectionFactory类对象
 		$this->app->singleton('db.factory', function($app)
 		{
 			return new ConnectionFactory($app);
 		});
 
-		// The database manager is used to resolve various connections, since multiple
-		// connections might be managed. It also implements the connection resolver
-		// interface which may be used by other components requiring connections.
+		//DB facade就是\Illuminate\Database\DatabaseManager类对象
 		$this->app->singleton('db', function($app)
 		{
 			return new DatabaseManager($app, $app['db.factory']);

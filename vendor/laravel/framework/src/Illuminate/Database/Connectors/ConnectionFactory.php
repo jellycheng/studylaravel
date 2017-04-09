@@ -20,7 +20,7 @@ class ConnectionFactory {
 	/**
 	 * Create a new connection factory instance.
 	 *
-	 * @param  \Illuminate\Contracts\Container\Container  $container
+	 * @param  \Illuminate\Contracts\Container\Container  $container  app对象即容器对象
 	 * @return void
 	 */
 	public function __construct(Container $container)
@@ -33,56 +33,58 @@ class ConnectionFactory {
 	 *
 	 * @param  array   $config
 	 * @param  string  $name
-	 * @return \Illuminate\Database\Connection
+	 * @return \Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
 	 */
 	public function make(array $config, $name = null)
 	{
-		$config = $this->parseConfig($config, $name);
-
+		$config = $this->parseConfig($config, $name);//完善配置
 		if (isset($config['read']))
-		{
+		{//存在读配置,则同时进行读写连接(进行了2次PDO连接)
 			return $this->createReadWriteConnection($config);
 		}
-
+		//单个连接,即写连接
 		return $this->createSingleConnection($config);
 	}
 
 	/**
 	 * Create a single database connection instance.
-	 *
+	 * 进行一次PDO连接(不存在读写分离情况)
 	 * @param  array  $config
-	 * @return \Illuminate\Database\Connection
+	 * @return \Illuminate\Database\Connection 子类对象 如:Illuminate\Database\MySqlConnection类对象
 	 */
 	protected function createSingleConnection(array $config)
 	{
-		$pdo = $this->createConnector($config)->connect($config);
+		//调用Illuminate\Database\Connectors\MySqlConnector类对象->connect($config),返回PDO对象
+		$pdo = $this->createConnector($config)->connect($config);//返回原始PDO对象
 
 		return $this->createConnection($config['driver'], $pdo, $config['database'], $config['prefix'], $config);
 	}
 
 	/**
 	 * Create a single database connection instance.
-	 *
+	 * 同时进行2次PDO连接(读写分离情况)
+	 * 设置Illuminate\Database\MySqlConnection类对象readPdo属性=原始PDO对象
 	 * @param  array  $config
-	 * @return \Illuminate\Database\Connection
+	 * @return \Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
 	 */
 	protected function createReadWriteConnection(array $config)
 	{
+		//\Illuminate\Database\Connection子类对象,如:Illuminate\Database\MySqlConnection类对象
 		$connection = $this->createSingleConnection($this->getWriteConfig($config));
-
+		//设置\Illuminate\Database\MySqlConnection类对象readPdo属性=原始PDO对象
 		return $connection->setReadPdo($this->createReadPdo($config));
 	}
 
 	/**
 	 * Create a new PDO instance for reading.
-	 *
+	 * 通过db读配置返回原始PDO对象
 	 * @param  array  $config
 	 * @return \PDO
 	 */
 	protected function createReadPdo(array $config)
 	{
-		$readConfig = $this->getReadConfig($config);
-
+		$readConfig = $this->getReadConfig($config);//获取读配置
+		//调用Illuminate\Database\Connectors\MySqlConnector类对象->connect($readConfig);
 		return $this->createConnector($readConfig)->connect($readConfig);
 	}
 
@@ -143,7 +145,7 @@ class ConnectionFactory {
 
 	/**
 	 * Parse and prepare the database configuration.
-	 *
+	 * 完善配置
 	 * @param  array   $config
 	 * @param  string  $name
 	 * @return array
@@ -155,7 +157,7 @@ class ConnectionFactory {
 
 	/**
 	 * Create a connector instance based on the configuration.
-	 *
+	 * 创建连接类对象,如返回Illuminate\Database\Connectors\MySqlConnector类对象
 	 * @param  array  $config
 	 * @return \Illuminate\Database\Connectors\ConnectorInterface
 	 *
@@ -169,13 +171,14 @@ class ConnectionFactory {
 		}
 
 		if ($this->container->bound($key = "db.connector.{$config['driver']}"))
-		{
+		{//存在绑定db.connector.mysql则直接实例化
 			return $this->container->make($key);
 		}
 
 		switch ($config['driver'])
 		{
 			case 'mysql':
+				//返回Illuminate\Database\Connectors\MySqlConnector类对象
 				return new MySqlConnector;
 
 			case 'pgsql':
@@ -194,19 +197,19 @@ class ConnectionFactory {
 	/**
 	 * Create a new connection instance.
 	 *
-	 * @param  string   $driver
-	 * @param  \PDO     $connection
-	 * @param  string   $database
-	 * @param  string   $prefix
-	 * @param  array    $config
-	 * @return \Illuminate\Database\Connection
+	 * @param  string   $driver 驱动名
+	 * @param  \PDO     $connection =原始PDO对象
+	 * @param  string   $database 库名
+	 * @param  string   $prefix 表前缀
+	 * @param  array    $config db配置
+	 * @return \Illuminate\Database\Connection 子类对象 如:Illuminate\Database\MySqlConnection类对象
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	protected function createConnection($driver, PDO $connection, $database, $prefix = '', array $config = array())
 	{
 		if ($this->container->bound($key = "db.connection.{$driver}"))
-		{
+		{//存在db.connection.mysql绑定则直接实例化
 			return $this->container->make($key, array($connection, $database, $prefix, $config));
 		}
 

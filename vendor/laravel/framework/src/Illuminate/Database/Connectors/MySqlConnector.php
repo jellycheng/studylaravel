@@ -4,19 +4,17 @@ class MySqlConnector extends Connector implements ConnectorInterface {
 
 	/**
 	 * Establish a database connection.
-	 *
+	 * 返回原始PDO对象
 	 * @param  array  $config
 	 * @return \PDO
 	 */
 	public function connect(array $config)
 	{
-		$dsn = $this->getDsn($config);
+		$dsn = $this->getDsn($config);//获取dsn字符串
 
-		$options = $this->getOptions($config);
+		$options = $this->getOptions($config);//获取option配置key值
 
-		// We need to grab the PDO options that should be used while making the brand
-		// new connection instance. The PDO options control various aspects of the
-		// connection's behavior, and some might be specified by the developers.
+		//返回原始PDO对象
 		$connection = $this->createConnection($dsn, $config, $options);
 
 		if (isset($config['unix_socket']))
@@ -26,19 +24,15 @@ class MySqlConnector extends Connector implements ConnectorInterface {
 
 		$collation = $config['collation'];
 
-		// Next we will set the "names" and "collation" on the clients connections so
-		// a correct character set will be used by this client. The collation also
-		// is set on the server but needs to be set here on this client objects.
+		//编码
 		$charset = $config['charset'];
 
 		$names = "set names '$charset'".
 			( ! is_null($collation) ? " collate '$collation'" : '');
-
+		//调用原始PDO对象->prepare(sql语句)->execute()
 		$connection->prepare($names)->execute();
 
-		// Next, we will check to see if a timezone has been specified in this config
-		// and if it has we will issue a statement to modify the timezone with the
-		// database. Setting this DB timezone is an optional configuration item.
+		// 时区
 		if (isset($config['timezone']))
 		{
 			$connection->prepare(
@@ -46,11 +40,8 @@ class MySqlConnector extends Connector implements ConnectorInterface {
 			)->execute();
 		}
 
-		// If the "strict" option has been configured for the connection we'll enable
-		// strict mode on all of these tables. This enforces some extra rules when
-		// using the MySQL database system and is a quicker way to enforce them.
 		if (isset($config['strict']) && $config['strict'])
-		{
+		{//严格模式
 			$connection->prepare("set session sql_mode='STRICT_ALL_TABLES'")->execute();
 		}
 

@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Support\Traits\CapsuleManagerTrait;
 
+/**
+ * 本类使用例子:
+ * use Illuminate\Database\Capsule\Manager as Capsule;
+ * $capsule = new Capsule();//构造函数初始化app对象,默认配置,及设置\Illuminate\Database\DatabaseManager类对象等动作
+ * $capsule->addConnection(db配置, 连接代号默认default);可以调用多次
+ * $capsule->setEventDispatcher(事件对象); 本行调用可选
+ * $capsule->setAsGlobal();//注入本类对象,使后续所有对象共用本类对象
+ * $capsule->bootEloquent();
+ * 至此,就可以使用以下方式调用
+ * Illuminate\Database\Capsule\Manager::connection('连接代号')->\Illuminate\Database\MySqlConnection类方法();如Illuminate\Database\Capsule\Manager::connection('连接代号')->xyz(参数...);
+ * Illuminate\Database\Capsule\Manager::table('表名')->\Illuminate\Database\MySqlConnection类对象table('表名');
+ * Illuminate\Database\Capsule\Manager::xyz(参数...);调用调用Illuminate\Database\MySqlConnection类对象->xyz(参数...);
+ *
+ */
 class Manager {
 
 	use CapsuleManagerTrait;
@@ -15,7 +29,7 @@ class Manager {
 	/**
 	 * The database manager instance.
 	 *
-	 * @var \Illuminate\Database\DatabaseManager
+	 * @var \Illuminate\Database\DatabaseManager 类对象
 	 */
 	protected $manager;
 
@@ -27,31 +41,30 @@ class Manager {
 	 */
 	public function __construct(Container $container = null)
 	{
+		//设置app对象(容器对象),同时如果config未绑定则绑定一个config对象
 		$this->setupContainer($container ?: new Container);
 
-		// Once we have the container setup, we will setup the default configuration
-		// options in the container "config" binding. This will make the database
-		// manager behave correctly since all the correct binding are in place.
+		//设置默认db配置
 		$this->setupDefaultConfiguration();
-
+		//设置manager属性=\Illuminate\Database\DatabaseManager 类对象
 		$this->setupManager();
 	}
 
 	/**
 	 * Setup the default database configuration options.
-	 *
+	 * 设置默认db配置
 	 * @return void
 	 */
 	protected function setupDefaultConfiguration()
 	{
 		$this->container['config']['database.fetch'] = PDO::FETCH_ASSOC;
 
-		$this->container['config']['database.default'] = 'default';
+		$this->container['config']['database.default'] = 'default';//默认配置代号
 	}
 
 	/**
 	 * Build the database manager instance.
-	 *
+	 * 设置manager属性=\Illuminate\Database\DatabaseManager 类对象
 	 * @return void
 	 */
 	protected function setupManager()
@@ -64,12 +77,12 @@ class Manager {
 	/**
 	 * Get a connection instance from the global manager.
 	 *
-	 * @param  string  $connection
-	 * @return \Illuminate\Database\Connection
+	 * @param  string  $connection 连接代号
+	 * @return \Illuminate\Database\Connection 子类对象
 	 */
 	public static function connection($connection = null)
 	{
-		return static::$instance->getConnection($connection);
+		return static::$instance->getConnection($connection);//调用本类的getConnection($connection)方法
 	}
 
 	/**
@@ -99,7 +112,7 @@ class Manager {
 	 * Get a registered connection instance.
 	 *
 	 * @param  string  $name
-	 * @return \Illuminate\Database\Connection
+	 * @return \Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
 	 */
 	public function getConnection($name = null)
 	{
@@ -108,9 +121,9 @@ class Manager {
 
 	/**
 	 * Register a connection with the manager.
-	 *
-	 * @param  array   $config
-	 * @param  string  $name
+	 * 新增db连接配置
+	 * @param  array   $config db配置
+	 * @param  string  $name 连接代号
 	 * @return void
 	 */
 	public function addConnection(array $config, $name = 'default')
@@ -129,13 +142,12 @@ class Manager {
 	 */
 	public function bootEloquent()
 	{
+		//给Model类注入\Illuminate\Database\DatabaseManager类对象
 		Eloquent::setConnectionResolver($this->manager);
 
-		// If we have an event dispatcher instance, we will go ahead and register it
-		// with the Eloquent ORM, allowing for model callbacks while creating and
-		// updating "model" instances; however, if it not necessary to operate.
+		//事件类对象注入
 		if ($dispatcher = $this->getEventDispatcher())
-		{
+		{//如果存在\Illuminate\Contracts\Events\Dispatcher类对象则注入Model类中
 			Eloquent::setEventDispatcher($dispatcher);
 		}
 	}
@@ -156,7 +168,7 @@ class Manager {
 	/**
 	 * Get the database manager instance.
 	 *
-	 * @return \Illuminate\Database\DatabaseManager
+	 * @return \Illuminate\Database\DatabaseManager 类对象
 	 */
 	public function getDatabaseManager()
 	{
@@ -166,7 +178,7 @@ class Manager {
 	/**
 	 * Get the current event dispatcher instance.
 	 *
-	 * @return \Illuminate\Contracts\Events\Dispatcher
+	 * @return \Illuminate\Contracts\Events\Dispatcher 类对象
 	 */
 	public function getEventDispatcher()
 	{
@@ -195,7 +207,7 @@ class Manager {
 	 * @return mixed
 	 */
 	public static function __callStatic($method, $parameters)
-	{
+	{	//调用Illuminate\Database\MySqlConnection类对象->$method($parameters...);
 		return call_user_func_array(array(static::connection(), $method), $parameters);
 	}
 

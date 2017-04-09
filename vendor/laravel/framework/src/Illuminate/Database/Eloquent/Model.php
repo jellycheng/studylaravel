@@ -3146,7 +3146,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the connection resolver instance.
-	 *
+	 * 注入连接管理类对象: \Illuminate\Database\DatabaseManager 类对象
 	 * @param  \Illuminate\Database\ConnectionResolverInterface  $resolver
 	 * @return void
 	 */
@@ -3177,7 +3177,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the event dispatcher instance.
-	 *
+	 * 注入事件对象: Illuminate\Events\Dispatcher类对象
 	 * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
 	 * @return void
 	 */

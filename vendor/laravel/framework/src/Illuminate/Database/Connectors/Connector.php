@@ -32,7 +32,7 @@ class Connector {
 
 	/**
 	 * Create a new PDO connection.
-	 *
+	 * 实例化原始PDO对象
 	 * @param  string  $dsn
 	 * @param  array   $config
 	 * @param  array   $options
