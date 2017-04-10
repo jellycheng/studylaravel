@@ -113,22 +113,23 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
-	 * @var array
+	 * 白名单，可填充字段
+	 * 是否可填充判断规则： 1.是否开启警戒，2.是否在白名单，3是否在黑名单，4.没有配置白名单且不以_开头
+	 * @var array=['字段名1', '字段名2', '...N']
 	 */
 	protected $fillable = array();
 
 	/**
 	 * The attributes that aren't mass assignable.
-	 *
+	 * 黑名单字段，不可填充字段
 	 * @var array
 	 */
 	protected $guarded = array('*');
 
 	/**
 	 * The attributes that should be mutated to dates.
-	 *
-	 * @var array
+	 * 存日期时间字段
+	 * @var array = [字段名，字段N]
 	 */
 	protected $dates = array();
 
@@ -211,15 +212,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Indicates if all mass assignment is enabled.
-	 *
+	 * 是否关闭警戒 则均可填充，否则根据配置规则判断是否填充，默认false不关闭，true关闭
 	 * @var bool
 	 */
 	protected static $unguarded = false;
 
 	/**
 	 * The cache of the mutated attributes for each class.
-	 *
-	 * @var array
+	 *  该类中增加的所有getXXXAttribute格式的方法
+	 * @var array = ['getXXXAttribute', 'getYYYAttribute']
 	 */
 	protected static $mutatorCache = array();
 
@@ -252,9 +253,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function __construct(array $attributes = array())
 	{
-		$this->bootIfNotBooted();
+		$this->bootIfNotBooted();//Model子类未初始化，进行初始化
 
-		$this->syncOriginal();
+		$this->syncOriginal();//同步original属性值=attributes属性值
 
 		$this->fill($attributes);
 	}
@@ -266,16 +267,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	protected function bootIfNotBooted()
 	{
-		$class = get_class($this);
+		$class = get_class($this);//子类名 如App\Model\LoginStatus
 
 		if ( ! isset(static::$booted[$class]))
-		{
+		{//当前模型类未初始化
 			static::$booted[$class] = true;
-
+			//激活eloquent.booting: 模型类 事件 如eloquent.booting: App\Model\LoginStatus
 			$this->fireModelEvent('booting', false);
-
-			static::boot();
-
+			static::boot();//启动初始化
 			$this->fireModelEvent('booted', false);
 		}
 	}
@@ -287,23 +286,26 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	protected static function boot()
 	{
-		$class = get_called_class();
-
+		$class = get_called_class(); //后期静态绑定的类名 如App\Model\LoginStatus
 		static::$mutatorCache[$class] = array();
 
-		// Here we will extract all of the mutated attributes so that we can quickly
-		// spin through them after we export models to their array form, which we
-		// need to be fast. This will let us always know the attributes mutate.
 		foreach (get_class_methods($class) as $method)
-		{
+		{//遍历类的所有方法
 			if (preg_match('/^get(.+)Attribute$/', $method, $matches))
-			{
+			{ //存在getXXXAttribute方法
 				if (static::$snakeAttributes) $matches[1] = snake_case($matches[1]);
-
-				static::$mutatorCache[$class][] = lcfirst($matches[1]);
+				static::$mutatorCache[$class][] = lcfirst($matches[1]);//该类中增加的所有getXXXAttribute格式的方法
 			}
 		}
-
+		/*调用本类的bootXXXtrait静态方法，一般是调用trait类引入的bootXxx方法，用于初始化逻辑，如：
+		trait SoftDeletes {
+			public static function bootSoftDeletes()
+			{
+				//初始化逻辑
+			}
+			//其它方法
+		}
+		*/
 		static::bootTraits();
 	}
 
@@ -315,10 +317,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	protected static function bootTraits()
 	{
 		foreach (class_uses_recursive(get_called_class()) as $trait)
-		{
+		{//遍历model类及子类中引入所有的trait名
 			if (method_exists(get_called_class(), $method = 'boot'.class_basename($trait)))
-			{
-				forward_static_call([get_called_class(), $method]);
+			{//存在bootXXXtrait方法
+				forward_static_call([get_called_class(), $method]);//调用本类的bootXXXtrait静态方法
 			}
 		}
 	}
@@ -395,7 +397,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Fill the model with an array of attributes.
-	 *
+	 * 填充
 	 * @param  array  $attributes
 	 * @return $this
 	 *
@@ -403,17 +405,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function fill(array $attributes)
 	{
-		$totallyGuarded = $this->totallyGuarded();
+		$totallyGuarded = $this->totallyGuarded();//没有配置可填充字段且黑名单字段值为array('*')  即黑白名单均没配置且不可填充就抛异常
 
 		foreach ($this->fillableFromArray($attributes) as $key => $value)
 		{
-			$key = $this->removeTableFromKey($key);
+			$key = $this->removeTableFromKey($key);//返回真实的字段名
 
-			// The developers may choose to place some attributes in the "fillable"
-			// array, which means only those attributes may be set through mass
-			// assignment to the model, and all others will just be ignored.
 			if ($this->isFillable($key))
-			{
+			{//可填充字段 则设置本来attributes属性值，attributes[$key字段名]=$value值
 				$this->setAttribute($key, $value);
 			}
 			elseif ($totallyGuarded)
@@ -444,17 +443,16 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the fillable attributes of a given array.
-	 *
+	 * 返回与白名单的交集，即在白名单内的字段
 	 * @param  array  $attributes
 	 * @return array
 	 */
 	protected function fillableFromArray(array $attributes)
 	{
 		if (count($this->fillable) > 0 && ! static::$unguarded)
-		{
-			return array_intersect_key($attributes, array_flip($this->fillable));
+		{//存在白名单，且没有关闭警戒
+			return array_intersect_key($attributes, array_flip($this->fillable));//返回交集，即在白名单内的字段
 		}
-
 		return $attributes;
 	}
 
@@ -1657,22 +1655,18 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Fire the given event for the model.
-	 *
-	 * @param  string  $event
+	 * 激活事件（触发事件）
+	 * @param  string  $event model的事件名
 	 * @param  bool    $halt
 	 * @return mixed
 	 */
 	protected function fireModelEvent($event, $halt = true)
 	{
 		if ( ! isset(static::$dispatcher)) return true;
-
-		// We will append the names of the class to the event to distinguish it from
-		// other model events that are fired, allowing us to listen on each model
-		// event set individually instead of catching event for all the models.
+		// 拼接完整事件名： eloquent.$evnent: 模型类名  如： eloquent.booting: App\Model\LoginStatus
 		$event = "eloquent.{$event}: ".get_class($this);
-
 		$method = $halt ? 'until' : 'fire';
-
+		//触发事件
 		return static::$dispatcher->$method($event, $this);
 	}
 
@@ -2213,7 +2207,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Disable all mass assignable restrictions.
-	 *
+	 * 关闭警戒 则均可填充，否则根据配置规则判断是否填充
 	 * @return void
 	 */
 	public static function unguard()
@@ -2223,7 +2217,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Enable the mass assignment restrictions.
-	 *
+	 * 不关闭警戒，根据配置规则判断是否可填充
 	 * @return void
 	 */
 	public static function reguard()
@@ -2233,7 +2227,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set "unguard" to a given state.
-	 *
+	 * 设置警戒状态
 	 * @param  bool  $state
 	 * @return void
 	 */
@@ -2244,27 +2238,26 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Determine if the given attribute may be mass assigned.
-	 *
-	 * @param  string  $key
-	 * @return bool
+	 * 判断字段名是否可填充
+	 * @param  string  $key 字段名
+	 * @return bool true 可填充，false不可填充
 	 */
 	public function isFillable($key)
 	{
+		//true关闭警戒 则均可填充，false根据配置规则判断是否填充
 		if (static::$unguarded) return true;
 
-		// If the key is in the "fillable" array, we can of course assume that it's
-		// a fillable attribute. Otherwise, we will check the guarded array when
-		// we need to determine if the attribute is black-listed on the model.
+		//在可填充字段名单内
 		if (in_array($key, $this->fillable)) return true;
-
+		//在黑名单内
 		if ($this->isGuarded($key)) return false;
-
+		//填充字段为空且字段名不以_开头  说明不在白名单和黑名单内则默认是可以填充
 		return empty($this->fillable) && ! starts_with($key, '_');
 	}
 
 	/**
 	 * Determine if the given key is guarded.
-	 *
+	 * 是否在黑名单内
 	 * @param  string  $key
 	 * @return bool
 	 */
@@ -2275,7 +2268,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Determine if the model is totally guarded.
-	 *
+	 * 没有配置可填充字段且黑名单字段值为array('*')
 	 * @return bool
 	 */
 	public function totallyGuarded()
@@ -2285,7 +2278,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Remove the table name from a given key.
-	 *
+	 * 根据“表名.字段名”格式返回 字段名
 	 * @param  string  $key
 	 * @return string
 	 */
@@ -2384,7 +2377,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		// to a DateTime / Carbon instance. This is so we will get some consistent
 		// formatting while accessing attributes vs. arraying / JSONing a model.
 		foreach ($this->getDates() as $key)
-		{
+		{//循环所有日期时间字段
 			if ( ! isset($attributes[$key])) continue;
 
 			$attributes[$key] = (string) $this->asDateTime($attributes[$key]);
@@ -2757,21 +2750,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function setAttribute($key, $value)
 	{
-		// First we will check for the presence of a mutator for the set operation
-		// which simply lets the developers tweak the attribute as it is set on
-		// the model, such as "json_encoding" an listing of data for storage.
-		if ($this->hasSetMutator($key))
-		{
-			$method = 'set'.studly_case($key).'Attribute';
 
+		if ($this->hasSetMutator($key))
+		{//本类存在setXXXAttribute方法
+			$method = 'set'.studly_case($key).'Attribute';
+			//调用方法设置
 			return $this->{$method}($value);
 		}
-
-		// If an attribute is listed as a "date", we'll convert it from a DateTime
-		// instance into a form proper for storage on the database tables using
-		// the connection grammar's date format. We will auto set the values.
 		elseif (in_array($key, $this->getDates()) && $value)
-		{
+		{//是日期时间字段
 			$value = $this->fromDateTime($value);
 		}
 
@@ -2796,7 +2783,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the attributes that should be converted to dates.
-	 *
+	 * 获取所有日期时间字段
 	 * @return array
 	 */
 	public function getDates()
@@ -2822,13 +2809,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		if ($value instanceof DateTime)
 		{
 			//
-		}
-
-		// If the value is totally numeric, we will assume it is a UNIX timestamp and
-		// format the date as such. Once we have the date in DateTime form we will
-		// format it according to the proper format for the database connection.
-		elseif (is_numeric($value))
-		{
+		}elseif (is_numeric($value)) {
 			$value = Carbon::createFromTimestamp($value);
 		}
 
@@ -2838,13 +2819,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		elseif (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value))
 		{
 			$value = Carbon::createFromFormat('Y-m-d', $value)->startOfDay();
-		}
-
-		// If this value is some other type of string, we'll create the DateTime with
-		// the format used by the database connection. Once we get the instance we
-		// can return back the finally formatted DateTime instances to the devs.
-		else
-		{
+		} else {
 			$value = Carbon::createFromFormat($format, $value);
 		}
 
@@ -2890,7 +2865,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the format for database stored dates.
-	 *
+	 * 获取日期时间格式
 	 * @return string
 	 */
 	protected function getDateFormat()
@@ -2957,7 +2932,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Sync the original attributes with the current.
-	 *
+	 * 同步original属性值=attributes属性值
 	 * @return $this
 	 */
 	public function syncOriginal()

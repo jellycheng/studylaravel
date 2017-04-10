@@ -342,7 +342,7 @@ if ( ! function_exists('class_uses_recursive'))
 {
 	/**
 	 * Returns all traits used by a class, it's subclasses and trait of their traits
-	 * 获取当前类名及父类名中引用的所有trait名 ，数组格式
+	 * 获取当前类名及父类名中引用所有的trait名 ，数组格式
 	 * @param  string  $class 类名
 	 * @return array
 	 */
@@ -351,10 +351,10 @@ if ( ! function_exists('class_uses_recursive'))
 		$results = [];
 
 		foreach (array_merge([$class => $class], class_parents($class)) as $class)
-		{
+		{//子类和父类名合并，$class=类名
 			$results += trait_uses_recursive($class);
 		}
-
+		//去重返回
 		return array_unique($results);
 	}
 }
@@ -738,15 +738,15 @@ if ( ! function_exists('trait_uses_recursive'))
 	/**
 	 * Returns all traits used by a trait and its traits
 	 *
-	 * @param  string  $trait
+	 * @param  string  $trait = 类名或对象
 	 * @return array
 	 */
 	function trait_uses_recursive($trait)
 	{
-		$traits = class_uses($trait);
+		$traits = class_uses($trait);//返回类中引入的trait类，返回['trait名'=>'trait名',]
 
 		foreach ($traits as $trait)
-		{
+		{//递归获取
 			$traits += trait_uses_recursive($trait);
 		}
 
