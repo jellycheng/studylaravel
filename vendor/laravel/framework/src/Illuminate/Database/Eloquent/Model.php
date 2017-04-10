@@ -1926,7 +1926,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the table associated with the model.
-	 *
+	 * 获取表名
 	 * @return string
 	 */
 	public function getTable()
@@ -1938,7 +1938,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the table associated with the model.
-	 *
+	 * 设置表名
 	 * @param  string  $table
 	 * @return void
 	 */
@@ -1949,7 +1949,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the value of the model's primary key.
-	 *
+	 * 获取自增id值，主键值,如：model对象->getKey();
 	 * @return mixed
 	 */
 	public function getKey()
@@ -1969,7 +1969,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the primary key for the model.
-	 *
+	 * 获取主键名，model对象->getKeyName();
 	 * @return string
 	 */
 	public function getKeyName()
@@ -1979,7 +1979,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the primary key for the model.
-	 *
+	 * 设置主键名
 	 * @param  string  $key
 	 * @return void
 	 */
@@ -1990,7 +1990,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the table qualified key name.
-	 *
+	 * 返回 表名.主键名 
 	 * @return string
 	 */
 	public function getQualifiedKeyName()
@@ -2020,7 +2020,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Determine if the model uses timestamps.
-	 *
+	 * 获取timestamps属性值
 	 * @return bool
 	 */
 	public function usesTimestamps()
@@ -2088,7 +2088,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the hidden attributes for the model.
-	 *
+	 * 获取hidden属性值
 	 * @return array
 	 */
 	public function getHidden()
@@ -2098,7 +2098,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the hidden attributes for the model.
-	 *
+	 * 设置hidden属性值
 	 * @param  array  $hidden
 	 * @return void
 	 */
@@ -2109,7 +2109,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Add hidden attributes for the model.
-	 *
+	 * 新增hidden属性值
 	 * @param  array|string|null  $attributes
 	 * @return void
 	 */
@@ -2122,7 +2122,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the visible attributes for the model.
-	 *
+	 * 获取visible属性值，
 	 * @return array
 	 */
 	public function getVisible()
@@ -2132,7 +2132,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the visible attributes for the model.
-	 *
+	 * 设置visible属性值，
 	 * @param  array  $visible
 	 * @return void
 	 */
@@ -2143,7 +2143,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Add visible attributes for the model.
-	 *
+	 * 新增visible属性值，
 	 * @param  array|string|null  $attributes
 	 * @return void
 	 */
@@ -2156,7 +2156,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the accessors to append to model arrays.
-	 *
+	 * 设置appends属性值
 	 * @param  array  $appends
 	 * @return void
 	 */
@@ -2167,7 +2167,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the fillable attributes for the model.
-	 *
+	 * 获取fillable属性值
 	 * @return array
 	 */
 	public function getFillable()
@@ -2177,7 +2177,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the fillable attributes for the model.
-	 *
+	 * 设置fillable属性值
 	 * @param  array  $fillable
 	 * @return $this
 	 */
@@ -2190,7 +2190,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the guarded attributes for the model.
-	 *
+	 * 获取guarded属性值，
 	 * @return array
 	 */
 	public function getGuarded()
@@ -2200,7 +2200,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the guarded attributes for the model.
-	 *
+	 * 设置guarded属性值，
 	 * @param  array  $guarded
 	 * @return $this
 	 */

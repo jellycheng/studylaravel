@@ -63,6 +63,17 @@ return [
 			'prefix'    => '',
 			'strict'    => false,
 		],
+		'user_db' => [
+			'driver'    => 'mysql',
+			'host'      => env('USER_DB_HOST', 'localhost'),
+			'database'  => env('USER_DB_DATABASE', 'user_db'),
+			'username'  => env('USER_DB_USERNAME', 'dev'),
+			'password'  => env('USER_DB_PASSWORD', 'dev'),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
 
 		'pgsql' => [
 			'driver'   => 'pgsql',

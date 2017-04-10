@@ -110,5 +110,17 @@ Route::get('db/test', function() {
 });
 
 
-#http://localhost/learnlaravel/public/jellyusers
+#http://localhost:8889/jellyusers
 Route::controller('jellyusers', 'jelly\UserController');
+
+
+//orm测试
+Route::group(['namespace' => 'OrmDemo', 'prefix' => 'ormdemo'], function($router) {
+    $router->get('index', 'Orm1Controller@index'); #对应地址 http://localhost:8889/ormdemo/index
+    $router->get('insert', 'Orm1Controller@insert'); #对应地址 http://localhost:8889/ormdemo/insert
+
+    $router->get('demo2', 'Orm2Controller@index'); #对应地址 http://localhost:8889/ormdemo/demo2
+    
+    
+});
+
