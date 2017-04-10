@@ -57,7 +57,7 @@ class Builder {
 	/**
 	 * Create a new Eloquent query builder instance.
 	 *
-	 * @param  \Illuminate\Database\Query\Builder  $query
+	 * @param  \Illuminate\Database\Query\Builder  $query 类对象
 	 * @return void
 	 */
 	public function __construct(QueryBuilder $query)
@@ -875,15 +875,14 @@ class Builder {
 	/**
 	 * Set a model instance for the model being queried.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model  $model
+	 * @param  \Illuminate\Database\Eloquent\Model  $model 模型子类对象
 	 * @return $this
 	 */
 	public function setModel(Model $model)
 	{
 		$this->model = $model;
-
+        //设置Query\Builder类对象->from属性值
 		$this->query->from($model->getTable());
-
 		return $this;
 	}
 

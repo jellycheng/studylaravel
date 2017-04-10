@@ -1,10 +1,11 @@
 <?php namespace Illuminate\Database;
 
+//语法基类
 abstract class Grammar {
 
 	/**
 	 * The grammar table prefix.
-	 *
+	 * 表前缀
 	 * @var string
 	 */
 	protected $tablePrefix = '';
@@ -37,32 +38,25 @@ abstract class Grammar {
 	 * Wrap a value in keyword identifiers.
 	 *
 	 * @param  string  $value
-	 * @param  bool    $prefixAlias
+	 * @param  bool    $prefixAlias 别名是否加上表前缀，默认否
 	 * @return string
 	 */
 	public function wrap($value, $prefixAlias = false)
 	{
-		if ($this->isExpression($value)) return $this->getValue($value);
+		if ($this->isExpression($value)) return $this->getValue($value); //获取表达式值
 
-		// If the value being wrapped has a column alias we will need to separate out
-		// the pieces so we can wrap each of the segments of the expression on it
-		// own, and then joins them both back together with the "as" connector.
 		if (strpos(strtolower($value), ' as ') !== false)
-		{
-			$segments = explode(' ', $value);
+		{//值存在别名
+			$segments = explode(' ', $value);// t_user as u
 
-			if ($prefixAlias) $segments[2] = $this->tablePrefix.$segments[2];
+			if ($prefixAlias) $segments[2] = $this->tablePrefix.$segments[2];//别名加上表前缀
 
 			return $this->wrap($segments[0]).' as '.$this->wrapValue($segments[2]);
 		}
+        //不存在as
 
 		$wrapped = array();
-
 		$segments = explode('.', $value);
-
-		// If the value is not an aliased table expression, we'll just wrap it like
-		// normal, so if there is more than one segment, we will wrap the first
-		// segments as if it was a table and the rest as just regular values.
 		foreach ($segments as $key => $segment)
 		{
 			if ($key == 0 && count($segments) > 1)
@@ -75,7 +69,7 @@ abstract class Grammar {
 			}
 		}
 
-		return implode('.', $wrapped);
+		return implode('.', $wrapped);//用点合并字符串
 	}
 
 	/**
@@ -93,7 +87,7 @@ abstract class Grammar {
 
 	/**
 	 * Convert an array of column names into a delimited string.
-	 *
+	 * 拼接字段
 	 * @param  array   $columns
 	 * @return string
 	 */
@@ -104,7 +98,7 @@ abstract class Grammar {
 
 	/**
 	 * Create query parameter place-holders for an array.
-	 *
+	 * 批量获取值，然后用,逗号拼接
 	 * @param  array   $values
 	 * @return string
 	 */
@@ -115,7 +109,7 @@ abstract class Grammar {
 
 	/**
 	 * Get the appropriate query parameter place-holder for a value.
-	 *
+	 * 如果是表达式则返回表达式值，否则返回?
 	 * @param  mixed   $value
 	 * @return string
 	 */
@@ -126,7 +120,7 @@ abstract class Grammar {
 
 	/**
 	 * Get the value of a raw expression.
-	 *
+	 * 获取表达式值
 	 * @param  \Illuminate\Database\Query\Expression  $expression
 	 * @return string
 	 */
@@ -137,7 +131,7 @@ abstract class Grammar {
 
 	/**
 	 * Determine if the given value is a raw expression.
-	 *
+	 * 是否是表达式
 	 * @param  mixed  $value
 	 * @return bool
 	 */
@@ -148,7 +142,7 @@ abstract class Grammar {
 
 	/**
 	 * Get the format for database stored dates.
-	 *
+	 * 日期时间格式
 	 * @return string
 	 */
 	public function getDateFormat()
@@ -158,7 +152,7 @@ abstract class Grammar {
 
 	/**
 	 * Get the grammar's table prefix.
-	 *
+	 * 获取表前缀
 	 * @return string
 	 */
 	public function getTablePrefix()
@@ -168,7 +162,7 @@ abstract class Grammar {
 
 	/**
 	 * Set the grammar's table prefix.
-	 *
+	 * 表前缀
 	 * @param  string  $prefix
 	 * @return $this
 	 */

@@ -133,7 +133,7 @@ class Connection implements ConnectionInterface {
 		$this->database = $database;
 		$this->tablePrefix = $tablePrefix;
 		$this->config = $config;
-		//设置本类queryGrammar属性=\Illuminate\Database\Query\Grammars\Grammar 类对象
+		//设置本类queryGrammar属性=\Illuminate\Database\Query\Grammars\Grammar 类对象 or \Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 		$this->useDefaultQueryGrammar();
 		//设置本类postProcessor属性=\Illuminate\Database\Query\Processors\Processor 类对象
 		$this->useDefaultPostProcessor();
@@ -178,7 +178,7 @@ class Connection implements ConnectionInterface {
 
 	/**
 	 * Set the query post processor to the default implementation.
-	 * 设置本类postProcessor属性=\Illuminate\Database\Query\Processors\Processor 类对象
+	 * 设置本类postProcessor属性=\Illuminate\Database\Query\Processors\Processor 类对象 or \Illuminate\Database\Query\Processors\MySqlProcessor 类对象
 	 * @return void
 	 */
 	public function useDefaultPostProcessor()
@@ -858,7 +858,7 @@ class Connection implements ConnectionInterface {
 	/**
 	 * Get the query grammar used by the connection.
 	 *
-	 * @return \Illuminate\Database\Query\Grammars\Grammar
+	 * @return \Illuminate\Database\Query\Grammars\Grammar or 子类对象 如：\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 	 */
 	public function getQueryGrammar()
 	{
@@ -1066,13 +1066,13 @@ class Connection implements ConnectionInterface {
 
 	/**
 	 * Set the table prefix and return the grammar.
-	 * 设置表前缀
-	 * @param  \Illuminate\Database\Grammar  $grammar
+	 * 设置表前缀并返回语法子类对象
+	 * @param  \Illuminate\Database\Grammar  $grammar 子类对象
 	 * @return \Illuminate\Database\Grammar
 	 */
 	public function withTablePrefix(Grammar $grammar)
 	{
-		$grammar->setTablePrefix($this->tablePrefix);
+		$grammar->setTablePrefix($this->tablePrefix);//注入表前缀
 
 		return $grammar;
 	}

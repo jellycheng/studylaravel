@@ -170,7 +170,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Indicates if the model exists.
-	 *
+	 * 默认否
 	 * @var bool
 	 */
 	public $exists = false;
@@ -623,7 +623,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Begin querying the model.
 	 *
-	 * @return \Illuminate\Database\Eloquent\Builder
+	 * @return \Illuminate\Database\Eloquent\Builder 类对象
 	 */
 	public static function query()
 	{
@@ -669,7 +669,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	public static function all($columns = array('*'))
 	{
 		$instance = new static;
-
+        //\Illuminate\Database\Eloquent\Builder类对象->get($columns);
 		return $instance->newQuery()->get($columns);
 	}
 
@@ -1797,7 +1797,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Get a new query builder for the model's table.
 	 *
-	 * @return \Illuminate\Database\Eloquent\Builder
+	 * @return \Illuminate\Database\Eloquent\Builder 类对象
 	 */
 	public function newQuery()
 	{
@@ -1826,13 +1826,12 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function newQueryWithoutScopes()
 	{
+	    //orm构建对象
 		$builder = $this->newEloquentBuilder(
 			$this->newBaseQueryBuilder()
 		);
 
-		// Once we have the query builders, we will set the model instances so the
-		// builder can easily access any information it may need from the model
-		// while it is constructing and executing various queries against it.
+		//orm Builder构建对象注入模型子类对象
 		return $builder->setModel($this)->with($this->with);
 	}
 
@@ -1871,8 +1870,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Create a new Eloquent query builder for the model.
 	 *
-	 * @param  \Illuminate\Database\Query\Builder $query
-	 * @return \Illuminate\Database\Eloquent\Builder|static
+	 * @param  \Illuminate\Database\Query\Builder $query 如 \Illuminate\Database\Query\Builder 类对象
+	 * @return \Illuminate\Database\Eloquent\Builder|static 返回orm的构建对象
 	 */
 	public function newEloquentBuilder($query)
 	{
@@ -1882,13 +1881,12 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Get a new query builder instance for the connection.
 	 *
-	 * @return \Illuminate\Database\Query\Builder
+	 * @return \Illuminate\Database\Query\Builder 类对象
 	 */
 	protected function newBaseQueryBuilder()
 	{
-		$conn = $this->getConnection();
-
-		$grammar = $conn->getQueryGrammar();
+		$conn = $this->getConnection();//\Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
+		$grammar = $conn->getQueryGrammar();//\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 
 		return new QueryBuilder($conn, $grammar, $conn->getPostProcessor());
 	}
@@ -2869,7 +2867,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 * @return string
 	 */
 	protected function getDateFormat()
-	{
+	{   //如Illuminate\Database\MySqlConnection类对象->\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象->getDateFormat()
 		return $this->getConnection()->getQueryGrammar()->getDateFormat();
 	}
 
@@ -3067,8 +3065,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the database connection for the model.
-	 *
-	 * @return \Illuminate\Database\Connection
+	 * 通过模型类中配置的连接代号获取连接对象
+	 * @return \Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
 	 */
 	public function getConnection()
 	{
@@ -3077,7 +3075,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the current connection name for the model.
-	 *
+	 * 获取连接代号
 	 * @return string
 	 */
 	public function getConnectionName()
@@ -3087,7 +3085,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the connection associated with the model.
-	 *
+	 * 设置连接代号
 	 * @param  string  $name
 	 * @return $this
 	 */
@@ -3101,17 +3099,17 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Resolve a connection instance.
 	 *
-	 * @param  string  $connection
-	 * @return \Illuminate\Database\Connection
+	 * @param  string  $connection 连接代号
+	 * @return \Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
 	 */
 	public static function resolveConnection($connection = null)
-	{
+	{   // \Illuminate\Database\DatabaseManager 类对象->connection($connection);
 		return static::$resolver->connection($connection);
 	}
 
 	/**
 	 * Get the connection resolver instance.
-	 *
+	 * 返回  \Illuminate\Database\DatabaseManager 类对象
 	 * @return \Illuminate\Database\ConnectionResolverInterface
 	 */
 	public static function getConnectionResolver()
@@ -3132,7 +3130,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Unset the connection resolver for models.
-	 *
+	 * 移除连接解决者
 	 * @return void
 	 */
 	public static function unsetConnectionResolver()
@@ -3142,7 +3140,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the event dispatcher instance.
-	 *
+	 * 获取事件对象
 	 * @return \Illuminate\Contracts\Events\Dispatcher
 	 */
 	public static function getEventDispatcher()
@@ -3163,7 +3161,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Unset the event dispatcher for models.
-	 *
+	 * 移除事件对象
 	 * @return void
 	 */
 	public static function unsetEventDispatcher()
@@ -3173,7 +3171,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the mutated attributes for a given instance.
-	 *
+	 * 获取model类中所有getXXXAttribute方法
 	 * @return array
 	 */
 	public function getMutatedAttributes()
@@ -3190,7 +3188,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Dynamically retrieve attributes on the model.
-	 *
+	 * 获取属性中，如$model对象->字段名;
 	 * @param  string  $key
 	 * @return mixed
 	 */
@@ -3201,7 +3199,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Dynamically set attributes on the model.
-	 *
+	 * 设置属性值,如$model对象->字段名=值;
 	 * @param  string  $key
 	 * @param  mixed   $value
 	 * @return void
@@ -3213,7 +3211,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Determine if the given attribute exists.
-	 *
+	 *  本类属性是否存在
 	 * @param  mixed  $offset
 	 * @return bool
 	 */
@@ -3224,7 +3222,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the value for a given offset.
-	 *
+	 * 获取本类属性值，$model对象['字段名'];
 	 * @param  mixed  $offset
 	 * @return mixed
 	 */
@@ -3235,7 +3233,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set the value for a given offset.
-	 *
+	 * 设置属性值，如 $model对象['字段名or属性名']=值;
 	 * @param  mixed  $offset
 	 * @param  mixed  $value
 	 * @return void
@@ -3293,14 +3291,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 			return call_user_func_array(array($this, $method), $parameters);
 		}
 
-		$query = $this->newQuery();
+		$query = $this->newQuery();//返回 \Illuminate\Database\Eloquent\Builder 类对象
 
 		return call_user_func_array(array($query, $method), $parameters);
 	}
 
 	/**
 	 * Handle dynamic static method calls into the method.
-	 *
+	 * Model类::本类的方法or\Illuminate\Database\Eloquent\Builder类的方法(参数..);
 	 * @param  string  $method
 	 * @param  array   $parameters
 	 * @return mixed

@@ -21,8 +21,8 @@ class MySqlConnection extends Connection {
 
 	/**
 	 * Get the default query grammar instance.
-	 *
-	 * @return \Illuminate\Database\Query\Grammars\MySqlGrammar
+	 * 获取mysql默认查询语法
+	 * @return \Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 	 */
 	protected function getDefaultQueryGrammar()
 	{
@@ -42,7 +42,7 @@ class MySqlConnection extends Connection {
 	/**
 	 * Get the default post processor instance.
 	 *
-	 * @return \Illuminate\Database\Query\Processors\Processor
+	 * @return \Illuminate\Database\Query\Processors\Processor 子类对象,如 \Illuminate\Database\Query\Processors\MySqlProcessor类对象
 	 */
 	protected function getDefaultPostProcessor()
 	{

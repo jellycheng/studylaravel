@@ -189,9 +189,9 @@ class Builder {
 	/**
 	 * Create a new query builder instance.
 	 *
-	 * @param  \Illuminate\Database\ConnectionInterface  $connection
-	 * @param  \Illuminate\Database\Query\Grammars\Grammar  $grammar
-	 * @param  \Illuminate\Database\Query\Processors\Processor  $processor
+	 * @param  \Illuminate\Database\ConnectionInterface  $connection 如Illuminate\Database\MySqlConnection类对象
+	 * @param  \Illuminate\Database\Query\Grammars\Grammar  $grammar  如\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
+	 * @param  \Illuminate\Database\Query\Processors\Processor  $processor 如 \Illuminate\Database\Query\Processors\MySqlProcessor类对象
 	 * @return void
 	 */
 	public function __construct(ConnectionInterface $connection,
@@ -299,7 +299,7 @@ class Builder {
 	/**
 	 * Set the table which the query is targeting.
 	 *
-	 * @param  string  $table
+	 * @param  string  $table 表名
 	 * @return $this
 	 */
 	public function from($table)
