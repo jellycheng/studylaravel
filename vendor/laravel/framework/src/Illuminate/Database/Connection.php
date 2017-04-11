@@ -135,7 +135,7 @@ class Connection implements ConnectionInterface {
 		$this->config = $config;
 		//设置本类queryGrammar属性=\Illuminate\Database\Query\Grammars\Grammar 类对象 or \Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 		$this->useDefaultQueryGrammar();
-		//设置本类postProcessor属性=\Illuminate\Database\Query\Processors\Processor 类对象
+		//设置本类postProcessor属性=\Illuminate\Database\Query\Processors\Processor 类对象 or \Illuminate\Database\Query\Processors\MySqlProcessor类对象
 		$this->useDefaultPostProcessor();
 	}
 

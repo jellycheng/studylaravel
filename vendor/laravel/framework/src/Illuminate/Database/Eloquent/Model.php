@@ -206,7 +206,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * The array of global scopes on the model.
 	 *
-	 * @var array
+	 * @var array = $globalScopes['模型子类名']['\Illuminate\Database\Eloquent\ScopeInterface实现类名'] = \Illuminate\Database\Eloquent\ScopeInterface实现类对象;
 	 */
 	protected static $globalScopes = array();
 
@@ -332,7 +332,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 * @return void
 	 */
 	public static function addGlobalScope(ScopeInterface $scope)
-	{
+	{	//static::$globalScopes['模型子类名']['\Illuminate\Database\Eloquent\ScopeInterface实现类名'] = \Illuminate\Database\Eloquent\ScopeInterface实现类对象;
 		static::$globalScopes[get_called_class()][get_class($scope)] = $scope;
 	}
 
@@ -363,7 +363,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the global scopes for this class instance.
-	 *
+	 * 获取本模型类配置的scope接口对象，数组格式
 	 * @return \Illuminate\Database\Eloquent\ScopeInterface[]
 	 */
 	public function getGlobalScopes()
@@ -1472,7 +1472,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function save(array $options = array())
 	{
-		$query = $this->newQueryWithoutScopes();
+		$query = $this->newQueryWithoutScopes();//\Illuminate\Database\Eloquent\Builder 类对象
 
 		// If the "saving" event returns false we'll bail out of the save and return
 		// false, indicating that the save failed. This provides a chance for any
@@ -1801,7 +1801,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function newQuery()
 	{
-		$builder = $this->newQueryWithoutScopes();
+		$builder = $this->newQueryWithoutScopes();//\Illuminate\Database\Eloquent\Builder 类对象
 
 		return $this->applyGlobalScopes($builder);
 	}
@@ -1826,26 +1826,27 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function newQueryWithoutScopes()
 	{
-	    //orm构建对象
+	    //orm构建对象： \Illuminate\Database\Eloquent\Builder类对象
 		$builder = $this->newEloquentBuilder(
-			$this->newBaseQueryBuilder()
-		);
+											$this->newBaseQueryBuilder()   //注册查询构建对象，\Illuminate\Database\Query\Builder 类对象
+											);
 
-		//orm Builder构建对象注入模型子类对象
+		//orm Builder构建对象注入模型子类对象及设置关联
 		return $builder->setModel($this)->with($this->with);
 	}
 
 	/**
 	 * Apply all of the global scopes to an Eloquent builder.
-	 *
-	 * @param  \Illuminate\Database\Eloquent\Builder  $builder
+	 * 扩展Illuminate\Database\Eloquent\Builder类的宏方法
+	 * @param  \Illuminate\Database\Eloquent\Builder  $builder 类对象
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
 	public function applyGlobalScopes($builder)
 	{
 		foreach ($this->getGlobalScopes() as $scope)
-		{
-			$scope->apply($builder, $this);
+		{//循环本模型类中 设置的Illuminate\Database\Eloquent\ScopeInterface接口子类对象
+			//在更高版本的Illuminate Database接口名是：Illuminate\Database\Eloquent\Scope
+			$scope->apply($builder, $this);//扩展Illuminate\Database\Eloquent\Builder类的宏方法
 		}
 
 		return $builder;
@@ -1869,8 +1870,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Create a new Eloquent query builder for the model.
-	 *
-	 * @param  \Illuminate\Database\Query\Builder $query 如 \Illuminate\Database\Query\Builder 类对象
+	 * 返回\Illuminate\Database\Eloquent\Builder类对象
+	 * @param  \Illuminate\Database\Query\Builder $query 类对象
 	 * @return \Illuminate\Database\Eloquent\Builder|static 返回orm的构建对象
 	 */
 	public function newEloquentBuilder($query)
@@ -1886,9 +1887,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	protected function newBaseQueryBuilder()
 	{
 		$conn = $this->getConnection();//\Illuminate\Database\Connection 子类对象,如Illuminate\Database\MySqlConnection类对象
-		$grammar = $conn->getQueryGrammar();//\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
+		$grammar = $conn->getQueryGrammar();//\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象, mysql语法
 
-		return new QueryBuilder($conn, $grammar, $conn->getPostProcessor());
+		return new QueryBuilder($conn, $grammar, $conn->getPostProcessor());//第3个参数：\Illuminate\Database\Query\Processors\MySqlProcessor类对象
 	}
 
 	/**
@@ -3287,7 +3288,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	public function __call($method, $parameters)
 	{
 		if (in_array($method, array('increment', 'decrement')))
-		{
+		{//调用本类的方法
 			return call_user_func_array(array($this, $method), $parameters);
 		}
 
@@ -3298,7 +3299,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Handle dynamic static method calls into the method.
-	 * Model类::本类的方法or\Illuminate\Database\Eloquent\Builder类的方法(参数..);
+	 * Model类::本类的保护和私有方法or\Illuminate\Database\Eloquent\Builder类的方法(参数..);
+	 * 一定调用不到本类的public类型方法
 	 * @param  string  $method
 	 * @param  array   $parameters
 	 * @return mixed
@@ -3309,6 +3311,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 		return call_user_func_array(array($instance, $method), $parameters);
 	}
+
 
 	/**
 	 * Convert the model to its string representation.

@@ -4,7 +4,7 @@ class SoftDeletingScope implements ScopeInterface {
 
 	/**
 	 * All of the extensions to be added to the builder.
-	 *
+	 *  扩展，追加Builder类的宏方法
 	 * @var array
 	 */
 	protected $extensions = ['ForceDelete', 'Restore', 'WithTrashed', 'OnlyTrashed'];
@@ -17,8 +17,10 @@ class SoftDeletingScope implements ScopeInterface {
 	 * @return void
 	 */
 	public function apply(Builder $builder, Model $model)
-	{
-		$builder->whereNull($model->getQualifiedDeletedAtColumn());
+	{	/**getQualifiedDeletedAtColumn()方法在Illuminate\Database\Eloquent\SoftDeletes中定义 返回 "表名.删除时间字段"
+	\Illuminate\Database\Eloquent\Builder对象->__call('whereNull', '表名.删除时间字段');=>Illuminate\Database\Query\Builder->whereNull('表名.删除时间字段','and',false);
+	 	*/
+		$builder->whereNull($model->getQualifiedDeletedAtColumn());//设置Illuminate\Database\Query\Builder对象的wheres属性
 
 		$this->extend($builder);
 	}
@@ -51,10 +53,10 @@ class SoftDeletingScope implements ScopeInterface {
 	public function extend(Builder $builder)
 	{
 		foreach ($this->extensions as $extension)
-		{
+		{	//追加宏方法
 			$this->{"add{$extension}"}($builder);
 		}
-
+		//设置Builder类的onDelete属性
 		$builder->onDelete(function(Builder $builder)
 		{
 			$column = $this->getDeletedAtColumn($builder);

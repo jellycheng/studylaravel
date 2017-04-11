@@ -69,7 +69,7 @@ class Builder {
 
 	/**
 	 * The table which the query is targeting.
-	 *
+	 * 查询表名
 	 * @var string
 	 */
 	public $from;
@@ -298,7 +298,7 @@ class Builder {
 
 	/**
 	 * Set the table which the query is targeting.
-	 *
+	 * 注入表名
 	 * @param  string  $table 表名
 	 * @return $this
 	 */

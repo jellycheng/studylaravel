@@ -15,7 +15,7 @@ trait SoftDeletes {
 	 * @return void
 	 */
 	public static function bootSoftDeletes()
-	{
+	{	//设置$globalScopes属性值：$globalScopes['模型子类名']['\Illuminate\Database\Eloquent\SoftDeletingScope类名'] = \Illuminate\Database\Eloquent\SoftDeletingScope类对象;
 		static::addGlobalScope(new SoftDeletingScope);
 	}
 

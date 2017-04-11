@@ -874,14 +874,14 @@ class Builder {
 
 	/**
 	 * Set a model instance for the model being queried.
-	 *
+	 * 设置模型对象及为查询器注入表名
 	 * @param  \Illuminate\Database\Eloquent\Model  $model 模型子类对象
 	 * @return $this
 	 */
 	public function setModel(Model $model)
 	{
 		$this->model = $model;
-        //设置Query\Builder类对象->from属性值
+        //设置Query\Builder类对象->from属性值=表名
 		$this->query->from($model->getTable());
 		return $this;
 	}

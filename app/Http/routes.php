@@ -119,8 +119,8 @@ Route::group(['namespace' => 'OrmDemo', 'prefix' => 'ormdemo'], function($router
     $router->get('index', 'Orm1Controller@index'); #对应地址 http://localhost:8889/ormdemo/index
     $router->get('insert', 'Orm1Controller@insert'); #对应地址 http://localhost:8889/ormdemo/insert
 
-    $router->get('demo2', 'Orm2Controller@index'); #对应地址 http://localhost:8889/ormdemo/demo2
-    
+    $router->get('index2', 'Orm2Controller@index'); #对应地址 http://localhost:8889/ormdemo/index2
+    $router->get('demo2', 'Orm2Controller@demo'); #对应地址 http://localhost:8889/ormdemo/demo2
     
 });
 

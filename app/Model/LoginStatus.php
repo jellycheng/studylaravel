@@ -29,4 +29,16 @@ class LoginStatus extends Model {
     ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='用户登录状态表';
      */
 
+    #const DELETED_AT = 'deleted_at'; //删除时间字段，配置可行
+    #const CREATED_AT = 'created_at'; //创建时间字段
+    #const UPDATED_AT = 'updated_at'; //更新时间字段
+
+    //覆盖父类的日期格式方法, 可选
+    /**
+    protected function getDateFormat()
+    {
+        return 'U';
+    }
+    */
+
 }
