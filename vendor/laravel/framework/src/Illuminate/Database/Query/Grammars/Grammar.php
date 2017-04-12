@@ -27,7 +27,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile a select query into SQL.
-	 *
+	 *  返回拼接好的sql语句
 	 * @param  \Illuminate\Database\Query\Builder
 	 * @return string
 	 */
@@ -50,13 +50,9 @@ class Grammar extends BaseGrammar {
 
 		foreach ($this->selectComponents as $component)
 		{
-			// To compile the query, we'll spin through each component of the query and
-			// see if that component exists. If it does we'll just call the compiler
-			// function for the component which is responsible for making the SQL.
 			if ( ! is_null($query->$component))
-			{
+			{// 如果查询构建对象属性有设置值则通过本类方法获取拼接sql部分值
 				$method = 'compile'.ucfirst($component);
-
 				$sql[$component] = $this->$method($query, $query->$component);
 			}
 		}
@@ -67,7 +63,7 @@ class Grammar extends BaseGrammar {
 	/**
 	 * Compile an aggregated select clause.
 	 *
-	 * @param  \Illuminate\Database\Query\Builder  $query
+	 * @param  \Illuminate\Database\Query\Builder  $query 类对象
 	 * @param  array  $aggregate
 	 * @return string
 	 */
@@ -75,9 +71,6 @@ class Grammar extends BaseGrammar {
 	{
 		$column = $this->columnize($aggregate['columns']);
 
-		// If the query has a "distinct" constraint and we're not asking for all columns
-		// we need to prepend "distinct" onto the column name so that the query takes
-		// it into account when it performs the aggregating operations on the data.
 		if ($query->distinct && $column !== '*')
 		{
 			$column = 'distinct '.$column;
@@ -89,15 +82,12 @@ class Grammar extends BaseGrammar {
 	/**
 	 * Compile the "select *" portion of the query.
 	 *
-	 * @param  \Illuminate\Database\Query\Builder  $query
-	 * @param  array  $columns
+	 * @param  \Illuminate\Database\Query\Builder  $query 类对象
+	 * @param  array  $columns  值
 	 * @return string
 	 */
 	protected function compileColumns(Builder $query, $columns)
 	{
-		// If the query is actually performing an aggregating select, we will let that
-		// compiler handle the building of the select clauses, as it will need some
-		// more syntax that is best handled by that function to keep things neat.
 		if ( ! is_null($query->aggregate)) return;
 
 		$select = $query->distinct ? 'select distinct ' : 'select ';
@@ -133,10 +123,7 @@ class Grammar extends BaseGrammar {
 		foreach ($joins as $join)
 		{
 			$table = $this->wrapTable($join->table);
-
-			// First we need to build all of the "on" clauses for the join. There may be many
-			// of these clauses so we will need to iterate through each one and build them
-			// separately, then we'll join them up into a single string when we're done.
+			//
 			$clauses = array();
 
 			foreach ($join->clauses as $clause)
@@ -149,18 +136,14 @@ class Grammar extends BaseGrammar {
 				$query->addBinding($binding, 'join');
 			}
 
-			// Once we have constructed the clauses, we'll need to take the boolean connector
-			// off of the first clause as it obviously will not be required on that clause
-			// because it leads the rest of the clauses, thus not requiring any boolean.
+			//
 			$clauses[0] = $this->removeLeadingBoolean($clauses[0]);
 
 			$clauses = implode(' ', $clauses);
 
 			$type = $join->type;
 
-			// Once we have everything ready to go, we will just concatenate all the parts to
-			// build the final join statement SQL for the query and we can then return the
-			// final clause back to the callers as a single, stringified join statement.
+			//
 			$sql[] = "$type join $table on $clauses";
 		}
 
@@ -191,29 +174,19 @@ class Grammar extends BaseGrammar {
 	protected function compileWheres(Builder $query)
 	{
 		$sql = array();
-
 		if (is_null($query->wheres)) return '';
-
-		// Each type of where clauses has its own compiler function which is responsible
-		// for actually creating the where clauses SQL. This helps keep the code nice
-		// and maintainable since each clause has a very small method that it uses.
+		//
 		foreach ($query->wheres as $where)
 		{
 			$method = "where{$where['type']}";
-
 			$sql[] = $where['boolean'].' '.$this->$method($query, $where);
 		}
 
-		// If we actually have some where clauses, we will strip off the first boolean
-		// operator, which is added by the query builders for convenience so we can
-		// avoid checking for the first clauses in each of the compilers methods.
 		if (count($sql) > 0)
 		{
 			$sql = implode(' ', $sql);
-
 			return 'where '.preg_replace('/and |or /', '', $sql, 1);
 		}
-
 		return '';
 	}
 
@@ -733,7 +706,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Concatenate an array of segments, removing empties.
-	 *
+	 * 去掉多余的空格值单元并把有值的单元用空格合并
 	 * @param  array   $segments
 	 * @return string
 	 */

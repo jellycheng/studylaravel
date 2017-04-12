@@ -6,26 +6,16 @@ Laravel 的 Eloquent ORM 模型
 数据库配置文件：  /config/database.php
 <?php
 	return [
-		/*
-		| PDO Fetch Style
-		*/
-
 		'fetch' => PDO::FETCH_CLASS,
-
-		/*
-		默认db连接名
-		*/
+		//默认db连接名
 		'default' => 'mysql',
-		/*
-		db连接配置，connections['连接名']=array(配置)
-		*/
+		//db连接配置，connections['连接名']=array(配置)
 		'connections' => [
 			'sqlite' => [
 				'driver'   => 'sqlite',
 				'database' => storage_path().'/database.sqlite',
 				'prefix'   => '',
 			],
-
 			'mysql' => [
 				'driver'    => 'mysql',
 				'host'      => env('DB_HOST', 'localhost'),
@@ -37,7 +27,6 @@ Laravel 的 Eloquent ORM 模型
 				'prefix'    => '',
 				'strict'    => false,
 			],
-
 			'pgsql' => [
 				'driver'   => 'pgsql',
 				'host'     => env('DB_HOST', 'localhost'),
@@ -48,7 +37,6 @@ Laravel 的 Eloquent ORM 模型
 				'prefix'   => '',
 				'schema'   => 'public',
 			],
-
 			'sqlsrv' => [
 				'driver'   => 'sqlsrv',
 				'host'     => env('DB_HOST', 'localhost'),
@@ -57,16 +45,11 @@ Laravel 的 Eloquent ORM 模型
 				'password' => env('DB_PASSWORD', ''),
 				'prefix'   => '',
 			],
-
 		],
 		'migrations' => 'migrations',
-		/*
-		redis配置
-		*/
+		//redis配置
 		'redis' => [
-
 			'cluster' => false,
-
 			'default' => [
 				'host'     => '127.0.0.1',
 				'port'     => 6379,
@@ -76,4 +59,23 @@ Laravel 的 Eloquent ORM 模型
 		],
 
 	];
+//查询构造器
+$users = DB::table('users')->get();//等价  $users = DB::table('users')->getFresh();
+foreach ($users as $user)
+{
+    var_dump($user->name);
+}
+
+DB::table('users') 等价 DB::connection('default连接代号')->table('users');返回\Illuminate\Database\Query\Builder 类对象
+执行顺序：
+1. 先执行 \Illuminate\Database\->DatabaseManager->__call('table'', 'user')
+2. Illuminate\Database\MySqlConnection类对象->table('user'); 此时返回\Illuminate\Database\Query\Builder 类对象
+3. \Illuminate\Database\Query\Builder 类对象->get(); //返回多条记录结果集
+4. Illuminate\Database\Query\Grammars\MySqlGrammar类的拼接select语句方法compileSelect(Builder $query查询构建对象)
+5.
+
+
+$user = DB::table('users')->where('name', 'John')->first(); //返回一条记录的结果集
+$name = DB::table('users')->where('name', 'John')->pluck('name字段名');//返回一条记录的name字段值
+
 

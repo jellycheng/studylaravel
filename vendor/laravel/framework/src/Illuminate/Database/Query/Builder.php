@@ -35,7 +35,7 @@ class Builder {
 
 	/**
 	 * The current query value bindings.
-	 *
+	 * 支持的绑定类型及配置
 	 * @var array
 	 */
 	protected $bindings = array(
@@ -226,7 +226,6 @@ class Builder {
 	public function selectRaw($expression, array $bindings = array())
 	{
 		$this->addSelect(new Expression($expression));
-
 		if ($bindings)
 		{
 			$this->addBinding($bindings, 'select');
@@ -420,20 +419,18 @@ class Builder {
 
 	/**
 	 * Add a basic where clause to the query.
-	 *
-	 * @param  string  $column
-	 * @param  string  $operator
-	 * @param  mixed   $value
-	 * @param  string  $boolean
+	 * 返回本类对象
+	 * @param  string  $column 字段名或['字段名'=>'字段值1','字段名'=>'字段值2']
+	 * @param  string  $operator 只有当第1个参数是字段名字符串时才有用，表示操作符如>,>=,<,<=,=
+	 * @param  mixed   $value  字段值
+	 * @param  string  $boolean   拼接条件 and，or 等
 	 * @return $this
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function where($column, $operator = null, $value = null, $boolean = 'and')
 	{
-		// If the column is an array, we will assume it is an array of key-value pairs
-		// and can add them each as a where clause. We will maintain the boolean we
-		// received when the method was called and pass it into the nested where.
+		//数组方式,$colum=['字段名'=>'字段值1','字段名'=>'字段值2']
 		if (is_array($column))
 		{
 			return $this->whereNested(function($query) use ($column)
@@ -445,9 +442,7 @@ class Builder {
 			}, $boolean);
 		}
 
-		// Here we will make some assumptions about the operator. If only 2 values are
-		// passed to the method, we will assume that the operator is an equals sign
-		// and keep going. Otherwise, we'll require the operator to be passed in.
+		//只有2个参数，则说明第1个参数是字段名，第2个参数是字段值
 		if (func_num_args() == 2)
 		{
 			list($value, $operator) = array($operator, '=');
@@ -457,50 +452,34 @@ class Builder {
 			throw new InvalidArgumentException("Value must be provided.");
 		}
 
-		// If the columns is actually a Closure instance, we will assume the developer
-		// wants to begin a nested where statement which is wrapped in parenthesis.
-		// We'll add that Closure to the query then return back out immediately.
+		//字段名是闭包
 		if ($column instanceof Closure)
 		{
 			return $this->whereNested($column, $boolean);
 		}
 
-		// If the given operator is not found in the list of valid operators we will
-		// assume that the developer is just short-cutting the '=' operators and
-		// we will set the operators to '=' and set the values appropriately.
 		if ( ! in_array(strtolower($operator), $this->operators, true))
 		{
 			list($value, $operator) = array($operator, '=');
 		}
 
-		// If the value is a Closure, it means the developer is performing an entire
-		// sub-select within the query and we will need to compile the sub-select
-		// within the where clause to get the appropriate query record results.
+		//字段值是闭包
 		if ($value instanceof Closure)
 		{
 			return $this->whereSub($column, $operator, $value, $boolean);
 		}
 
-		// If the value is "null", we will just assume the developer wants to add a
-		// where null clause to the query. So, we will allow a short-cut here to
-		// that method for convenience so the developer doesn't have to check.
+		//字段值为null
 		if (is_null($value))
 		{
 			return $this->whereNull($column, $boolean, $operator != '=');
 		}
-
-		// Now that we are working with just a simple query we can put the elements
-		// in our array and add the query binding to our array of bindings that
-		// will be bound to each SQL statements when it is finally executed.
 		$type = 'Basic';
-
 		$this->wheres[] = compact('type', 'column', 'operator', 'value', 'boolean');
-
 		if ( ! $value instanceof Expression)
-		{
+		{//值不是表达式 则设置bindings属性值
 			$this->addBinding($value, 'where');
 		}
-
 		return $this;
 	}
 
@@ -1635,9 +1614,6 @@ class Builder {
 
 		$results = $this->get($columns);
 
-		// Once we have executed the query, we will reset the aggregate property so
-		// that more select queries can be executed against the database without
-		// the aggregate value getting in the way when the grammar builds it.
 		$this->aggregate = null;
 
 		$this->columns = $previousColumns;
@@ -1645,7 +1621,6 @@ class Builder {
 		if (isset($results[0]))
 		{
 			$result = array_change_key_case((array) $results[0]);
-
 			return $result['aggregate'];
 		}
 	}
@@ -1659,19 +1634,10 @@ class Builder {
 	public function insert(array $values)
 	{
 		if (empty($values)) return true;
-
-		// Since every insert gets treated like a batch insert, we will make sure the
-		// bindings are structured in a way that is convenient for building these
-		// inserts statements by verifying the elements are actually an array.
 		if ( ! is_array(reset($values)))
 		{
 			$values = array($values);
-		}
-
-		// Since every insert gets treated like a batch insert, we will make sure the
-		// bindings are structured in a way that is convenient for building these
-		// inserts statements by verifying the elements are actually an array.
-		else
+		}else
 		{
 			foreach ($values as $key => $value)
 			{
@@ -1679,9 +1645,6 @@ class Builder {
 			}
 		}
 
-		// We'll treat every insert like a batch insert so we can easily insert each
-		// of the records into the database consistently. This will make it much
-		// easier on the grammars to just handle one type of record insertion.
 		$bindings = array();
 
 		foreach ($values as $record)
@@ -1694,9 +1657,6 @@ class Builder {
 
 		$sql = $this->grammar->compileInsert($this, $values);
 
-		// Once we have compiled the insert statement's SQL we can execute it on the
-		// connection and return a result as a boolean success indicator as that
-		// is the same type of result returned by the raw connection instance.
 		$bindings = $this->cleanBindings($bindings);
 
 		return $this->connection->insert($sql, $bindings);
@@ -1890,7 +1850,7 @@ class Builder {
 
 	/**
 	 * Add a binding to the query.
-	 *
+	 * 设置bindings属性值
 	 * @param  mixed   $value
 	 * @param  string  $type
 	 * @return $this
@@ -1900,19 +1860,15 @@ class Builder {
 	public function addBinding($value, $type = 'where')
 	{
 		if ( ! array_key_exists($type, $this->bindings))
-		{
+		{//不是合法的绑定类型 抛异常
 			throw new InvalidArgumentException("Invalid binding type: {$type}.");
 		}
-
 		if (is_array($value))
 		{
 			$this->bindings[$type] = array_values(array_merge($this->bindings[$type], $value));
-		}
-		else
-		{
+		} else {
 			$this->bindings[$type][] = $value;
 		}
-
 		return $this;
 	}
 

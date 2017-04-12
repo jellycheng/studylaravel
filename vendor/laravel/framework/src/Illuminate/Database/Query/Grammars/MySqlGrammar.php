@@ -6,13 +6,13 @@ class MySqlGrammar extends Grammar {
 
 	/**
 	 * The components that make up a select clause.
-	 *
+	 * 拼接select语句的方法，注意数组key的顺序,配置的分别对应的方法是compile开头
 	 * @var array
 	 */
 	protected $selectComponents = array(
-		'aggregate',
-		'columns',
-		'from',
+		'aggregate',  //compileAggregate
+		'columns',      //compileColumns
+		'from',         //compileFrom
 		'joins',
 		'wheres',
 		'groups',

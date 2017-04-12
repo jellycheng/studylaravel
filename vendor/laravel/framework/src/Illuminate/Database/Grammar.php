@@ -87,7 +87,7 @@ abstract class Grammar {
 
 	/**
 	 * Convert an array of column names into a delimited string.
-	 * 拼接字段
+	 * 逗号拼接字段
 	 * @param  array   $columns
 	 * @return string
 	 */
