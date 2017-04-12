@@ -216,11 +216,11 @@ class Connection implements ConnectionInterface {
 	 */
 	public function table($table)
 	{
-		$processor = $this->getPostProcessor();
-
+		$processor = $this->getPostProcessor();//\Illuminate\Database\Query\Processors\Processor 子类对象,如 \Illuminate\Database\Query\Processors\MySqlProcessor类对象
+		//$this->getQueryGrammar()是\Illuminate\Database\Query\Grammars\Grammar or 子类对象 如：\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 		$query = new Query\Builder($this, $this->getQueryGrammar(), $processor);
 
-		return $query->from($table);
+		return $query->from($table);//注入表名，同时返回\Illuminate\Database\Query\Builder 类对象
 	}
 
 	/**
@@ -1060,7 +1060,7 @@ class Connection implements ConnectionInterface {
 	public function setTablePrefix($prefix)
 	{
 		$this->tablePrefix = $prefix;
-
+		//\Illuminate\Database\Query\Grammars\Grammar or 子类对象 如：\Illuminate\Database\Query\Grammars\MySqlGrammar 类对象
 		$this->getQueryGrammar()->setTablePrefix($prefix);
 	}
 

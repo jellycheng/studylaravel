@@ -55,7 +55,7 @@ class Builder {
 
 	/**
 	 * The columns that should be returned.
-	 *
+	 * 查询要返回的字段
 	 * @var array
 	 */
 	public $columns;

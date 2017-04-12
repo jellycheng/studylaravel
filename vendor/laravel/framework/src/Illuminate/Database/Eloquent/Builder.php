@@ -32,7 +32,7 @@ class Builder {
 
 	/**
 	 * All of the registered builder macros.
-	 *
+	 * 为模型子类扩展的宏方法，格式：['方法名1'=>闭包1(本类对象),'方法名2'=>闭包2(本类对象)]
 	 * @var array
 	 */
 	protected $macros = array();
@@ -754,9 +754,7 @@ class Builder {
 
 		foreach ($relations as $name => $constraints)
 		{
-			// If the "relation" value is actually a numeric key, we can assume that no
-			// constraints have been specified for the eager load and we'll just put
-			// an empty Closure with the loader so that we can treat all the same.
+			//
 			if (is_numeric($name))
 			{
 				$f = function() {};
@@ -764,9 +762,7 @@ class Builder {
 				list($name, $constraints) = array($constraints, $f);
 			}
 
-			// We need to separate out any nested includes. Which allows the developers
-			// to load deep relationships using "dots" without stating each level of
-			// the relationship with its own key in the array of eager load names.
+			// 
 			$results = $this->parseNested($name, $results);
 
 			$results[$name] = $constraints;
@@ -786,25 +782,20 @@ class Builder {
 	{
 		$progress = array();
 
-		// If the relation has already been set on the result array, we will not set it
-		// again, since that would override any constraints that were already placed
-		// on the relationships. We will only set the ones that are not specified.
 		foreach (explode('.', $name) as $segment)
 		{
 			$progress[] = $segment;
-
 			if ( ! isset($results[$last = implode('.', $progress)]))
 			{
 				$results[$last] = function() {};
 			}
 		}
-
 		return $results;
 	}
 
 	/**
 	 * Call the given model scope on the underlying model.
-	 *
+	 * 调用模型类的scope开头的方法
 	 * @param  string  $scope
 	 * @param  array   $parameters
 	 * @return \Illuminate\Database\Query\Builder
@@ -812,13 +803,12 @@ class Builder {
 	protected function callScope($scope, $parameters)
 	{
 		array_unshift($parameters, $this);
-
 		return call_user_func_array(array($this->model, $scope), $parameters) ?: $this;
 	}
 
 	/**
 	 * Get the underlying query builder instance.
-	 *
+	 * 获取查询构建对象
 	 * @return \Illuminate\Database\Query\Builder|static
 	 */
 	public function getQuery()
@@ -828,14 +818,13 @@ class Builder {
 
 	/**
 	 * Set the underlying query builder instance.
-	 *
+	 * 设置查询构建对象
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @return $this
 	 */
 	public function setQuery($query)
 	{
 		$this->query = $query;
-
 		return $this;
 	}
 
@@ -864,7 +853,7 @@ class Builder {
 
 	/**
 	 * Get the model instance being queried.
-	 *
+	 * 获取模型类对象
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
 	public function getModel()
@@ -888,7 +877,7 @@ class Builder {
 
 	/**
 	 * Extend the builder with a given callback.
-	 *
+	 * 增加宏方法
 	 * @param  string    $name
 	 * @param  \Closure  $callback
 	 * @return void
@@ -900,7 +889,7 @@ class Builder {
 
 	/**
 	 * Get the given macro by name.
-	 *
+	 * 获取宏方法
 	 * @param  string  $name
 	 * @return \Closure
 	 */
@@ -919,18 +908,17 @@ class Builder {
 	public function __call($method, $parameters)
 	{
 		if (isset($this->macros[$method]))
-		{
+		{//存在宏方法，调用宏方法
 			array_unshift($parameters, $this);
-
 			return call_user_func_array($this->macros[$method], $parameters);
 		}
 		elseif (method_exists($this->model, $scope = 'scope'.ucfirst($method)))
-		{
+		{//存在scope开始的方法 则调用模型类的scope开头的方法
 			return $this->callScope($scope, $parameters);
 		}
-
+		//调用查询构建类（\Illuminate\Database\Query\Builder）方法
 		$result = call_user_func_array(array($this->query, $method), $parameters);
-
+		//是配置中的方法则返回结果否则返回本类对象
 		return in_array($method, $this->passthru) ? $result : $this;
 	}
 
