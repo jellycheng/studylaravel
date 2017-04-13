@@ -947,40 +947,26 @@ class Builder {
 	/**
 	 * Handles dynamic "where" clauses to the query.
 	 *
-	 * @param  string  $method
-	 * @param  string  $parameters
+	 * @param  string  $method  And字段名 或 Or字段名
+	 * @param  string  $parameters  参数
 	 * @return $this
 	 */
 	public function dynamicWhere($method, $parameters)
 	{
 		$finder = substr($method, 5);
-
 		$segments = preg_split('/(And|Or)(?=[A-Z])/', $finder, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-		// The connector variable will determine which connector will be used for the
-		// query condition. We will change it as we come across new boolean values
-		// in the dynamic method strings, which could contain a number of these.
-		$connector = 'and';
-
+		//
+		$connector = 'and'; //拼接符 如and or
 		$index = 0;
-
 		foreach ($segments as $segment)
 		{
-			// If the segment is not a boolean connector, we can assume it is a column's name
-			// and we will add it to the query as a new constraint as a where clause, then
-			// we can keep iterating through the dynamic method string's segments again.
+			//$segment=字段名
 			if ($segment != 'And' && $segment != 'Or')
 			{
 				$this->addDynamic($segment, $connector, $parameters, $index);
 
 				$index++;
-			}
-
-			// Otherwise, we will store the connector so we know how the next where clause we
-			// find in the query should be connected to the previous ones, meaning we will
-			// have the proper boolean connector to connect the next where clause found.
-			else
-			{
+			} else {
 				$connector = $segment;
 			}
 		}
@@ -991,17 +977,14 @@ class Builder {
 	/**
 	 * Add a single dynamic where clause statement to the query.
 	 *
-	 * @param  string  $segment
-	 * @param  string  $connector
-	 * @param  array   $parameters
-	 * @param  int     $index
+	 * @param  string  $segment 字段名
+	 * @param  string  $connector  拼接符 如and or
+	 * @param  array   $parameters  所有值
+	 * @param  int     $index        取哪个值
 	 * @return void
 	 */
 	protected function addDynamic($segment, $connector, $parameters, $index)
 	{
-		// Once we have parsed out the columns and formatted the boolean operators we
-		// are ready to add it to this query as a where clause just like any other
-		// clause on the query. Then we'll increment the parameter index values.
 		$bool = strtolower($connector);
 
 		$this->where(snake_case($segment), '=', $parameters[$index], $bool);
@@ -1009,7 +992,7 @@ class Builder {
 
 	/**
 	 * Add a "group by" clause to the query.
-	 *
+	 *  orderBy('name', 'desc')， orderBy('desc')
 	 * @param  array|string  $column,...
 	 * @return $this
 	 */
@@ -1025,7 +1008,7 @@ class Builder {
 
 	/**
 	 * Add a "having" clause to the query.
-	 *
+	 *  having('count', '>', 100)
 	 * @param  string  $column
 	 * @param  string  $operator
 	 * @param  string  $value
@@ -1664,16 +1647,16 @@ class Builder {
 
 	/**
 	 * Insert a new record and get the value of the primary key.
-	 *
-	 * @param  array   $values
-	 * @param  string  $sequence
+	 * 插入数据并返回自增id
+	 * @param  array   $values = 【字段名=>字段值，字段名2=>值2】
+	 * @param  string  $sequence 如果是mysql pdo 这个参数不用管，使用默认值即可
 	 * @return int
 	 */
 	public function insertGetId(array $values, $sequence = null)
 	{
 		$sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
 
-		$values = $this->cleanBindings($values);
+		$values = $this->cleanBindings($values);//值不是表达式的一律做bind
 
 		return $this->processor->processInsertGetId($this, $sql, $values, $sequence);
 	}
@@ -1784,7 +1767,7 @@ class Builder {
 
 	/**
 	 * Remove all of the expressions from a list of bindings.
-	 *
+	 * 获取值不是表达式的所有值
 	 * @param  array  $bindings
 	 * @return array
 	 */
@@ -1939,12 +1922,12 @@ class Builder {
 	public function __call($method, $parameters)
 	{
 		if (starts_with($method, 'where'))
-		{
+		{//调用了where开头不存在的方法
 			return $this->dynamicWhere($method, $parameters);
 		}
 
 		$className = get_class($this);
-
+        //抛异常，调用不存在的方法
 		throw new BadMethodCallException("Call to undefined method {$className}::{$method}()");
 	}
 
