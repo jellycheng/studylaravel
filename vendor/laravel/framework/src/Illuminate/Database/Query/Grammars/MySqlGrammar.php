@@ -10,17 +10,17 @@ class MySqlGrammar extends Grammar {
 	 * @var array
 	 */
 	protected $selectComponents = array(
-		'aggregate',  //compileAggregate
-		'columns',      //compileColumns
-		'from',         //compileFrom
-		'joins',
-		'wheres',
-		'groups',
-		'havings',
-		'orders',
-		'limit',
-		'offset',
-		'lock',
+		'aggregate',  //对应本类 compileAggregate方法，对应Illuminate\Database\Query\Builder类aggregate属性
+		'columns',      //对应本类compileColumns方法， 对应Illuminate\Database\Query\Builder类columns属性
+		'from',         //对应本类compileFrom方法，    对应Illuminate\Database\Query\Builder类from属性
+		'joins',		//对应本类compileJoins方法，    对应Illuminate\Database\Query\Builder类joins属性
+		'wheres',		//对应本类compileWheres方法，   对应Illuminate\Database\Query\Builder类wheres属性
+		'groups',		//对应本类compileGroups方法，   对应Illuminate\Database\Query\Builder类groups属性
+		'havings',		//对应本类compileHavings方法，  对应Illuminate\Database\Query\Builder类havings属性
+		'orders',		//对应本类compileOrders方法，   对应Illuminate\Database\Query\Builder类orders属性
+		'limit',		//对应本类compileLimit方法，    对应Illuminate\Database\Query\Builder类limit属性
+		'offset',		//对应本类compileOffset方法，   对应Illuminate\Database\Query\Builder类offset属性
+		'lock',			//对应本类compileLock方法，     对应Illuminate\Database\Query\Builder类lock属性
 	);
 
 	/**

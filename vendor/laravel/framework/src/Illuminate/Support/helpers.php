@@ -157,7 +157,7 @@ if ( ! function_exists('array_flatten'))
 {
 	/**
 	 * Flatten a multi-dimensional array into a single level.
-	 *
+	 *  函数将会把多维数组扁平化成一维，即取出所有单元值
 	 * @param  array  $array
 	 * @return array
 	 */

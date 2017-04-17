@@ -1307,7 +1307,7 @@ class Builder {
 
 	/**
 	 * Execute the query as a "select" statement.
-	 *
+	 * 返回多条记录结果集
 	 * @param  array  $columns
 	 * @return array|static[]
 	 */
@@ -1318,7 +1318,7 @@ class Builder {
 
 	/**
 	 * Execute the query as a fresh "select" statement.
-	 *
+	 * 返回多条记录结果集
 	 * @param  array  $columns
 	 * @return array|static[]
 	 */
@@ -1331,7 +1331,7 @@ class Builder {
 
 	/**
 	 * Run the query as a "select" statement against the connection.
-	 *
+	 * 执行select sql语句，并返回结果
 	 * @return array
 	 */
 	protected function runSelect()
@@ -1792,7 +1792,7 @@ class Builder {
 
 	/**
 	 * Get the current query value bindings in a flattened array.
-	 *
+	 *  函数将会把多维数组扁平化成一维
 	 * @return array
 	 */
 	public function getBindings()

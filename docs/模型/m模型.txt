@@ -68,10 +68,10 @@ foreach ($users as $user)
 
 DB::table('users') 等价 DB::connection('default连接代号')->table('users');返回\Illuminate\Database\Query\Builder 类对象
 执行顺序：
-1. 先执行 \Illuminate\Database\->DatabaseManager->__call('table'', 'user')
-2. Illuminate\Database\MySqlConnection类对象->table('user'); 此时返回\Illuminate\Database\Query\Builder 类对象
-3. \Illuminate\Database\Query\Builder 类对象->get(); //返回多条记录结果集
-4. Illuminate\Database\Query\Grammars\MySqlGrammar类的拼接select语句方法compileSelect(Builder $query查询构建对象)
+1. 先执行 \Illuminate\Database\DatabaseManager->__call('table'', 'user')
+2. \Illuminate\Database\MySqlConnection类对象->table('user'); 此时返回\Illuminate\Database\Query\Builder 类对象
+3. \Illuminate\Database\Query\Builder 类对象->get(); //返回多条记录结果集，array
+4. 其中get()调用了\Illuminate\Database\Query\Grammars\MySqlGrammar类对象->compileSelect(Builder $query查询构建对象):拼接select语句方法
 5.
 
 

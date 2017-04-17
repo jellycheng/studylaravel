@@ -40,7 +40,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the components necessary for a select clause.
-	 *
+	 * 构建select sql语句，返回select每部分单元值
 	 * @param  \Illuminate\Database\Query\Builder
 	 * @return array
 	 */
