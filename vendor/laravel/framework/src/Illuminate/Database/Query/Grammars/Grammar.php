@@ -62,8 +62,8 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile an aggregated select clause.
-	 *
-	 * @param  \Illuminate\Database\Query\Builder  $query 类对象
+	 * 返回如select count(*) as aggregate , select min(*) as aggregate 等
+     * @param  \Illuminate\Database\Query\Builder  $query 类对象
 	 * @param  array  $aggregate
 	 * @return string
 	 */
@@ -72,7 +72,7 @@ class Grammar extends BaseGrammar {
 		$column = $this->columnize($aggregate['columns']);
 
 		if ($query->distinct && $column !== '*')
-		{
+		{//去重
 			$column = 'distinct '.$column;
 		}
 
@@ -81,13 +81,13 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the "select *" portion of the query.
-	 *
+	 * 如果有拼接过aggregate属性则不需要拼接字段属性,否则返回select 字段名，字段名N  或者 select *
 	 * @param  \Illuminate\Database\Query\Builder  $query 类对象
-	 * @param  array  $columns  值
+	 * @param  array  $columns  =[字段名.每个单元一个字段名，所有用*表示]
 	 * @return string
 	 */
 	protected function compileColumns(Builder $query, $columns)
-	{
+	{  //如果有拼接过aggregate属性则不需要拼接字段属性
 		if ( ! is_null($query->aggregate)) return;
 
 		$select = $query->distinct ? 'select distinct ' : 'select ';
@@ -97,7 +97,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the "from" portion of the query.
-	 *
+	 * 返回 from 表名
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  string  $table
 	 * @return string
@@ -111,21 +111,20 @@ class Grammar extends BaseGrammar {
 	 * Compile the "join" portions of the query.
 	 *
 	 * @param  \Illuminate\Database\Query\Builder  $query
-	 * @param  array  $joins
+	 * @param  array  $joins = [每个单元均是join对象]
 	 * @return string
 	 */
 	protected function compileJoins(Builder $query, $joins)
 	{
 		$sql = array();
-
+        //执行查询构建对象的setBindings()方法,其实是设置bindings属性，bindings['join']=[];
 		$query->setBindings(array(), 'join');
 
 		foreach ($joins as $join)
 		{
-			$table = $this->wrapTable($join->table);
-			//
+			$table = $this->wrapTable($join->table);//表名
+			//on条件
 			$clauses = array();
-
 			foreach ($join->clauses as $clause)
 			{
 				$clauses[] = $this->compileJoinConstraint($clause);
@@ -167,7 +166,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the "where" portions of the query.
-	 *
+	 * 不存在wheres属性值则返回空，有where条件则返回 where 字段=值 and 字段名=值 or 字段名=值
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @return string
 	 */
@@ -234,7 +233,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile a "between" where clause.
-	 *
+	 * 返回 字段名 between ? and ?  或 字段名 not between ? and ?
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  array  $where
 	 * @return string
@@ -431,7 +430,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the "group by" portions of the query.
-	 *
+	 * 返回group by 字段名1，字段名N
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  array  $groups
 	 * @return string

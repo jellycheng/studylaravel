@@ -49,20 +49,20 @@ class Builder {
 	/**
 	 * An aggregate function and column to be run.
 	 *
-	 * @var array
+	 * @var array = ['columns'=>'字段名多个逗号分割，默认*', 'function'=>'select支持的函数如min，max，count等']
 	 */
 	public $aggregate;
 
 	/**
 	 * The columns that should be returned.
-	 * 查询要返回的字段
+	 * 查询要返回的字段,每个单元存放一个字段名，如[字段1，字段N，*]
 	 * @var array
 	 */
 	public $columns;
 
 	/**
 	 * Indicates if the query returns distinct results.
-	 *
+	 * 去重
 	 * @var bool
 	 */
 	public $distinct = false;
@@ -84,7 +84,23 @@ class Builder {
 	/**
 	 * The where constraints for the query.
 	 *
-	 * @var array
+	 * @var array = [['type'=>'basic或between或', 'boolean'=>'and或or','column'=>'字段名，多个数组格式','operator'=>'操作符如>,=,<=','value'=>'值'],
+     *                  ['type'=>'basic', 'boolean'=>'and或or', 'column'=>'username','operator'=>'=','value'=>'值'],
+     *                  ['type'=>'between', 'boolean'=>'and或or', 'column'=>'username','not'=>bool值],
+     *                  ['type'=>'exists','boolean'=>'and或or', 'query'=>子查询对象],
+     *                  ['type'=>'notExists','boolean'=>'and或or', 'query'=>子查询对象],
+     *                  ['type'=>'sub', 'boolean'=>'and或or', 'query'=>子查询对象],
+     *                  ['type'=>'inSub', 'boolean'=>'and或or', 'query'=>子查询对象],
+     *                  ['type'=>'notInsub', 'boolean'=>'and或or', 'query'=>子查询对象],
+     *                  ['type'=>'in', 'boolean'=>'and或or', 'column'=>'username','values'=>值],
+     *                  ['type'=>'notIn', 'boolean'=>'and或or', 'column'=>'username','values'=>值],
+     *                  ['type'=>'null', 'boolean'=>'and或or', 'column'=>字段名],
+     *                  ['type'=>'notNull', 'boolean'=>'and或or', 'column'=>字段名],
+     *                  ['type'=>'raw', 'boolean'=>'and或or', 'sql'=>sql语句],
+     *                  ['type'=>'year', 'boolean'=>'and或or', 'column'=>字段名,'operator'=>'=','value'=>'值'],
+     *                  ['type'=>'month', 'boolean'=>'and或or', 'column'=>字段名,'operator'=>'=','value'=>'值'],
+     *                  ['type'=>'day', 'boolean'=>'and或or', 'column'=>字段名,'operator'=>'=','value'=>'值'],
+     *              ]
 	 */
 	public $wheres;
 
@@ -1319,12 +1335,12 @@ class Builder {
 	/**
 	 * Execute the query as a fresh "select" statement.
 	 * 返回多条记录结果集
-	 * @param  array  $columns
+	 * @param  array  $columns = [每个字段一个单元,字段名N]
 	 * @return array|static[]
 	 */
 	public function getFresh($columns = array('*'))
 	{
-		if (is_null($this->columns)) $this->columns = $columns;
+		if (is_null($this->columns)) $this->columns = $columns;//设置字段属性
 
 		return $this->processor->processSelect($this, $this->runSelect());
 	}
@@ -1584,9 +1600,9 @@ class Builder {
 
 	/**
 	 * Execute an aggregate function on the database.
-	 *
-	 * @param  string  $function
-	 * @param  array   $columns
+	 * 设置aggregate属性
+	 * @param  string  $function 函数名
+	 * @param  array   $columns 字段名，每个单元存一个字段
 	 * @return mixed
 	 */
 	public function aggregate($function, $columns = array('*'))
@@ -1595,14 +1611,14 @@ class Builder {
 
 		$previousColumns = $this->columns;
 
-		$results = $this->get($columns);
+		$results = $this->get($columns);//查询结果
 
 		$this->aggregate = null;
 
 		$this->columns = $previousColumns;
 
 		if (isset($results[0]))
-		{
+		{//存在结果
 			$result = array_change_key_case((array) $results[0]);
 			return $result['aggregate'];
 		}

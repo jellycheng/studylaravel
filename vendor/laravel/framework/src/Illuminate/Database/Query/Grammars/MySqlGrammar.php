@@ -10,17 +10,17 @@ class MySqlGrammar extends Grammar {
 	 * @var array
 	 */
 	protected $selectComponents = array(
-		'aggregate',  //对应本类 compileAggregate方法，对应Illuminate\Database\Query\Builder类aggregate属性
-		'columns',      //对应本类compileColumns方法， 对应Illuminate\Database\Query\Builder类columns属性
-		'from',         //对应本类compileFrom方法，    对应Illuminate\Database\Query\Builder类from属性
-		'joins',		//对应本类compileJoins方法，    对应Illuminate\Database\Query\Builder类joins属性
-		'wheres',		//对应本类compileWheres方法，   对应Illuminate\Database\Query\Builder类wheres属性
-		'groups',		//对应本类compileGroups方法，   对应Illuminate\Database\Query\Builder类groups属性
-		'havings',		//对应本类compileHavings方法，  对应Illuminate\Database\Query\Builder类havings属性
-		'orders',		//对应本类compileOrders方法，   对应Illuminate\Database\Query\Builder类orders属性
-		'limit',		//对应本类compileLimit方法，    对应Illuminate\Database\Query\Builder类limit属性
-		'offset',		//对应本类compileOffset方法，   对应Illuminate\Database\Query\Builder类offset属性
-		'lock',			//对应本类compileLock方法，     对应Illuminate\Database\Query\Builder类lock属性
+		'aggregate',  //对应本类 compileAggregate方法，对应Illuminate\Database\Query\Builder类aggregate属性，拼接sql： select count(*) as aggregate ,
+		'columns',      //对应本类compileColumns方法， 对应Illuminate\Database\Query\Builder类columns属性,拼接sql：如果有拼接过aggregate属性则不需要拼接字段属性,否则返回select 字段名，字段名N  或者 select *
+		'from',         //对应本类compileFrom方法，    对应Illuminate\Database\Query\Builder类from属性,拼接sql：返回 from 表名
+		'joins',		//对应本类compileJoins方法，    对应Illuminate\Database\Query\Builder类joins属性,拼接sql：
+		'wheres',		//对应本类compileWheres方法，   对应Illuminate\Database\Query\Builder类wheres属性,拼接sql：
+		'groups',		//对应本类compileGroups方法，   对应Illuminate\Database\Query\Builder类groups属性,拼接sql：
+		'havings',		//对应本类compileHavings方法，  对应Illuminate\Database\Query\Builder类havings属性,拼接sql：
+		'orders',		//对应本类compileOrders方法，   对应Illuminate\Database\Query\Builder类orders属性,拼接sql：
+		'limit',		//对应本类compileLimit方法，    对应Illuminate\Database\Query\Builder类limit属性,拼接sql：
+		'offset',		//对应本类compileOffset方法，   对应Illuminate\Database\Query\Builder类offset属性,拼接sql：
+		'lock',			//对应本类compileLock方法，     对应Illuminate\Database\Query\Builder类lock属性,拼接sql：
 	);
 
 	/**
