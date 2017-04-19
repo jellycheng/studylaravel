@@ -115,14 +115,16 @@ class Builder {
 	/**
 	 * The having constraints for the query.
 	 *
-	 * @var array
+	 * @var array = [
+     *              ['type'=>'类型basic,raw', 'column'=>'字段', 'operator'=>'操作符>,=,<=', 'value'=>'值', 'boolean'=>'and']
+     *              ]
 	 */
 	public $havings;
 
 	/**
 	 * The orderings for the query.
 	 *
-	 * @var array
+	 * @var array = [['column'=>'字段名', 'direction'=>'asc,desc'], ['type'=>'raw', 'sql'=>'字段名 asc，字段名 desc']]
 	 */
 	public $orders;
 
@@ -1652,9 +1654,9 @@ class Builder {
 	/**
 	 * Increment a column's value by a given amount.
 	 *
-	 * @param  string  $column
-	 * @param  int     $amount
-	 * @param  array   $extra
+	 * @param  string  $column 字段名
+	 * @param  int     $amount 字段增加的值
+	 * @param  array   $extra =[字段名1=>更新值1，字段名2=>更新值]
 	 * @return int
 	 */
 	public function increment($column, $amount = 1, array $extra = array())
@@ -1662,7 +1664,7 @@ class Builder {
 		$wrapped = $this->grammar->wrap($column);
 
 		$columns = array_merge(array($column => $this->raw("$wrapped + $amount")), $extra);
-
+        //更新记录
 		return $this->update($columns);
 	}
 

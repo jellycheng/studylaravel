@@ -27,9 +27,9 @@ class Processor {
 	 */
 	public function processInsertGetId(Builder $query, $sql, $values, $sequence = null)
 	{
-		$query->getConnection()->insert($sql, $values);
+		$query->getConnection()->insert($sql, $values);//执行插入sql
 
-		$id = $query->getConnection()->getPdo()->lastInsertId($sequence);
+		$id = $query->getConnection()->getPdo()->lastInsertId($sequence);//插入自增id
 
 		return is_numeric($id) ? (int) $id : $id;
 	}

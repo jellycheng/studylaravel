@@ -632,15 +632,12 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Begin querying the model on a given connection.
-	 *
+	 * 设置连接对象
 	 * @param  string|null  $connection
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
 	public static function on($connection = null)
 	{
-		// First we will just create a fresh instance of this model, and then we can
-		// set the connection on the model so that it is be used for the queries
-		// we execute, as well as being set on each relationship we retrieve.
 		$instance = new static;
 
 		$instance->setConnection($connection);
@@ -1475,7 +1472,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		}
 
 		if ($this->exists)
-		{
+		{//记录是查询出来的，则更新
 			$saved = $this->performUpdate($query, $options);
 		} else {
 			$saved = $this->performInsert($query, $options);
@@ -1580,8 +1577,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	protected function insertAndSetId(Builder $query, $attributes)
 	{
-		$id = $query->insertGetId($attributes, $keyName = $this->getKeyName());
-
+		$id = $query->insertGetId($attributes, $keyName = $this->getKeyName());//返回自增id
+        //设置自增值
 		$this->setAttribute($keyName, $id);
 	}
 
@@ -2282,7 +2279,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Set whether IDs are incrementing.
-	 *
+	 * 是否设置插入成功设置自增id属性值，true设置，false否
 	 * @param  bool  $value
 	 * @return void
 	 */

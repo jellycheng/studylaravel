@@ -456,19 +456,15 @@ class Grammar extends BaseGrammar {
 	/**
 	 * Compile a single having clause.
 	 *
-	 * @param  array   $having
+	 * @param  array   $having = ['type'=>'类型basic,raw', 'column'=>'字段', 'operator'=>'操作符>,=,<=', 'value'=>'值', 'boolean'=>'and']
 	 * @return string
 	 */
 	protected function compileHaving(array $having)
 	{
-		// If the having clause is "raw", we can just return the clause straight away
-		// without doing any more processing on it. Otherwise, we will compile the
-		// clause into SQL based on the components that make it up from builder.
 		if ($having['type'] === 'raw')
-		{
+		{// 原始表达式
 			return $having['boolean'].' '.$having['sql'];
 		}
-
 		return $this->compileBasicHaving($having);
 	}
 
@@ -480,18 +476,18 @@ class Grammar extends BaseGrammar {
 	 */
 	protected function compileBasicHaving($having)
 	{
-		$column = $this->wrap($having['column']);
+		$column = $this->wrap($having['column']);//字段包裹起来``
 
-		$parameter = $this->parameter($having['value']);
+		$parameter = $this->parameter($having['value']);//字段值,如果是表达式则返回表达式值，否则返回?
 
 		return $having['boolean'].' '.$column.' '.$having['operator'].' '.$parameter;
 	}
 
 	/**
 	 * Compile the "order by" portions of the query.
-	 *
+	 * 返回 order by 字段 asc
 	 * @param  \Illuminate\Database\Query\Builder  $query
-	 * @param  array  $orders
+	 * @param  array  $orders = [['column'=>'字段名', 'direction'=>'asc,desc'], ['type'=>'raw', 'sql'=>'字段名 asc,字段名2 desc']]
 	 * @return string
 	 */
 	protected function compileOrders(Builder $query, $orders)
@@ -507,7 +503,7 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile the "limit" portions of the query.
-	 *
+	 * 返回limit 22
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  int  $limit
 	 * @return string
@@ -577,17 +573,14 @@ class Grammar extends BaseGrammar {
 
 	/**
 	 * Compile an insert statement into SQL.
-	 *
+	 * 拼接insert语句
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @param  array  $values
 	 * @return string
 	 */
 	public function compileInsert(Builder $query, array $values)
 	{
-		// Essentially we will force every insert to be treated as a batch insert which
-		// simply makes creating the SQL easier for us since we can utilize the same
-		// basic routine regardless of an amount of records given to us to insert.
-		$table = $this->wrapTable($query->from);
+		$table = $this->wrapTable($query->from);//表名
 
 		if ( ! is_array(reset($values)))
 		{
@@ -630,23 +623,14 @@ class Grammar extends BaseGrammar {
 	 */
 	public function compileUpdate(Builder $query, $values)
 	{
-		$table = $this->wrapTable($query->from);
-
-		// Each one of the columns in the update statements needs to be wrapped in the
-		// keyword identifiers, also a place-holder needs to be created for each of
-		// the values in the list of bindings so we can make the sets statements.
+		$table = $this->wrapTable($query->from);//表名
 		$columns = array();
-
 		foreach ($values as $key => $value)
-		{
+		{//$columns[] = '字段名=值';
 			$columns[] = $this->wrap($key).' = '.$this->parameter($value);
 		}
 
 		$columns = implode(', ', $columns);
-
-		// If the query has any "join" clauses, we will setup the joins on the builder
-		// and compile them so we can attach them to this update, as update queries
-		// can get join statements to attach to other tables when they're needed.
 		if (isset($query->joins))
 		{
 			$joins = ' '.$this->compileJoins($query, $query->joins);
@@ -656,9 +640,7 @@ class Grammar extends BaseGrammar {
 			$joins = '';
 		}
 
-		// Of course, update queries may also be constrained by where clauses so we'll
-		// need to compile the where clauses and attach it to the query so only the
-		// intended records are updated by the SQL statements we generate to run.
+		// 拼接where条件
 		$where = $this->compileWheres($query);
 
 		return trim("update {$table}{$joins} set $columns $where");
@@ -672,8 +654,8 @@ class Grammar extends BaseGrammar {
 	 */
 	public function compileDelete(Builder $query)
 	{
-		$table = $this->wrapTable($query->from);
-
+		$table = $this->wrapTable($query->from);//表名
+        //拼接where条件
 		$where = is_array($query->wheres) ? $this->compileWheres($query) : '';
 
 		return trim("delete from $table ".$where);

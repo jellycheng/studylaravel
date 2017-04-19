@@ -15,12 +15,12 @@ class MySqlGrammar extends Grammar {
 		'from',         //对应本类compileFrom方法，    对应Illuminate\Database\Query\Builder类from属性,拼接sql：返回 from 表名
 		'joins',		//对应本类compileJoins方法，    对应Illuminate\Database\Query\Builder类joins属性,拼接sql：
 		'wheres',		//对应本类compileWheres方法，   对应Illuminate\Database\Query\Builder类wheres属性,拼接sql：
-		'groups',		//对应本类compileGroups方法，   对应Illuminate\Database\Query\Builder类groups属性,拼接sql：
-		'havings',		//对应本类compileHavings方法，  对应Illuminate\Database\Query\Builder类havings属性,拼接sql：
-		'orders',		//对应本类compileOrders方法，   对应Illuminate\Database\Query\Builder类orders属性,拼接sql：
-		'limit',		//对应本类compileLimit方法，    对应Illuminate\Database\Query\Builder类limit属性,拼接sql：
-		'offset',		//对应本类compileOffset方法，   对应Illuminate\Database\Query\Builder类offset属性,拼接sql：
-		'lock',			//对应本类compileLock方法，     对应Illuminate\Database\Query\Builder类lock属性,拼接sql：
+		'groups',		//对应本类compileGroups方法，   对应Illuminate\Database\Query\Builder类groups属性,拼接sql： group by 字段名1，字段名N
+		'havings',		//对应本类compileHavings方法，  对应Illuminate\Database\Query\Builder类havings属性,拼接sql：having count(字段)>2
+		'orders',		//对应本类compileOrders方法，   对应Illuminate\Database\Query\Builder类orders属性,拼接sql：  order by 字段 asc
+		'limit',		//对应本类compileLimit方法，    对应Illuminate\Database\Query\Builder类limit属性,拼接sql： limit 12
+		'offset',		//对应本类compileOffset方法，   对应Illuminate\Database\Query\Builder类offset属性,拼接sql：  offset 122
+		'lock',		//对应本类compileLock方法，     对应Illuminate\Database\Query\Builder类lock属性,拼接sql： for update 或 lock in share mode
 	);
 
 	/**
@@ -93,15 +93,15 @@ class MySqlGrammar extends Grammar {
 
 	/**
 	 * Compile a delete statement into SQL.
-	 *
+	 * 拼接delete语句
 	 * @param  \Illuminate\Database\Query\Builder  $query
 	 * @return string
 	 */
 	public function compileDelete(Builder $query)
 	{
-		$table = $this->wrapTable($query->from);
+		$table = $this->wrapTable($query->from);//表名
 
-		$where = is_array($query->wheres) ? $this->compileWheres($query) : '';
+		$where = is_array($query->wheres) ? $this->compileWheres($query) : '';//拼接where条件
 
 		if (isset($query->joins))
 		{
