@@ -1,24 +1,27 @@
 <?php namespace Illuminate\Database\Query;
 
+/**
+ * join查询对象
+ */
 class JoinClause {
 
 	/**
 	 * The type of join being performed.
-	 *
+	 * 类型，如inner、left、right
 	 * @var string
 	 */
 	public $type;
 
 	/**
 	 * The table the join clause is joining to.
-	 *
+	 * 表名
 	 * @var string
 	 */
 	public $table;
 
 	/**
 	 * The "on" clauses for the join.
-	 *
+	 *  ['first'=>'', 'operator'=>'is、or、and', 'second'=>'', 'boolean'=>'', 'where'=>'']
 	 * @var array
 	 */
 	public $clauses = array();
@@ -26,15 +29,14 @@ class JoinClause {
 	/**
 	* The "on" bindings for the join.
 	*
-	* @var array
+	* @var array =[值,值N]
 	*/
 	public $bindings = array();
 
 	/**
 	 * Create a new join clause instance.
-	 *
-	 * @param  string  $type
-	 * @param  string  $table
+	 * @param  string  $type 类型
+	 * @param  string  $table 表名
 	 * @return void
 	 */
 	public function __construct($type, $table)

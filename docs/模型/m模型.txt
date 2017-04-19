@@ -78,4 +78,10 @@ DB::table('users') 等价 DB::connection('default连接代号')->table('users');
 $user = DB::table('users')->where('name', 'John')->first(); //返回一条记录的结果集
 $name = DB::table('users')->where('name', 'John')->pluck('name字段名');//返回一条记录的name字段值
 
+join对象(Illuminate\Database\Query\JoinClause类名)属性有：{
+    table:表名,
+    clauses: ['first'=>'', 'operator'=>'is、or、and', 'second'=>'', 'boolean'=>'', 'where'=>''],
+    bindings: [值1,值n] ,
+    type: 如inner、left、right,
 
+}

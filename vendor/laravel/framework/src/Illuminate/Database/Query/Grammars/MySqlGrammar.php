@@ -10,7 +10,7 @@ class MySqlGrammar extends Grammar {
 	 * @var array
 	 */
 	protected $selectComponents = array(
-		'aggregate',  //对应本类 compileAggregate方法，对应Illuminate\Database\Query\Builder类aggregate属性，拼接sql： select count(*) as aggregate ,
+		'aggregate',  //对应本类 compileAggregate方法，对应Illuminate\Database\Query\Builder类aggregate属性，拼接sql： select count(*) as aggregate , 其实就是聚合方法的sql拼接，如 count、max、min、avg 及 sum
 		'columns',      //对应本类compileColumns方法， 对应Illuminate\Database\Query\Builder类columns属性,拼接sql：如果有拼接过aggregate属性则不需要拼接字段属性,否则返回select 字段名，字段名N  或者 select *
 		'from',         //对应本类compileFrom方法，    对应Illuminate\Database\Query\Builder类from属性,拼接sql：返回 from 表名
 		'joins',		//对应本类compileJoins方法，    对应Illuminate\Database\Query\Builder类joins属性,拼接sql：
@@ -25,7 +25,7 @@ class MySqlGrammar extends Grammar {
 
 	/**
 	 * Compile a select query into SQL.
-	 *
+	 * 拼接查询sql
 	 * @param  \Illuminate\Database\Query\Builder
 	 * @return string
 	 */
@@ -37,7 +37,6 @@ class MySqlGrammar extends Grammar {
 		{
 			$sql = '('.$sql.') '.$this->compileUnions($query);
 		}
-
 		return $sql;
 	}
 
@@ -130,7 +129,7 @@ class MySqlGrammar extends Grammar {
 
 	/**
 	 * Wrap a single string in keyword identifiers.
-	 *
+	 * 给值加上``
 	 * @param  string  $value
 	 * @return string
 	 */

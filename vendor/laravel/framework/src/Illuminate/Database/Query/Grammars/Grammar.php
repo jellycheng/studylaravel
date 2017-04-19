@@ -47,7 +47,6 @@ class Grammar extends BaseGrammar {
 	protected function compileComponents(Builder $query)
 	{
 		$sql = array();
-
 		foreach ($this->selectComponents as $component)
 		{
 			if ( ! is_null($query->$component))
@@ -117,12 +116,12 @@ class Grammar extends BaseGrammar {
 	protected function compileJoins(Builder $query, $joins)
 	{
 		$sql = array();
-        //执行查询构建对象的setBindings()方法,其实是设置bindings属性，bindings['join']=[];
+        //执行查询构建对象->setBindings()方法,来设置其bindings属性，bindings['join']=[];
 		$query->setBindings(array(), 'join');
 
 		foreach ($joins as $join)
-		{
-			$table = $this->wrapTable($join->table);//表名
+		{//循环查询构建对象->joins属性值
+			$table = $this->wrapTable($join->table);//`表名`
 			//on条件
 			$clauses = array();
 			foreach ($join->clauses as $clause)

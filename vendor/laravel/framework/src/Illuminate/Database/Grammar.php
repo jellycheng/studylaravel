@@ -12,7 +12,7 @@ abstract class Grammar {
 
 	/**
 	 * Wrap an array of values.
-	 *
+	 * 批量给表名和字段名加包裹符合：``
 	 * @param  array  $values
 	 * @return array
 	 */
@@ -23,58 +23,52 @@ abstract class Grammar {
 
 	/**
 	 * Wrap a table in keyword identifiers.
-	 *
+	 * 给表名加上包裹符号，如： `t_user`
 	 * @param  string  $table
 	 * @return string
 	 */
 	public function wrapTable($table)
 	{
-		if ($this->isExpression($table)) return $this->getValue($table);
+		if ($this->isExpression($table)) return $this->getValue($table);//如果是表达式则获取表达式值
 
 		return $this->wrap($this->tablePrefix.$table, true);
 	}
 
 	/**
 	 * Wrap a value in keyword identifiers.
-	 *
+	 * 给表名和字段名加包裹符合：``
 	 * @param  string  $value
-	 * @param  bool    $prefixAlias 别名是否加上表前缀，默认否
+	 * @param  bool    $prefixAlias 别名是否加上表前缀，默认否， true是，false否
 	 * @return string
 	 */
 	public function wrap($value, $prefixAlias = false)
 	{
-		if ($this->isExpression($value)) return $this->getValue($value); //获取表达式值
+		if ($this->isExpression($value)) return $this->getValue($value); //如果是表达式则获取表达式值
 
 		if (strpos(strtolower($value), ' as ') !== false)
 		{//值存在别名
 			$segments = explode(' ', $value);// t_user as u
-
 			if ($prefixAlias) $segments[2] = $this->tablePrefix.$segments[2];//别名加上表前缀
-
-			return $this->wrap($segments[0]).' as '.$this->wrapValue($segments[2]);
+			return $this->wrap($segments[0]).' as '.$this->wrapValue($segments[2]);//递归调用
 		}
         //不存在as
-
 		$wrapped = array();
-		$segments = explode('.', $value);
+		$segments = explode('.', $value);//t_user.字段名  或 t_user表名
 		foreach ($segments as $key => $segment)
 		{
 			if ($key == 0 && count($segments) > 1)
-			{
-				$wrapped[] = $this->wrapTable($segment);
-			}
-			else
-			{
-				$wrapped[] = $this->wrapValue($segment);
+			{//第1个单元 认为一定是 表名
+				$wrapped[] = $this->wrapTable($segment);//给表名加 `引起来`
+			} else {
+				$wrapped[] = $this->wrapValue($segment);//给值加 `引起来`   这个值可以是表名，字段名等
 			}
 		}
-
 		return implode('.', $wrapped);//用点合并字符串
 	}
 
 	/**
 	 * Wrap a single string in keyword identifiers.
-	 *
+	 * 本方法子类有覆盖，给值加包裹值 如 `xxx`，"xxx"
 	 * @param  string  $value
 	 * @return string
 	 */
@@ -87,7 +81,7 @@ abstract class Grammar {
 
 	/**
 	 * Convert an array of column names into a delimited string.
-	 * 逗号拼接字段
+	 * 逗号拼接字段,返回字符串
 	 * @param  array   $columns
 	 * @return string
 	 */
@@ -162,7 +156,7 @@ abstract class Grammar {
 
 	/**
 	 * Set the grammar's table prefix.
-	 * 表前缀
+	 * 设置表前缀
 	 * @param  string  $prefix
 	 * @return $this
 	 */
