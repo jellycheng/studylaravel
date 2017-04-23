@@ -465,9 +465,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function newInstance($attributes = array(), $exists = false)
 	{
-		// This method just provides a convenient way for us to generate fresh model
-		// instances of this current model. It is particularly useful during the
-		// hydration of new objects via the Eloquent query builder instances.
+		//实例化本类
 		$model = new static((array) $attributes);
 
 		$model->exists = $exists;
@@ -477,18 +475,18 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Create a new model instance that is existing.
-	 *
+	 * 返回本类对象
 	 * @param  array  $attributes
 	 * @param  string|null  $connection
 	 * @return static
 	 */
 	public function newFromBuilder($attributes = array(), $connection = null)
 	{
-		$model = $this->newInstance(array(), true);
+		$model = $this->newInstance(array(), true);//实例化本类
 
-		$model->setRawAttributes((array) $attributes, true);
+		$model->setRawAttributes((array) $attributes, true);//设置属性
 
-		$model->setConnection($connection ?: $this->connection);
+		$model->setConnection($connection ?: $this->connection);//设置连接代号
 
 		return $model;
 	}
@@ -496,15 +494,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * Create a collection of models from plain arrays.
 	 *
-	 * @param  array  $items
+	 * @param  array  $items 结果集
 	 * @param  string|null  $connection
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
 	public static function hydrate(array $items, $connection = null)
 	{
-		$instance = (new static)->setConnection($connection);
+		$instance = (new static)->setConnection($connection);//实例化model类并注入连接代号
 
-		$collection = $instance->newCollection($items);
+		$collection = $instance->newCollection($items);//实例化集合类对象(Illuminate\Database\Eloquent\Collection)
 
 		return $collection->map(function ($item) use ($instance)
 		{
@@ -531,7 +529,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Save a new model and return the instance.
-	 *
+	 * 新增记录并返回本类对象
 	 * @param  array  $attributes
 	 * @return static
 	 */
@@ -1754,6 +1752,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get a new query builder for the model's table.
+	 * 实例化orm构建器,同时向构建器注入本类对象
 	 *
 	 * @return \Illuminate\Database\Eloquent\Builder 类对象
 	 */
@@ -1852,7 +1851,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Create a new Eloquent Collection instance.
-	 *
+	 * 实例化集合类对象
 	 * @param  array  $models
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
@@ -3250,7 +3249,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 			return call_user_func_array(array($this, $method), $parameters);
 		}
 
-		$query = $this->newQuery();//返回 \Illuminate\Database\Eloquent\Builder 类对象
+		$query = $this->newQuery();//返回 \Illuminate\Database\Eloquent\Builder 类对象,同时向构建器注入本类对象
 
 		return call_user_func_array(array($query, $method), $parameters);
 	}

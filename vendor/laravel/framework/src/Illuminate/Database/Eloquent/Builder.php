@@ -153,7 +153,7 @@ class Builder {
 
 	/**
 	 * Execute the query as a "select" statement.
-	 *
+	 * 执行查询语句,并返回结果集,但结果集存在Illuminate\Database\Eloquent\Collection集合类对象中
 	 * @param  array  $columns
 	 * @return \Illuminate\Database\Eloquent\Collection|static[]
 	 */
@@ -161,9 +161,7 @@ class Builder {
 	{
 		$models = $this->getModels($columns);
 
-		// If we actually found models we will also eager load any relationships that
-		// have been specified as needing to be eager loaded, which will solve the
-		// n+1 query issue for the developers to avoid running a lot of queries.
+		//
 		if (count($models) > 0)
 		{
 			$models = $this->eagerLoadRelations($models);
@@ -371,7 +369,7 @@ class Builder {
 
 	/**
 	 * Get the hydrated models without eager loading.
-	 *
+	 * 返回\Illuminate\Database\Eloquent\Collection集合类对象,对象中值存查询结果
 	 * @param  array  $columns
 	 * @return \Illuminate\Database\Eloquent\Model[]
 	 */
