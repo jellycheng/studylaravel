@@ -277,7 +277,7 @@ class Connection implements ConnectionInterface {
 			$statement = $this->getPdoForSelect($useReadPdo)->prepare($query);
 
 			$statement->execute($me->prepareBindings($bindings));
-
+			//PDOStatement::fetchAll() — 返回一个包含结果集中所有行的数组
 			return $statement->fetchAll($me->getFetchMode());
 		});
 	}

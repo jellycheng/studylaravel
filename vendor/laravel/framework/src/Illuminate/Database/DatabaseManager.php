@@ -154,7 +154,7 @@ class DatabaseManager implements ConnectionResolverInterface {
 		$config = $this->getConfig($name);//根据配置代号获取配置
 
 		if (isset($this->extensions[$name]))
-		{//配置代号存在扩展,调用扩展
+		{//配置代号存在扩展,调用扩展,扩展函数接收参数($config配置, $name连接代号)返回Illuminate\Database\MySqlConnection类对象
 			return call_user_func($this->extensions[$name], $config, $name);
 		}
 

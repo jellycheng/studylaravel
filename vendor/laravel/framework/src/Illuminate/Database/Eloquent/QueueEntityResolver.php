@@ -7,9 +7,9 @@ class QueueEntityResolver implements EntityResolverContract {
 
 	/**
 	 * Resolve the entity for the given ID.
-	 *
-	 * @param  string  $type
-	 * @param  mixed  $id
+	 * 按id查询一条记录
+	 * @param  string  $type = 类名
+	 * @param  mixed  $id  记录id
 	 * @return mixed
 	 */
 	public function resolve($type, $id)

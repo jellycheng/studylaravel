@@ -70,12 +70,12 @@ DB::table('users') 等价 DB::connection('default连接代号')->table('users');
 执行顺序：
 1. 先执行 \Illuminate\Database\DatabaseManager->__call('table'', 'user')
 2. \Illuminate\Database\MySqlConnection类对象->table('user'); 此时返回\Illuminate\Database\Query\Builder 类对象
-3. \Illuminate\Database\Query\Builder 类对象->get(); //返回多条记录结果集，array
+3. \Illuminate\Database\Query\Builder 类对象->get(); //返回多条记录结果集，array,PDOStatement::fetchAll()— 返回一个包含结果集中所有行的数组
 4. 其中get()调用了\Illuminate\Database\Query\Grammars\MySqlGrammar类对象->compileSelect(Builder $query查询构建对象):拼接select语句方法
 5.
 
 
-$user = DB::table('users')->where('name', 'John')->first(); //返回一条记录的结果集
+$user = DB::table('users')->where('name', 'John')->first(); //返回一条记录的结果集,PDOStatement::fetchAll()返回一个包含结果集中所有行的数组中的第1个单元
 $name = DB::table('users')->where('name', 'John')->pluck('name字段名');//返回一条记录的name字段值
 
 join对象(Illuminate\Database\Query\JoinClause类名)属性有：{

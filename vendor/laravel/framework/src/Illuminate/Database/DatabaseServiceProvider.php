@@ -50,7 +50,7 @@ class DatabaseServiceProvider extends ServiceProvider {
 	{
 		$this->app->singleton('Illuminate\Contracts\Queue\EntityResolver', function()
 		{
-			return new Eloquent\QueueEntityResolver;
+			return new Eloquent\QueueEntityResolver;//此类有resolve($type, $id)方法
 		});
 	}
 
