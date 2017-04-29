@@ -72,7 +72,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * The model's attributes.
 	 *
-	 * @var array
+	 * @var array = ['字段名'=>'值','字段名2'=>'值2',]
 	 */
 	protected $attributes = array();
 
@@ -93,27 +93,27 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	/**
 	 * The attributes that should be hidden for arrays.
 	 *
-	 * @var array
+	 * @var array = [字段名1, 字段N]
 	 */
 	protected $hidden = array();
 
 	/**
 	 * The attributes that should be visible in arrays.
 	 *
-	 * @var array
+	 * @var array = [字段名1, 字段N]
 	 */
 	protected $visible = array();
 
 	/**
 	 * The accessors to append to the model's array form.
 	 *
-	 * @var array
+	 * @var array = [字段名1, 字段N]
 	 */
 	protected $appends = array();
 
 	/**
 	 * The attributes that are mass assignable.
-	 * 白名单，可填充字段
+	 * 白名单，可填充字段,默认不填充字段,  白名单字段优先级>黑名单优先级
 	 * 是否可填充判断规则： 1.是否开启警戒，2.是否在白名单，3是否在黑名单，4.没有配置白名单且不以_开头
 	 * @var array=['字段名1', '字段名2', '...N']
 	 */
@@ -121,7 +121,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * The attributes that aren't mass assignable.
-	 * 黑名单字段，不可填充字段
+	 * 黑名单字段(即不可填充字段),默认全是黑名单字段
 	 * @var array
 	 */
 	protected $guarded = array('*');
@@ -135,7 +135,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * The attributes that should be casted to native types.
-	 *
+	 * 属性值的类型转换
 	 * @var array
 	 */
 	protected $casts = array();
@@ -177,7 +177,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Indicates whether attributes are snake cased on arrays.
-	 *
+	 * 是否把字符串转成蛇形命名,如 fooBar转成 foo_bar
+	 * 默认转换
 	 * @var bool
 	 */
 	public static $snakeAttributes = true;
@@ -255,9 +256,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	{
 		$this->bootIfNotBooted();//Model子类未初始化，进行初始化
 
-		$this->syncOriginal();//同步original属性值=attributes属性值
+		$this->syncOriginal();//同步original属性值=attributes属性值,即执行($this->original = $this->attributes;)
 
-		$this->fill($attributes);
+		$this->fill($attributes);//如果合法规则则调用本类->setAttribute(字段名,值)方法设置属性值
 	}
 
 	/**
@@ -293,15 +294,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		{//遍历类的所有方法
 			if (preg_match('/^get(.+)Attribute$/', $method, $matches))
 			{ //存在getXXXAttribute方法
-				if (static::$snakeAttributes) $matches[1] = snake_case($matches[1]);
+				if (static::$snakeAttributes) $matches[1] = snake_case($matches[1]);//把字符串转成蛇形命名,如 fooBar转成 foo_bar
 				static::$mutatorCache[$class][] = lcfirst($matches[1]);//该类中增加的所有getXXXAttribute格式的方法
 			}
 		}
-		/*调用本类的bootXXXtrait静态方法，一般是调用trait类引入的bootXxx方法，用于初始化逻辑，如：
+		/*调用本类的bootXXXtrait静态方法，一般是调用引入trait类的bootXxx方法，用于初始化逻辑，如：
 		trait SoftDeletes {
 			public static function bootSoftDeletes()
 			{
-				//初始化逻辑
+				//初始化方法命名规则boot类名(),用于初始化逻辑
 			}
 			//其它方法
 		}
@@ -408,7 +409,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		$totallyGuarded = $this->totallyGuarded();//没有配置可填充字段且黑名单字段值为array('*')  即黑白名单均没配置且不可填充就抛异常
 
 		foreach ($this->fillableFromArray($attributes) as $key => $value)
-		{
+		{//白名单内字段
 			$key = $this->removeTableFromKey($key);//返回真实的字段名
 
 			if ($this->isFillable($key))
@@ -443,7 +444,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get the fillable attributes of a given array.
-	 * 返回与白名单的交集，即在白名单内的字段
+	 * 返回与白名单的交集字段，即在白名单内的字段
 	 * @param  array  $attributes
 	 * @return array
 	 */
@@ -1455,7 +1456,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Save the model to the database.
-	 *
+	 * 保存,返回bool值
 	 * @param  array  $options
 	 * @return bool
 	 */
@@ -1548,9 +1549,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 			$this->updateTimestamps();
 		}
 
-		// If the model has an incrementing key, we can use the "insertGetId" method on
-		// the query builder, which will give us back the final inserted ID for this
-		// table from the database. Not all tables have to be incrementing though.
 		$attributes = $this->attributes;
 
 		if ($this->incrementing)
@@ -1568,7 +1566,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Insert the given attributes and set the ID on the model.
-	 *
+	 * 保存并设置好自增id
 	 * @param  \Illuminate\Database\Eloquent\Builder  $query
 	 * @param  array  $attributes
 	 * @return void
@@ -2310,8 +2308,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Convert the model instance to an array.
-	 *
-	 * @return array
+	 * 把relations属性和attributes属性值合并返回
+	 * @return array = ['字段名'=>值, ]
 	 */
 	public function toArray()
 	{
@@ -2327,11 +2325,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 	 */
 	public function attributesToArray()
 	{
-		$attributes = $this->getArrayableAttributes();
+		$attributes = $this->getArrayableAttributes();//处理attributes属性中定义的字段,过滤掉不需要的
 
-		// If an attribute is a date, we will cast it to a string after converting it
-		// to a DateTime / Carbon instance. This is so we will get some consistent
-		// formatting while accessing attributes vs. arraying / JSONing a model.
 		foreach ($this->getDates() as $key)
 		{//循环所有日期时间字段
 			if ( ! isset($attributes[$key])) continue;
@@ -2339,25 +2334,18 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 			$attributes[$key] = (string) $this->asDateTime($attributes[$key]);
 		}
 
-		$mutatedAttributes = $this->getMutatedAttributes();
-
-		// We want to spin through all the mutated attributes for this model and call
-		// the mutator for the attribute. We cache off every mutated attributes so
-		// we don't have to constantly check on attributes that actually change.
+		$mutatedAttributes = $this->getMutatedAttributes();//存在属性宏方法,宏方法(字段,值)
 		foreach ($mutatedAttributes as $key)
 		{
 			if ( ! array_key_exists($key, $attributes)) continue;
-
+			//返回处理后的内容
 			$attributes[$key] = $this->mutateAttributeForArray(
 				$key, $attributes[$key]
 			);
 		}
 
-		// Next we will handle any casts that have been setup for this model and cast
-		// the values to their appropriate type. If the attribute has a mutator we
-		// will not perform the cast on those attributes to avoid any confusion.
 		foreach ($this->casts as $key => $value)
-		{
+		{//属性值的类型转换
 			if ( ! array_key_exists($key, $attributes) ||
 				in_array($key, $mutatedAttributes)) continue;
 
@@ -2366,9 +2354,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 			);
 		}
 
-		// Here we will grab all of the appended, calculated attributes to this model
-		// as these attributes are not really in the attributes array, but are run
-		// when we need to array or JSON the model for convenience to the coder.
 		foreach ($this->getArrayableAppends() as $key)
 		{
 			$attributes[$key] = $this->mutateAttributeForArray($key, null);
@@ -2379,7 +2364,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get an attribute array of all arrayable attributes.
-	 *
+	 * 处理attributes属性中定义的字段,过滤掉不需要的
 	 * @return array
 	 */
 	protected function getArrayableAttributes()
@@ -2414,33 +2399,20 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 		{
 			if (in_array($key, $this->hidden)) continue;
 
-			// If the values implements the Arrayable interface we can just call this
-			// toArray method on the instances which will convert both models and
-			// collections to their proper array form and we'll set the values.
 			if ($value instanceof Arrayable)
 			{
 				$relation = $value->toArray();
-			}
-
-			// If the value is null, we'll still go ahead and set it in this list of
-			// attributes since null is used to represent empty relationships if
-			// if it a has one or belongs to type relationships on the models.
-			elseif (is_null($value))
+			} elseif (is_null($value))
 			{
 				$relation = $value;
 			}
 
-			// If the relationships snake-casing is enabled, we will snake case this
-			// key so that the relation attribute is snake cased in this returned
-			// array to the developers, making this consistent with attributes.
 			if (static::$snakeAttributes)
 			{
 				$key = snake_case($key);
 			}
 
-			// If the relation value has been set, we will set it on this attributes
-			// list for returning. If it was not arrayable or null, we'll not set
-			// the value on the array because it is some type of invalid value.
+
 			if (isset($relation) || is_null($value))
 			{
 				$attributes[$key] = $relation;
@@ -2464,17 +2436,17 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
 	/**
 	 * Get an attribute array of all arrayable values.
-	 *
+	 * 过滤不需要的字段
 	 * @param  array  $values
 	 * @return array
 	 */
 	protected function getArrayableItems(array $values)
 	{
 		if (count($this->visible) > 0)
-		{
+		{//去交集字段
 			return array_intersect_key($values, array_flip($this->visible));
 		}
-
+		//取不在隐藏中的字段
 		return array_diff_key($values, array_flip($this->hidden));
 	}
 

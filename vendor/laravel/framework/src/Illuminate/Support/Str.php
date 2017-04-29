@@ -303,7 +303,7 @@ class Str {
 
 	/**
 	 * Convert a string to snake case.
-	 *
+	 * 把字符串转成蛇形命名,如 fooBar转成 foo_bar
 	 * @param  string  $value
 	 * @param  string  $delimiter
 	 * @return string
