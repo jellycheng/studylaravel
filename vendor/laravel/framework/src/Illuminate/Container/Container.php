@@ -20,7 +20,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * An array of the types that have been resolved.
-	 *
+	 * 标记make()过，['抽象物'=>bool值，]
 	 * @var array
 	 */
 	protected $resolved = [];
@@ -61,7 +61,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The extension closures for services.
-	 * 扩展闭包服务, ['$abstract'=>"方法(abstract对象, app对象)", ]
+	 * 对抽象物的扩展, ['$abstract'=>"方法or闭包(abstract对象, app对象)", ]
 	 * @var array
 	 */
 	protected $extenders = [];
@@ -179,7 +179,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register a binding with the container.
-	 *
+	 * 绑定到容器
 	 * @param  string|array  $abstract = 字符串 或者 数组[$abstract=> $alias]  抽象
 	 * @param  \Closure|string|null  $concrete=闭包 或 字符串 或 null   具体物
 	 * @param  bool  $shared
@@ -768,7 +768,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Resolve all of the dependencies from the ReflectionParameters.
 	 *
-	 * @param  array  $parameters=['反射参数对象1', '反射参数对象n']
+	 * @param  array  $parameters=['反射参数对象1', '反射参数对象n','ReflectionParameter类对象']
 	 * @param  array  $primitives = [参数名=>值, 参数名n=>值n]
 	 * @return array = [值1,'对象1', '...']
 	 */
@@ -781,7 +781,7 @@ class Container implements ArrayAccess, ContainerContract {
 			$dependency = $parameter->getClass();
 
 			if (array_key_exists($parameter->name, $primitives))
-			{//类名在参数值中
+			{//参数名有传入对应的参数值
 				$dependencies[] = $primitives[$parameter->name];
 			}
 			elseif (is_null($dependency))
@@ -841,7 +841,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * If extra parameters are passed by numeric ID, rekey them by argument name.
 	 * 如果$parameters的key是数字下标则换成参数名做下标
-	 * @param  array  $dependencies=['参数对象1', '参数对象2'] 反射出来的参数对象
+	 * @param  array  $dependencies=['参数对象1', '参数对象2','ReflectionParameter类对象'] 反射出来的参数对象
 	 * @param  array  $parameters = [0=>值, 1=>值n]
 	 * @return array
 	 */
