@@ -97,7 +97,7 @@ class Kernel implements KernelContract {
 		$this->app->instance('request', $request);
 		Facade::clearResolvedInstance('request');//取消facade属性对象
 		$this->bootstrap();//调用启动执行的类,且这些类均有bootstrap($app对象)方法
-
+		//执行本类middleware属性设置的所有类->handle(请求对象,下一个闭包);最后执行dispatchToRouter()方法返回的闭包
 		return (new Pipeline($this->app))
 		            ->send($request)
 		            ->through($this->middleware)
