@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider {
 		$this->setRootControllerNamespace();
 
 		if ($this->app->routesAreCached())
-		{
+		{//路由缓存文件存在
 			$this->loadCachedRoutes();
 		}
 		else
@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		$this->app->booted(function()
 		{
-			require $this->app->getCachedRoutesPath();
+			require $this->app->getCachedRoutesPath();//加载vendor/routes.php文件
 		});
 	}
 

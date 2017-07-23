@@ -5,7 +5,7 @@ use ReflectionClass;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Contracts\Container\Container as ContainerContract;
-
+//事件类
 class Dispatcher implements DispatcherContract {
 
 	/**

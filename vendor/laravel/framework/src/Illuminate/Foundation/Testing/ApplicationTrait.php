@@ -33,7 +33,7 @@ trait ApplicationTrait {
 	 */
 	protected function refreshApplication()
 	{
-		putenv('APP_ENV=testing');
+		putenv('APP_ENV=testing'); //设置单元测试环境
 
 		$this->app = $this->createApplication();
 	}

@@ -1,7 +1,8 @@
 <?php namespace Illuminate\Foundation;
 /** 
  * 单例 
- * 注册别名并设置自动加载器 \Illuminate\Foundation\AliasLoader::getInstance($appConfig['app_aliases'])->register();
+ * 注册别名并设置自动加载器
+ * \Illuminate\Foundation\AliasLoader::getInstance($appConfig['app.aliases'])->register();
 */
 class AliasLoader {
 
@@ -82,7 +83,7 @@ class AliasLoader {
 
 	/**
 	 * Register the loader on the auto-loader stack.
-	 *
+	 * 如果没设置则设置自动加载器
 	 * @return void
 	 */
 	public function register()

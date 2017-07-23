@@ -20,7 +20,7 @@ class HomeController extends Controller {
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth');
+		$this->middleware('auth');//调用中间介,中间介类在App\Http\Kernel->$routeMiddleware属性中配置
 	}
 
 	/**

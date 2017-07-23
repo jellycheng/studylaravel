@@ -24,17 +24,17 @@ class Kernel implements KernelContract {
 
 	/**
 	 * The bootstrap classes for the application.
-	 *  http启动时执行的类,这些类均有bootstrap(app对象)方法且构造函数接收app对象
+	 *  http启动时执行的类,且这些类均有bootstrap(app对象)方法和构造函数接收app对象
 	 * @var array
 	 */
 	protected $bootstrappers = [
 		'Illuminate\Foundation\Bootstrap\DetectEnvironment',//分析.env文件，并设置当前环境
-		'Illuminate\Foundation\Bootstrap\LoadConfiguration',//加载config配置文件，设置时区,
-		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志
-		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置
-		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器
+		'Illuminate\Foundation\Bootstrap\LoadConfiguration',//加载config配置文件，设置时区,设置编码,可以使用$app['config']['app.aliases']获取配置值
+		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志,可通过app['log']获取日志对象,写日志app['log']->info("信息内容");等价Log::info('信息内容');
+		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置,set_error_handler(),set_exception_handler(),register_shutdown_function()
+		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器,即把config/app.php中aliases配置的值定义好别名
 		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法
-		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（其实是执行所有服务提供者的boot()方法）
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（即执行所有服务提供者的boot()方法）
 	];
 
 	/**
@@ -63,7 +63,7 @@ class Kernel implements KernelContract {
 		$this->app = $app;
 		$this->router = $router;
 		foreach ($this->routeMiddleware as $key => $middleware)
-		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）
+		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）=[中间介名=>中间介类]
 			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
 		}
 	}

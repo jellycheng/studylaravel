@@ -1,6 +1,6 @@
 ## learn Laravel PHP Framework
 ### Laravel项目目录结构说明：
-	|- vendor 目录包含你的 Composer 依赖模块及laravel框架。
+	|- vendor 目录包含Composer 依赖模块及laravel框架。
 	|- bootstrap 目录:主要包含包含框架启动跟自动加载配置的文件。
 		|- app.php
 		|- autoload.php
@@ -17,7 +17,7 @@
 	|- tests 单元测试代码目录
 	|- app 目录包含应用程序的核心代码
 		|- Console 是Artisan 命令
-		|- Commands 用来放置应用程序的命
+		|- Commands 用来放置应用程序的命令
 		|- Events 用来放置事件类
 		|- Exceptions
 		|- Handlers 包含命令和事件的处理类。处理进程接收命令或事件，并针对该命令或事件执行逻辑

@@ -8,11 +8,11 @@ class RegisterFacades {
 
 	public function bootstrap(Application $app, $config)
 	{
-		\Illuminate\Support\Facades\Facade::clearResolvedInstances();
+		\Illuminate\Support\Facades\Facade::clearResolvedInstances();//清空以前设置的facade
 		
-		\Illuminate\Support\Facades\Facade::setFacadeApplication($app);
-		#注册别名并设置自动加载器
-		\Illuminate\Foundation\AliasLoader::getInstance($config['app_aliases'])->register();
+		\Illuminate\Support\Facades\Facade::setFacadeApplication($app);//注入app对象
+		#注册别名并设置自动加载器,app.aliases在laravel是config/app.php中的aliases配置key值
+		\Illuminate\Foundation\AliasLoader::getInstance($config['app.aliases'])->register();
 	}
 
 }
@@ -21,7 +21,7 @@ class testjelly{
 
 	public function hello() {
 
-		echo "hello...";
+		echo "hello..." . PHP_EOL;
 	}
 }
 class Application implements ArrayAccess{
@@ -75,7 +75,7 @@ require_once 'AliasLoader.php';
 require_once 'facade/TestJelly.php';
 
 $appConfig = array(
-				'app_aliases'=>array(
+				'app.aliases'=>array(
 							//类别名=>facades类名
 							'App'       => 'Illuminate\Support\Facades\App',//别名对应的类
 							'Artisan'   => 'Illuminate\Support\Facades\Artisan',

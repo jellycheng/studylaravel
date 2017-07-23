@@ -17,7 +17,6 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * The Laravel framework version.
-	 *
 	 * @var string
 	 */
 	const VERSION = '5.0.16';
@@ -31,7 +30,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Indicates if the application has been bootstrapped before.
-	 * 是否批量执行$bootstrapper对象的bootstrap(app对象)方法
+	 * 是否批量执行$bootstrapper对象的bootstrap(app对象)方法即本类的bootstrapWith()方法执行完毕
+	 * 即把在Illuminate\Foundation\Http\Kernel类bootstrappers属性中配置的类名执行完毕了
 	 * @var bool
 	 */
 	protected $hasBeenBootstrapped = false;
@@ -94,7 +94,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * The environment file to load during bootstrapping.
-	 *
+	 * env文件名
 	 * @var string
 	 */
 	protected $environmentFile = '.env';
@@ -107,19 +107,19 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function __construct($basePath = null)
 	{
-	    //注册基本绑定，设置本类对象
+	    //1.注册基本绑定，设置本类对象
 		$this->registerBaseBindings();
-		//注册服务提供者： 1.事件服务提供者，2.路由服务提供者
+		//2.注册服务提供者： 1.事件服务提供者，2.路由服务提供者   备注:服务提供者构造方法接收laravel app对象
 		$this->registerBaseServiceProviders();
-
-		$this->registerCoreContainerAliases();//设置别名
-		//设置app类basePath属性和instance属性key[path.项目目录代号]=目录,方便后面通过本类app对象->basePath()获取的是$basePath值
+		//3.在容器中注册类的核心别名
+		$this->registerCoreContainerAliases();
+		//4.设置app类basePath属性和instance属性[path.项目目录代号]=目录,方便后面通过本类app对象->basePath()获取的是$basePath值
 		if ($basePath) $this->setBasePath($basePath);
 	}
 
 	/**
 	 * Get the version number of the application.
-	 *
+	 * 获取laravel app版本
 	 * @return string
 	 */
 	public function version()
@@ -136,7 +136,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	{
 	    //设置本类的$instance属性值为本类对象
 		static::setInstance($this);
-        //设置instances属性key=》值
+        //设置instances属性[key]=值
 		$this->instance('app', $this);
 		$this->instance('Illuminate\Container\Container', $this);
 	}
@@ -157,7 +157,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Run the given array of bootstrap classes.在http类的bootstrap()方法中调用这个方法
 	 * 批量执行$bootstrapper对象->bootstrap(app对象);
-	 * @param  array  $bootstrappers=[$bootstrapper1对象1, $bootstrapper2,$bootstrapperN]
+	 * bootstrappers对象是在Illuminate\Foundation\Http\Kernel类bootstrappers属性中配置,也可以在App\Http\Kernel类重写属性
+	 * @param  array  $bootstrappers=[$bootstrapper1类名or抽象物or别名, $bootstrapper2,$bootstrapperN]
 	 * @return void
 	 */
 	public function bootstrapWith(array $bootstrappers)
@@ -239,9 +240,10 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	protected function bindPathsInContainer()
 	{
-		$this->instance('path', $this->path()); //app目录
+		$this->instance('path', $this->path()); //app目录,获取该值方式:1.app对象->make('path');2.$app对象['path'];3.app('path');4.app_path();
 		foreach (['base', 'config', 'database', 'lang', 'public', 'storage'] as $path)
 		{   //path.base=项目代码根目录
+			//path=项目app目录
             //path.config=项目代码根目录/config
 			$this->instance('path.'.$path, $this->{$path.'Path'}());
 		}
@@ -422,7 +424,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Register all of the configured providers.
-	 * 把服务提供者类cache到指定json文件中
+	 * 把服务提供者类cache到指定json文件中,并执行register()方法
 	 * @return void
 	 */
 	public function registerConfiguredProviders()
@@ -436,9 +438,9 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a service provider with the application.
 	 * 注册服务提供者并执行其register()方法
-	 * @param  $provider = 服务提供者对象或者服务提供者类名
-	 * @param  array  $options 设置bindings[$key]属性值
-	 * @param  bool   $force 是否强制重新执行regiser（）
+	 * @param  $provider = 服务提供者类对象 或者 服务提供者类名
+	 * @param  array  $options = [key=>val] 设置app类对象的bindings[key]=val
+	 * @param  bool   $force 是否强制重新执行regiser()
 	 * @return \Illuminate\Support\ServiceProvider
 	 */
 	public function register($provider, $options = array(), $force = false)
@@ -447,17 +449,17 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
              return $registered;
 
 		if (is_string($provider))
-		{//是字符串则实例化服务提供者类，并注入app对象
+		{//是字符串则实例化服务提供者类，并注入app类对象
 			$provider = $this->resolveProviderClass($provider);//是new $provider($this);这样代码
 		}
 		#调用服务提供者类的register()方法
 		$provider->register();
 
 		foreach ($options as $key => $value)
-		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性值
+		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性=$value值
 			$this[$key] = $value;
 		}
-		//把已经实例化服务提供者对象存入属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true
+		//把已经实例化服务提供者对象存入app类属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true
 		$this->markAsRegistered($provider);
 
 		if ($this->booted)
@@ -470,8 +472,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Get the registered service provider instance if it exists.
-	 * 通过服务提供者类对象(或类名)在serviceProviders属性中查找是否存在对象,存放返回true,不存在返回null
-	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者对象或者服务提供者类名
+	 * 服务提供者类对象(或类名)在Application类的serviceProviders属性中能找到对象,存放返回true,不存在返回null
+	 * @param  \Illuminate\Support\ServiceProvider|string  $provider服务提供者类对象 或者 服务提供者类名
 	 * @return \Illuminate\Support\ServiceProvider|null 已经是服务器提供者返回对象，否则返回nulll
 	 */
 	public function getProvider($provider)
@@ -498,7 +500,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Mark the given provider as registered.
 	 * 设置serviceProviders和loadedProviders属性归档
-	 * @param  \Illuminate\Support\ServiceProvider 服务提供者对象
+	 * @param  \Illuminate\Support\ServiceProvider 服务提供者类对象
 	 * @return void
 	 */
 	protected function markAsRegistered($provider)
@@ -851,13 +853,14 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 
 	/**
 	 * Register the core class aliases in the container.
-	 *
+	 * 在容器中注册类的核心别名
+	 * 用途: 使app对象->make('app');等价app对象->make('Illuminate\Foundation\Application');等价app对象->make('Illuminate\Contracts\Container\Container');等价app对象->make('Illuminate\Contracts\Foundation\Application')
 	 * @return void
 	 */
 	public function registerCoreContainerAliases()
 	{
 		$aliases = array(
-		    //'类代号即$abstract'=>['别名1即aliases属性的key名', '别名N']
+		    //'类代号即make方法的$abstract参数'=>['别名1即aliases属性的key名', '具体实现类,抽象类,接口']
 			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
 			'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
 			'auth'                 => 'Illuminate\Auth\AuthManager',

@@ -55,7 +55,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * 存放字符串=>别名
-	 * @var array=[字符串=>别名, 'Illuminate\\Foundation\\Application'=>'app']
+	 * @var array=[抽象物=>别名,字符串=>别名, 'Illuminate\\Foundation\\Application'=>'app']
 	 */
 	protected $aliases = [];
 
@@ -147,6 +147,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Determine if the given abstract type has been bound.
 	 * 捆绑，实例，别名
+	 * 本方法laravel Application类有重写
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -280,8 +281,8 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * 返回闭包,闭包里面的代码执行之后,如果不是返回null则不再执行且只返回上一次返回的内容
-	 * @param  \Closure  $closure
-	 * @return \Closure
+	 * @param  \Closure  $closure  闭包且只接收一个参数
+	 * @return \Closure 返回新闭包且接收一个参数
 	 */
 	public function share(Closure $closure)
 	{
@@ -333,12 +334,12 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Register an existing instance as shared in the container.注册一个已经存在的实例以便app容器共享
-	 * $this->instance('app', $this);
+	 * $this->instance('app', $this); 对应的获取方法是
 	 * $this->instance('Illuminate\Container\Container', $this);
 	 * $this->instance('path', $this->path());
      * $this->instance('path.config', $this->configPath());
-	 * @param  string  $abstract 字符串|数组array('abstract即key'=>'别名')
-	 * @param  mixed   $instance =对象|字符串
+	 * @param  string  $abstract 字符串|数组array('abstract即key'=>'别名')  抽象物
+	 * @param  mixed   $instance =对象|字符串                              实现物,具体物
 	 * @return void
 	 */
 	public function instance($abstract, $instance)
@@ -348,7 +349,7 @@ class Container implements ArrayAccess, ContainerContract {
 			list($abstract, $alias) = $this->extractAlias($abstract);//分析$abstract数组,返回['abstract','别名'];
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
-		//解决 不能互为别名
+		//禁止互为别名,解决代码冲突
 		unset($this->aliases[$abstract]);
 
 		//是否为本类bindings捆绑，instances实例，aliases别名三者属性数组key之一， 如果存在返回true
@@ -1129,7 +1130,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Set the shared instance of the container.
-	 *
+	 * 设置容器对象
 	 * @param  \Illuminate\Contracts\Container\Container  $container
 	 * @return void
 	 */

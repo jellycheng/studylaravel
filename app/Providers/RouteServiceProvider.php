@@ -36,9 +36,24 @@ class RouteServiceProvider extends ServiceProvider {
 	public function map(Router $router)
 	{
 		$router->group(['namespace' => $this->namespace], function($router)
-		{
-			require app_path('Http/routes.php');
+		{//控制器类均是在App\Http\Controllers\目录下
+			require app_path('Http/routes.php'); //加载路由配置
 		});
+
+		//扩展路由
+		foreach (config('modules.list', []) as $dir => $module) {
+			$router->group(
+				[
+					'namespace' => 'App\Modules\\' . $dir . '\Http\Controllers', //控制器命名空间
+					'prefix' => strtolower($module), //url前缀
+				],
+				function ($router) use ($dir) {
+					//app/Modules/项目名/Http/routes.php
+					require app_path('Modules/' . $dir . '/Http/routes.php');//加载路由配置文件
+				}
+			);
+		}
+
 	}
 
 }

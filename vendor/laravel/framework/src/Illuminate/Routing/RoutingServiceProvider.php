@@ -1,7 +1,7 @@
 <?php namespace Illuminate\Routing;
 
 use Illuminate\Support\ServiceProvider;
-
+//路由服务提供者
 class RoutingServiceProvider extends ServiceProvider {
 
 	/**
@@ -42,10 +42,11 @@ class RoutingServiceProvider extends ServiceProvider {
 			$routes = $app['router']->getRoutes();//获取RouteCollection类对象即路由集合对象
 			$app->instance('routes', $routes);
 			$url = new UrlGenerator(
-				$routes, $app->rebinding(
-					'request', $this->requestRebinder()
-				)
-			);
+								$routes,
+								$app->rebinding(
+									'request', $this->requestRebinder()
+								)
+							);
 			//设置session解决者
 			$url->setSessionResolver(function()
 			{
@@ -60,7 +61,7 @@ class RoutingServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * @return \Closure  返回闭包(app对象, 请求对象)
+	 * @return \Closure  返回闭包(app对象, 请求对象即抽象物对象即实现物对象)
 	 */
 	protected function requestRebinder()
 	{

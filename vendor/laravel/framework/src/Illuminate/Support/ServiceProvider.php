@@ -1,7 +1,7 @@
 <?php namespace Illuminate\Support;
 
 use BadMethodCallException;
-
+//服务提供者基类
 abstract class ServiceProvider {
 
 	/**
@@ -35,7 +35,7 @@ abstract class ServiceProvider {
 	/**
 	 * Create a new service provider instance.
 	 *
-	 * @param  \Illuminate\Contracts\Foundation\Application  $app
+	 * @param  \Illuminate\Contracts\Foundation\Application  $app 对象
 	 * @return void
 	 */
 	public function __construct($app)

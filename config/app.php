@@ -112,7 +112,7 @@ return [
 
 		/*
 		 * Laravel Framework Service Providers...
-		 * laravel框架自带的服务提供者类
+		 * laravel框架自带的服务提供者类,且均有register()方法,但boot()方法可选
 		 */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
@@ -144,14 +144,14 @@ return [
 		'App\Providers\AppServiceProvider',
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
-		'App\Providers\EventServiceProvider',
-		'App\Providers\RouteServiceProvider',
+		'App\Providers\EventServiceProvider', //事件服务提供者
+		'App\Providers\RouteServiceProvider', //路由服务提供者
 
 	],
 
 	/*
 	|--------------------------------------------------------------------------
-	| Class Aliases  类别名配置
+	| Class Aliases  类别名配置,配置好之后,后续代码则可以使用 use 别名;来使用类
 	|--------------------------------------------------------------------------
 	|
 	| This array of class aliases will be registered when this application
@@ -161,7 +161,7 @@ return [
 	*/
 
 	'aliases' => [
-
+		//'别名'=>'类名', #class_alias(类名, 别名, true);
 		'App'       => 'Illuminate\Support\Facades\App',
 		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
 		'Auth'      => 'Illuminate\Support\Facades\Auth',

@@ -146,6 +146,27 @@ app对象->singleton($abstract, $concrete = null) =》app对象->bind($abstract,
 	其中$abstract=字符串 或者 数组array($abstract=> $alias)
 
 
-$abc = $this->app['url']; 是调用application类的offsetGet('url')方法=》app对象->make($key);
+$abc = $this->app对象['url']; 是调用application类的offsetGet('url')方法=》app对象->make($key);
+
+
+获取app目录值方式:1.app对象->make('path');2.$app对象['path'];3.app('path');4.app_path();
+use facade名;其实就是$app['facade名'] or app('facade名')
+$app['config'];等价app('config');等价app对象->make('config');是在Illuminate\Foundation\Bootstrap\LoadConfiguration->bootstrap()方法注入
+
+步骤:
+1. application类初始化
+2. 实例化App\Http\Kernel类,注入app对象和路由对象,同时设置路由中间介
+3. Illuminate\Http\Request::capture() 生成request对象
+4. kernel对象->handle()方法(返回响应对象):
+    执行Illuminate\Foundation\Http\Kernel类的$bootstrappers属性值配置类的bootstrap($app对象)方法:初始化,执行服务提供者的register和boot方法
+    执行App\Http\Kernel类$middleware属性配置的中间介类名->handle($request, Closure $next)方法
+    执行匹配路由即路由对象->dispatch($request)查找路由 然后执行找到的控制器类
+     如果匹配到的路由有配置路由中间介则调用路由中间介(路由中间介名单在App\Http\Kernel->$routeMiddleware配置)
+5.
+
+
+
+
+$actions = $request对象->route()->getAction();//路由中间介中可以调用,获取当前匹配的路由设置,array
 
 

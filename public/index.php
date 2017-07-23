@@ -33,7 +33,7 @@ require __DIR__.'/../bootstrap/autoload.php';
 */
 //返回laravel app对象
 $app = require_once __DIR__.'/../bootstrap/app.php';
-
+//echo app('path.database');exit;
 /*
 |--------------------------------------------------------------------------
 | Run The Application
@@ -43,7 +43,7 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 | through the kernel, and send the associated response back to
 | the client's browser allowing them to enjoy the creative
 | and wonderful application we have prepared for them.
-|
+| $对象 = $app->make('抽象物');
 */
 
 $kernel = $app->make('Illuminate\Contracts\Http\Kernel');//返回App\Http\Kernel类对象

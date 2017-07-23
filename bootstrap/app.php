@@ -12,7 +12,7 @@
 */
 //实例化app对象
 $app = new Illuminate\Foundation\Application(
-	realpath(__DIR__.'/../')   //项目代码跟目录
+	realpath(__DIR__.'/../')   //项目代码根目录
 );
 
 /*
@@ -23,6 +23,7 @@ $app = new Illuminate\Foundation\Application(
 | Next, we need to bind some important interfaces into the container so
 | we will be able to resolve them when needed. The kernels serve the
 | incoming requests to this application from both the web and CLI.
+| 格式:$app->singleton(抽象物,实现物);
 | $app->singleton('Illuminate\Contracts\Http\Kernel','App\Http\Kernel');等价
 | $app->bind('Illuminate\Contracts\Http\Kernel','App\Http\Kernel', true);
 | 其实是设置app对象的bindings属性值

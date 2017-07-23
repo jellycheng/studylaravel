@@ -53,6 +53,13 @@ Route::any('foo', function()
 Route::get('user/profile', [
 	    'as' => 'profile', 'uses' => 'UserController@showProfile'
 	]);
+//指定中间介
+Route::get('user/profile2', ['middleware' => 'auth', function()
+{
+    //
+}]);
+//指定中间介
+Route::get('user/profile3', ['middleware' => 'cors', 'uses' => 'UserController@showProfile3', 'permissions' => '菜单ID:123']);
 
 #路由群组
 Route::group(['namespace' => 'V1_0', 'prefix' => '1.0'], function($router) {

@@ -44,14 +44,14 @@ class ProviderRepository {
 	/**
 	 * Register the application service providers.
 	 *
-	 * @param  array  $providers
+	 * @param  array  $providers  值来源于config/app.php文件的providers配置key值
 	 * @return void
 	 */
 	public function load(array $providers)
-	{
-		$manifest = $this->loadManifest();//配置文件存在，返回数组内容，否则返回null
+	{	//获取的是vendor/services.json文件内容
+		$manifest = $this->loadManifest();//配置文件存在则返回数组内容，否则返回null
 		if ($this->shouldRecompile($manifest, $providers))
-		{//需要重新编译
+		{//cache不存在或提供者配置不一致则需要重新编译
 			$manifest = $this->compileManifest($providers);
 		}
 		foreach ($manifest['when'] as $provider => $events)
@@ -59,7 +59,7 @@ class ProviderRepository {
 			$this->registerLoadEvents($provider, $events);
 		}
 		foreach ($manifest['eager'] as $provider)
-		{//注册服务提供者并执行其register()方法
+		{//循环非延迟加载服务提供者类,注册服务提供者并执行服务提供者->register()方法
 			$this->app->register($this->createProvider($provider));
 		}
 		//设置app类的setDeferredServices属性值
@@ -85,7 +85,7 @@ class ProviderRepository {
 
 	/**
 	 * Compile the application manifest file.
-	 * 重新编译服务提供者类
+	 * 重新编译服务提供者类,写入cache文件
 	 * @param  array  $providers
 	 * @return array
 	 */
@@ -93,7 +93,7 @@ class ProviderRepository {
 	{
 		$manifest = $this->freshManifest($providers);//获取最新结构
 		foreach ($providers as $provider)
-		{
+		{//$provider类名
 			$instance = $this->createProvider($provider);//实例化服务提供者类
 			if ($instance->isDeferred())
 			{
@@ -125,7 +125,7 @@ class ProviderRepository {
 
 	/**
 	 * Determine if the manifest should be compiled.
-	 * $manifest为空，或者 $manifest!=$providers
+	 * $manifest为空，或者 $manifest['providers']!=$providers 即已经cache的提供者不一致
 	 * @param  array  $manifest
 	 * @param  array  $providers
 	 * @return bool
@@ -152,8 +152,8 @@ class ProviderRepository {
 
 	/**
 	 * Write the service manifest file to disk.
-	 * 写入配置文件
-	 * @param  array  $manifest
+	 * 写入配置文件(vendor/services.json)
+	 * @param  array  $manifest 要写入的内容
 	 * @return array
 	 */
 	public function writeManifest($manifest)
@@ -167,8 +167,12 @@ class ProviderRepository {
 
 	/**
 	 * Create a fresh service manifest data structure.
-	 *
-	 * @param  array  $providers
+	 * [
+	 * 'providers'=>'',
+	 * 	'eager'=>非延迟加载服务提供者类,
+	 * 'deferred'=>
+	 * ]
+	 * @param  array  $providers 服务提供者
 	 * @return array
 	 */
 	protected function freshManifest(array $providers)
