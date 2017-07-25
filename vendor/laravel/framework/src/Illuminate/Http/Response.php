@@ -11,7 +11,7 @@ class Response extends BaseResponse {
 
 	/**
 	 * The original content of the response.
-	 *
+	 * 未处理前的内容
 	 * @var mixed
 	 */
 	public $original;
@@ -25,44 +25,33 @@ class Response extends BaseResponse {
 	public function setContent($content)
 	{
 		$this->original = $content;
-
-		// If the content is "JSONable" we will set the appropriate header and convert
-		// the content to JSON. This is useful when returning something like models
-		// from routes that will be automatically transformed to their JSON form.
 		if ($this->shouldBeJson($content))
-		{
+		{//判断内容是否数组 or ArrayObject子类对象 or 实现了Illuminate\Contracts\Support\Jsonable接口类对象 是则转成json字符串
 			$this->headers->set('Content-Type', 'application/json');
-
-			$content = $this->morphToJson($content);
-		}
-
-		// If this content implements the "Renderable" interface then we will call the
-		// render method on the object so we will avoid any "__toString" exceptions
-		// that might be thrown and have their errors obscured by PHP's handling.
-		elseif ($content instanceof Renderable)
-		{
+			$content = $this->morphToJson($content);//转成json字符串
+		} elseif ($content instanceof Renderable)
+		{//是实现了的Illuminate\Contracts\Support\Renderable接口类对象
 			$content = $content->render();
 		}
-
+		//设置相应内容content属性值
 		return parent::setContent($content);
 	}
 
 	/**
 	 * Morph the given content into JSON.
-	 *
+	 * 转成json字符串
 	 * @param  mixed   $content
 	 * @return string
 	 */
 	protected function morphToJson($content)
 	{
 		if ($content instanceof Jsonable) return $content->toJson();
-
 		return json_encode($content);
 	}
 
 	/**
-	 * Determine if the given content should be turned into JSON.
-	 *
+	 * Determine if the given content should be turned into JSON. 判断是否可以转成json字符串
+	 * 判断是否数组 or ArrayObject子类对象 or 实现了Illuminate\Contracts\Support\Jsonable接口类对象
 	 * @param  mixed  $content
 	 * @return bool
 	 */
@@ -75,7 +64,7 @@ class Response extends BaseResponse {
 
 	/**
 	 * Get the original response content.
-	 *
+	 * 获取未处理的内容
 	 * @return mixed
 	 */
 	public function getOriginalContent()

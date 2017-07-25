@@ -353,13 +353,12 @@ class Response
 
     /**
      * Sends content for the current web response.
-     *
+     * 输出相应内容
      * @return Response
      */
     public function sendContent()
     {
         echo $this->content;
-
         return $this;
     }
 
@@ -373,7 +372,7 @@ class Response
     public function send()
     {
         $this->sendHeaders();
-        $this->sendContent();
+        $this->sendContent();//输出相应内容
 
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
