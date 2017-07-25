@@ -147,6 +147,9 @@ return [
 		'App\Providers\EventServiceProvider', //事件服务提供者
 		'App\Providers\RouteServiceProvider', //路由服务提供者
 
+		//我定义的
+		'App\Providers\JellyServiceProvider',
+
 	],
 
 	/*
@@ -194,7 +197,9 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-
+		
+		//自定义的别名
+		'JellyImage'=>'App\Lib\Facades\jellyImage', 
 	],
 
 ];

@@ -1,12 +1,12 @@
 
 
 
-服务提供者 类必须继承类： Illuminate\Support\ServiceProvider 该类的构造方法接收app对象
-	服务提供者子类必须实现 register()方法
+服务提供者 类必须继承类： Illuminate\Support\ServiceProvider ,该类的构造方法接收app对象
+	服务提供者子类必须实现 register()方法,但boot()方法可选
 
 使用命令创建服务提供者子类：  php artisan make:provider JellyServiceProvider
-此时生成文件app\Providers\JellyServiceProvider.php 文件内容如下：
-	<?php namespace App\Providers;
+    此时生成文件/app/Providers/JellyServiceProvider.php 文件内容如下：
+<?php namespace App\Providers;
 	use Illuminate\Support\ServiceProvider;
 	class JellyServiceProvider extends ServiceProvider {
 		/**
@@ -20,7 +20,7 @@
 
 		/**
 		 * Register the application services.
-		 * 注册应用程序服务，register方法不能少
+		 * 注册应用程序服务，register方法不能少,一般用于初始化类
 		 * @return void
 		 */
 		public function register()
@@ -61,8 +61,8 @@
 			 * 取得提供者所提供的服务
 			 * @return array
 			*/
-   		        public function provides(){
+   		    public function provides(){
 				return ['Xxx\Contracts\Connection类名'];
-			 }
+			}
 
 		}

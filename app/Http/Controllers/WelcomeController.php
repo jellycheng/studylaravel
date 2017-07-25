@@ -35,6 +35,11 @@ class WelcomeController extends Controller {
 		if(isset($_GET['open_log']) && $_GET['open_log']==1) {
 			Log::info('这是我写的日志，日志文件在storage/logs/laravel-年-月-日.log');
 		}
+		echo App("jellyImage")->hello();
+		echo App()->make("jellyImage")->hello();
+		//echo \App\Lib\Facades\jellyImage::hello();  //配合单例做的
+		echo \JellyImage::hello(); //facades调用方式
+
 		return view('welcome');
 	}
 
