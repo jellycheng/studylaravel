@@ -1,0 +1,15 @@
+<?php
+namespace App\Model;
+
+use Illuminate\Database\Eloquent\Model;
+
+class {{$className}} extends Model
+{
+    protected $connection = '{{$connection}}';
+    protected $table = '{{$table}}';
+
+    protected $primaryKey = "{{$primaryKey}}";
+
+    public $timestamps = false;
+
+}
