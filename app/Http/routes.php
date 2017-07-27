@@ -131,3 +131,9 @@ Route::group(['namespace' => 'OrmDemo', 'prefix' => 'ormdemo'], function($router
     
 });
 
+Route::any('db/log', function()
+{
+    $res = \App\Model\SiteConfig::where('config_id','<', 15)->first();
+    return 'config:' . var_export($res->toArray(), true);
+});
+

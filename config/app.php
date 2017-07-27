@@ -90,7 +90,7 @@ return [
 	| Here you may configure the log settings for your application. Out of
 	| the box, Laravel uses the Monolog PHP logging library. This gives
 	| you a variety of powerful log handlers / formatters to utilize.
-	|
+	| 记录日志方式，daily表每天一个文件，日志目录storage/logs/laravel-日期.log
 	| Available Settings: "single", "daily", "syslog", "errorlog"
 	|
 	*/
