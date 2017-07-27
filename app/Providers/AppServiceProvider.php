@@ -26,16 +26,16 @@ class AppServiceProvider extends ServiceProvider {
         });
 
         //监听方式2：与上面一种方式不同点是：不论是否执行sql，每次请求均连接Db
-          \DB::connection('mysql')->listen(
-                           function ($sql, $binds, $time, $connectionName) {
-                              \Log::info(
-                              [
-                              'sql'   => $sql,
-                              'time'  => $time,
-                              'binds' => $binds,
-                              'connection'=>$connectionName,
-                              ]);
-                          });
+//          \DB::connection('mysql')->listen(
+//                           function ($sql, $binds, $time, $connectionName) {
+//                              \Log::info(
+//                              [
+//                              'sql'   => $sql,
+//                              'time'  => $time,
+//                              'binds' => $binds,
+//                              'connection'=>$connectionName,
+//                              ]);
+//                          });
 	}
 
 	/**
