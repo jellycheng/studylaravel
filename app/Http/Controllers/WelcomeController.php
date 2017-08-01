@@ -43,4 +43,23 @@ class WelcomeController extends Controller {
 		return view('welcome');
 	}
 
+
+	public function yztest() {
+        $data = [
+            'email'=>'123@qq.com',
+            'card'=>'360427233222323232', //错误的身份证号
+        ];
+        $validator = \Validator::make($data, [
+            'email' => 'required|email',
+            'card' => 'required|IdCard',
+        ]);
+        if ($validator->fails()){
+            echo "fail"  . var_export($validator->errors()->all(), true);
+        } else {
+            echo 'ok';
+        }
+
+    }
+
+
 }

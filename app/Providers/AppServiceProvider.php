@@ -36,6 +36,10 @@ class AppServiceProvider extends ServiceProvider {
 //                              'connection'=>$connectionName,
 //                              ]);
 //                          });
+        \Validator::resolver(function ($translator, $aData, $aRules, $aMessages, $aAttributes) {
+            return new \App\Lib\Validator($translator, $aData, $aRules, $aMessages, $aAttributes);
+        });
+
 	}
 
 	/**

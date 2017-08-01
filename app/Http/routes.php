@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'WelcomeController@index');
+Route::get('yztest', 'WelcomeController@yztest');//验证扩展类demo
 
 Route::get('home', 'HomeController@index');
 
