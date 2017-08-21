@@ -89,8 +89,8 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * All of the registered rebound callbacks.
-	 *
-	 * @var array
+	 * 抽象物重新绑定时回调的方法，本类属性可以通过本类rebinding()方法设置
+	 * @var array = [ ['抽象物']=>[闭包($app对象, $abstract的对象即实现物), 闭包N], ]
 	 */
 	protected $reboundCallbacks = [];
 
@@ -338,7 +338,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * $this->instance('Illuminate\Container\Container', $this);
 	 * $this->instance('path', $this->path());
      * $this->instance('path.config', $this->configPath());
-	 * @param  string  $abstract 字符串|数组array('abstract即key'=>'别名')  抽象物
+	 * @param  string  $abstract 字符串|数组array('abstract即key'=>'别名')  抽象物|[抽象物=>抽象物的别名]
 	 * @param  mixed   $instance =对象|字符串                              实现物,具体物
 	 * @return void
 	 */
@@ -349,7 +349,7 @@ class Container implements ArrayAccess, ContainerContract {
 			list($abstract, $alias) = $this->extractAlias($abstract);//分析$abstract数组,返回['abstract','别名'];
 			$this->alias($abstract, $alias);//设置属性$this->aliases[$alias] = $abstract;
 		}
-		//禁止互为别名,解决代码冲突
+		//禁止互为别名,解决代码冲突(作为instances属性key则就不能作为aliases属性key)
 		unset($this->aliases[$abstract]);
 
 		//是否为本类bindings捆绑，instances实例，aliases别名三者属性数组key之一， 如果存在返回true
@@ -406,7 +406,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Alias a type to a different name.
 	 *
-	 * @param  string  $abstract 抽象
+	 * @param  string  $abstract 抽象物
 	 * @param  string  $alias 抽象别名
 	 * @return void
 	 */
@@ -429,8 +429,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Bind a new callback to an abstract's rebind event.
 	 * 设置reboundCallbacks属性并返回对象
-	 * @param  string    $abstract
-	 * @param  \Closure  $callback = 闭包($app对象, $abstract的对象)
+	 * @param  string    $abstract 抽象物
+	 * @param  \Closure  $callback = 闭包($app对象, $abstract的对象即实现物)
 	 * @return mixed
 	 */
 	public function rebinding($abstract, Closure $callback)
@@ -473,12 +473,13 @@ class Container implements ArrayAccess, ContainerContract {
 	}
 	/**
 	 * Get the rebound callbacks for a given type.
-	 * @param  string  $abstract
+	 * 获取抽象物重新绑定时需要回调的方法
+	 * @param  string  $abstract 抽象物
 	 * @return array
 	 */
 	protected function getReboundCallbacks($abstract) {
 		if (isset($this->reboundCallbacks[$abstract]))
-		{//存在值,值可被call_user_func函数调用(接收2个参数,分别是app对象和$abstract对应的类对象)
+		{//存在值,值可被call_user_func函数调用(接收2个参数,分别是app对象和$abstract对应的类对象即实现物)
 			return $this->reboundCallbacks[$abstract];
 		}
 		return [];
@@ -1054,9 +1055,9 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Get the alias for an abstract if available.
-	 *
-	 * @param  string  $abstract
-	 * @return string
+	 * 通过别名获取真正的抽象物
+	 * @param  string  $abstract  别名|抽象物
+	 * @return string  返回真正的抽象物
 	 */
 	protected function getAlias($abstract)
 	{

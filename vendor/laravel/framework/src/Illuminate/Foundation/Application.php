@@ -228,7 +228,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 */
 	public function setBasePath($basePath)
 	{
-		$this->basePath = $basePath;
+		$this->basePath = $basePath; //项目目录
 		$this->bindPathsInContainer();
 		return $this;
 	}
@@ -860,7 +860,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function registerCoreContainerAliases()
 	{
 		$aliases = array(
-		    //'类代号即make方法的$abstract参数'=>['别名1即aliases属性的key名', '具体实现类,抽象类,接口']
+		    //'类代号（抽象物即make()方法的$abstract参数')=>['别名1即aliases属性的key名', '具体实现类,抽象类,接口']
 			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
 			'artisan'              => ['Illuminate\Console\Application', 'Illuminate\Contracts\Console\Application'],
 			'auth'                 => 'Illuminate\Auth\AuthManager',
@@ -900,8 +900,8 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		foreach ($aliases as $key => $aliases)
 		{
 			foreach ((array) $aliases as $alias)
-			{   //$key=view, $alias=Illuminate\View\Factory
-                //=>$this->aliases['Illuminate\View\Factory '] = 'view';$abstract=view;
+			{   //$key=view抽象物, $alias=Illuminate\View\Factory别名
+                //=>$this->aliases['Illuminate\View\Factory别名'] = 'view抽象物';
 				$this->alias($key, $alias);
 			}
 		}
