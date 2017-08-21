@@ -190,7 +190,7 @@ class Container implements ArrayAccess, ContainerContract {
 	{
 		//
 		if (is_array($abstract))
-		{   #array($abstract=> $alias)
+		{   #array($abstract抽象物=> $alias抽象物别名)
 			list($abstract, $alias) = $this->extractAlias($abstract);
 			//设置别名属性
 			$this->alias($abstract, $alias);//$this->aliases[$alias] = $abstract;
@@ -201,7 +201,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 		if (is_null($concrete))
 		{
-			$concrete = $abstract;//build($concrete, $param)
+			$concrete = $abstract;//抽象物和实现物一样则调用app对象->build($concrete, $param)
 		}
 
 		if ( ! $concrete instanceof Closure)

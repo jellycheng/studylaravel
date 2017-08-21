@@ -53,8 +53,8 @@ abstract class ServiceProvider {
 	/**
 	 * Merge the given configuration with the existing configuration.
 	 * 为$key新增配置($path上配置文件目录+文件)，但不覆盖原来的配置
-	 * @param  string  $path
-	 * @param  string  $key
+	 * @param  string  $path 配置文件
+	 * @param  string  $key  配置key
 	 * @return void
 	 */
 	protected function mergeConfigFrom($path, $key)
@@ -67,8 +67,8 @@ abstract class ServiceProvider {
 	/**
 	 * Register a view file namespace.
 	 *
-	 * @param  string  $path
-	 * @param  string  $namespace
+	 * @param  string  $path 目录
+	 * @param  string  $namespace 命名空间名
 	 * @return void
 	 */
 	protected function loadViewsFrom($path, $namespace)

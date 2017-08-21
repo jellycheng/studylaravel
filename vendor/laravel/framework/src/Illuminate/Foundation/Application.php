@@ -456,7 +456,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$provider->register();
 
 		foreach ($options as $key => $value)
-		{	#调用app对象的offsetSet($key, $value)方法=》app对象->bind($key, $value, false); =>设置bindings[$key]属性=$value值
+		{	#调用app对象->offsetSet($key, $value)方法;=》app对象->bind($key, $value, false); =>设置bindings[$key]属性=$value值
 			$this[$key] = $value;
 		}
 		//把已经实例化服务提供者对象存入app类属性$serviceProviders[]=$provider，$loadedProviders[provider类名]=true

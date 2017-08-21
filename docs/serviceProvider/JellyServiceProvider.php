@@ -21,8 +21,8 @@ class JellyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//单例
-		$this->app->singleton('jellyImage', function ($app) {
+		//其它地方调用: $jellyImageObj = $app对象->make('jellyImage');
+		$this->app->singleton('jellyImage', function ($app) {//单例
 			return new \App\Lib\JellyImage();
 		});
 

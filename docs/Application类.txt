@@ -22,16 +22,16 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 注册服务提供者： app对象->register(new EventServiceProvider($app对象)服务提供者对象);
 \Illuminate\Foundation\Application 类属性：
 	    protected static $instance ＝Application对象
-			在其它地方获取Application对象方式：
+			获取Application对象方式(app对象)：
 				1. \Illuminate\Container\Container::getInstance()
 				2. \Illuminate\Foundation\Application::getInstance()
 				3. app(); 其实执行的是\Illuminate\Container\Container::getInstance()
 				4. $app->make('app')
 
-
 		protected $resolved = []; #bindings属性key被执行之后，会把这个属性key设置为真 array('xxx'=>true,'xx2'=>true)
 
-		protected $bindings = []; array('events'=>array('concrete'=>function($app){}, 'shared'=>true ),  #其中shared为真则实例化对象之后会存入instances属性
+		protected $bindings = []; 格式如下:
+		                array('events'=>array('concrete'=>function($app){}, 'shared'=>true ),  #其中shared为真则实例化对象之后会存入instances属性
 						'Illuminate\Contracts\Routing\ResponseFactory'=>array('concrete'=>function($app){}, 'shared'=>true),
 						'Illuminate\Contracts\Http\Kernel'=>array('concrete'=>function($c类对象, $parameters = []传给类对象make的参数) use ($abstract, $concrete如'App\Http\Kernel'){
 												$method = ($abstract == $concrete) ? 'build' : 'make';	return $c->$method($concrete如'App\Http\Kernel', $parameters);
@@ -46,6 +46,7 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 
 
 		protected $instances = [
+		            #'抽象物'=>'具体物即实现物',
 					'app'=>app对象, 
 					'Illuminate\Container\Container'=>app对象, 
 					'path'=>项目根目录/app，
@@ -58,8 +59,11 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 					'request'=>$request对象
 					];
 
+        //是$instances属性key则一定不会是$aliases属性key
+		protected $aliases = [
+		                    '别名'=>抽象物,
 
-		protected $aliases = [];实例化app对象则
+		                        ];
 					
 		protected $extenders = [];
 
