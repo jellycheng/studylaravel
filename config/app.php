@@ -107,12 +107,10 @@ return [
 	| this array to grant expanded functionality to your applications.
 	|
 	*/
-
 	'providers' => [
-
 		/*
 		 * Laravel Framework Service Providers...
-		 * laravel框架自带的服务提供者类,且均有register()方法,但boot()方法可选
+		 * laravel框架自带的服务提供者类(实际类),且均有register()方法,但boot()方法可选
 		 */
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
@@ -154,7 +152,9 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Class Aliases  类别名配置,配置好之后,后续代码则可以使用 use 别名;来使用类
+	| Class Aliases  类别名配置,
+	| 配置好之后,后续代码则可以使用 use 别名;来使用类,
+	| 如 use DB; $results = DB::select('select * from t_general_user where iUserID = ?', [1]);
 	|--------------------------------------------------------------------------
 	|
 	| This array of class aliases will be registered when this application
@@ -162,7 +162,6 @@ return [
 	| the aliases are "lazy" loaded so they don't hinder performance.
 	|
 	*/
-
 	'aliases' => [
 		//'别名'=>'类名', #class_alias(类名, 别名, true);
 		'App'       => 'Illuminate\Support\Facades\App',

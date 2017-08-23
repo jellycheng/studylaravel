@@ -54,7 +54,7 @@ class Router implements RegistrarContract {
 	/**
 	 * All of the short-hand keys for middlewares.
 	 *
-	 * @var array
+	 * @var array = ['中间件名1'=>'中间件类名1', '中间件名N'=>'中间件类名N',]
 	 */
 	protected $middleware = [];
 

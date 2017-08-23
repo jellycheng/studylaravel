@@ -5,7 +5,7 @@ class AliasLoader {
 	/**
 	 * The array of class aliases.
 	 *
-	 * @var array
+	 * @var array = ['类别名'=>'原类名', '类别名N'=>'原类名N']
 	 */
 	protected $aliases;
 
@@ -53,7 +53,7 @@ class AliasLoader {
 	/**
 	 * Load a class alias if it is registered.
 	 * 自动加载器，使用到类时，设置类别名
-	 * @param  string  $alias
+	 * @param  string  $alias 类别名
 	 * @return void
 	 */
 	public function load($alias)

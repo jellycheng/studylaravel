@@ -39,7 +39,7 @@ class Container implements ArrayAccess, ContainerContract {
 	 * @var array=[
 			'app'=>app对象,
 			'Illuminate\Container\Container'=>app对象,
-	 		'app'=>app对象,
+	 		'events'=>事件对象,
 			'path'=>项目根目录/app，
 			'path.base'=>项目根目录，
 			'path.config'=>项目根目录/config，
@@ -61,7 +61,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * The extension closures for services.
-	 * 对抽象物的扩展, ['$abstract'=>"方法or闭包(abstract对象, app对象)", ]
+	 * 对抽象物的扩展, ['$abstract抽象物'=>"方法名or闭包(abstract抽象物对象, app对象)", ]
 	 * @var array
 	 */
 	protected $extenders = [];
@@ -618,7 +618,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Resolve the given type from the container.
 	 * 获取类对象,实例化类对象
-	 * @param  string  $abstract 字符串
+	 * @param  string  $abstract 字符串|抽象物|具体物
 	 * @param  array   $parameters
 	 * @return mixed
 	 */
@@ -631,13 +631,13 @@ class Container implements ArrayAccess, ContainerContract {
 		{	#存在instances属性key
 			return $this->instances[$abstract];
 		}
-		$concrete = $this->getConcrete($abstract);//从bindings属性中取闭包，不是bindings属性则带\原样返回
+		$concrete = $this->getConcrete($abstract);//返回具体物：从bindings属性中取闭包，不是bindings属性则带\原样返回
 
 		//return $concrete === $abstract || $concrete instanceof Closure;
 		if ($this->isBuildable($concrete, $abstract))
-		{#是闭包或者$concrete == $abstract， 
+		{#具体物是闭包或者$concrete == $abstract(即具体物和抽象物相同)，
 			$object = $this->build($concrete, $parameters);//返回对象，如果$concrete是闭包则接收app对象和$parameters参数并返回对象，如果$concrete=字符串则是反射出类对象
-		}else {//递归实例化
+		}else {//递归调用make方法
 			$object = $this->make($concrete, $parameters);
 		}
 		//
@@ -698,7 +698,7 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Determine if the given abstract has a leading slash.
 	 *  是字符串且不以\开头  如abc， abc\xyz
-	 * 判断是否不以\开头的字符串
+	 * 判断是否不以\开头的字符串(不是以\开头的字符串)
 	 * @param  string  $abstract
 	 * @return bool
 	 */
@@ -960,8 +960,8 @@ class Container implements ArrayAccess, ContainerContract {
 	/**
 	 * Fire all of the resolving callbacks.
 	 *
-	 * @param  string  $abstract=字符串
-	 * @param  mixed   $object=对象
+	 * @param  string  $abstract=字符串，抽象物
+	 * @param  mixed   $object=对象，抽象物对应的具体实现物
 	 * @return void
 	 */
 	protected function fireResolvingCallbacks($abstract, $object)
@@ -1043,7 +1043,7 @@ class Container implements ArrayAccess, ContainerContract {
 
 	/**
 	 * Determine if the given concrete is buildable.
-	 * 是闭包或2个参数完全相等 则返回true
+	 * 具体物是闭包或具体物与抽象物相同(2个参数完全相等) 则返回true
 	 * @param  mixed   $concrete 具体物
 	 * @param  string  $abstract 抽象
 	 * @return bool

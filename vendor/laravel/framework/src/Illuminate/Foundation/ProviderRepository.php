@@ -29,8 +29,8 @@ class ProviderRepository {
 	/**
 	 * Create a new service repository instance.
 	 *
-	 * @param  \Illuminate\Contracts\Foundation\Application  $app
-	 * @param  \Illuminate\Filesystem\Filesystem  $files
+	 * @param  \Illuminate\Contracts\Foundation\Application  $app app对象
+	 * @param  \Illuminate\Filesystem\Filesystem  $files  
 	 * @param  string  $manifestPath  服务提供者的json文件
 	 * @return void
 	 */
@@ -55,11 +55,11 @@ class ProviderRepository {
 			$manifest = $this->compileManifest($providers);
 		}
 		foreach ($manifest['when'] as $provider => $events)
-		{
+		{//延迟服务提供者类,存在事件则绑定事件，后续其它程序触发事件后，会触发调用服务提供者的register()方法
 			$this->registerLoadEvents($provider, $events);
 		}
 		foreach ($manifest['eager'] as $provider)
-		{//循环非延迟加载服务提供者类,注册服务提供者并执行服务提供者->register()方法
+		{//非延迟服务提供者类,注册服务提供者并执行服务提供者->register()方法
 			$this->app->register($this->createProvider($provider));
 		}
 		//设置app类的setDeferredServices属性值
@@ -93,22 +93,22 @@ class ProviderRepository {
 	{
 		$manifest = $this->freshManifest($providers);//获取最新结构
 		foreach ($providers as $provider)
-		{//$provider类名
+		{//$provider=服务提供者实际类名
 			$instance = $this->createProvider($provider);//实例化服务提供者类
 			if ($instance->isDeferred())
-			{
+			{//服务提供者类$defer属性是否为真，默认false
 				foreach ($instance->provides() as $service)
-				{
+				{//有配置服务提供者名
 					$manifest['deferred'][$service] = $provider;
 				}
-
+				//延迟服务提供者
 				$manifest['when'][$provider] = $instance->when();
 			} else
-			{
+			{//不是延迟服务提供者类
 				$manifest['eager'][] = $provider;
 			}
 		}
-
+		//服务提供者类cache到文件中
 		return $this->writeManifest($manifest);
 	}
 

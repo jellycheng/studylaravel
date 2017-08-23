@@ -46,7 +46,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * The array of booting callbacks.
 	 *
-	 * @var array
+	 * @var array = [闭包1, 闭包N]
 	 */
 	protected $bootingCallbacks = array();
 
@@ -534,7 +534,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function loadDeferredProvider($service)
 	{
 		if ( ! isset($this->deferredServices[$service]))
-		{
+		{//不是延迟服务提供者类 返回
 			return;
 		}
 		$provider = $this->deferredServices[$service];
@@ -644,7 +644,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a new boot listener.
 	 *
-	 * @param  mixed  $callback
+	 * @param  mixed  $callback = 闭包
 	 * @return void
 	 */
 	public function booting($callback)
@@ -809,7 +809,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Set the application's deferred services.
 	 *
-	 * @param  array  $services = [服务代号=>'', 服务代号2=>'',]
+	 * @param  array  $services = ['服务代号即抽象物'=>'', '服务代号2'=>'',]
 	 * @return void
 	 */
 	public function setDeferredServices(array $services)
@@ -918,4 +918,35 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$this->loadedProviders = [];
 	}
 
+	//add by jelly，laravel框架本省没这个方法   echo gettype($this->app->getInstances4Jelly());exit;
+	public function getInstances4Jelly() {
+		return $this->instances;
+	}
+
+	/**
+	 * 获取instances所有配置的key
+	 * add by jelly，laravel框架本省没这个方法
+	 * var_export($this->app->getInstancesAllKey4Jelly());exit;
+	 */
+	public function getInstancesAllKey4Jelly() {
+		$ret = [];
+		foreach ($this->instances as $k=>$v) {
+			$ret[] = $k;
+		}
+		return $ret;
+	}
+
+	/**
+	 * add by jelly，laravel框架本省没这个方法
+	 * @return array
+	 */
+	public function getBindingsAllKey4Jelly() {
+		$ret = [];
+		foreach ($this->getBindings() as $k=>$v) {
+			$ret[] = $k;
+		}
+		return $ret;
+	}
+	
+	
 }

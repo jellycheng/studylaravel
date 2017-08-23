@@ -60,12 +60,33 @@ class Kernel implements KernelContract {
 	 */
 	public function __construct(Application $app, Router $router)
 	{
+		/*
+		 array ('app','Illuminate\\Container\\Container','events是事件对象','path','path.base',
+  				'path.config','path.database','path.lang','path.public','path.storage')
+		 */
+		//var_export($app->getInstancesAllKey4Jelly());exit;
+		/**
+		 app类的bindings属性值的key：
+		array (
+			0 => 'events',事件,在Illuminate\Events\EventServiceProvider.php文件中设置
+			1 => 'router',路由，在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+			2 => 'url',                     在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+			3 => 'redirect',               在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+			4 => 'Illuminate\Contracts\Routing\ResponseFactory',在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+			5 => 'Illuminate\Contracts\Http\Kernel',            在bootstrap/app.php文件中设置
+			6 => 'Illuminate\Contracts\Console\Kernel',         在bootstrap/app.php文件中设置
+			7 => 'Illuminate\Contracts\Debug\ExceptionHandler', 在bootstrap/app.php文件中设置
+		)
+		 */
+		//var_export($app->getBindingsAllKey4Jelly());exit;
+		//var_export($app->getBindings());exit;
 		$this->app = $app;
 		$this->router = $router;
 		foreach ($this->routeMiddleware as $key => $middleware)
 		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）=[中间介名=>中间介类]
 			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
 		}
+		
 	}
 
 	/**
@@ -183,8 +204,8 @@ class Kernel implements KernelContract {
 	public function bootstrap()
 	{
 		if ( ! $this->app->hasBeenBootstrapped())
-		{//app未启动执行完毕
-			$this->app->bootstrapWith($this->bootstrappers());
+		{//app未启动执行完毕：判断标准是：app类的$hasBeenBootstrapped属性是否为真
+			$this->app->bootstrapWith($this->bootstrappers());//执行每个启动类的bootstrap($app对象)方法，然后标记app类的$hasBeenBootstrapped属性值=true
 		}
 	}
 

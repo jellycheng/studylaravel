@@ -166,7 +166,8 @@ abstract class ServiceProvider {
 
 	/**
 	 * Get the services provided by the provider.
-	 *
+	 * 配置“服务提供者名即抽象物名”,多个写在多个单元中
+	 * return ['服务提供者名1如Riak\Contracts\Connection', '服务提供者名N'];
 	 * @return array
 	 */
 	public function provides()
@@ -176,12 +177,14 @@ abstract class ServiceProvider {
 
 	/**
 	 * Get the events that trigger this service provider to register.
-	 *
-	 * @return array
+	 * 配置监听事件名
+	 * @return array = ['监听事件名1', '监听事件名N']
 	 */
 	public function when()
 	{
 		return [];
+		#1.无需监听事件则返回空数组
+		#2.设置监听事件，当触发事件时触发服务提供者register()方法
 	}
 
 	/**
