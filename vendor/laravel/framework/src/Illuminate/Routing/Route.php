@@ -26,7 +26,7 @@ class Route {
 
 	/**
 	 * The HTTP methods the route responds to.
-	 *
+	 * 请求方式 如['GET', 'POST', 'DELETE', '等']
 	 * @var array
 	 */
 	protected $methods;
@@ -34,7 +34,18 @@ class Route {
 	/**
 	 * The route action array.
 	 *
-	 * @var array
+	 * @var array = [ 'prefix'=>'',
+	 * 				'uses'=>闭包,
+	 * 				'domain'=>'域名',
+	 * 				'as'=>'名字可选',
+	 * 				'controller'=>'',
+	 * 				'before'=>'',
+	 * 				'after'=>'',
+	 * 				'middleware'=>'中间件',
+	 * 				'http', //仅支持http协议请求
+	 * 				'https',//仅支持https协议请求
+	 * 				'其它自定义的key'=>'值',
+	 * 				]
 	 */
 	protected $action;
 
@@ -54,27 +65,28 @@ class Route {
 
 	/**
 	 * The array of matched parameters.
-	 *
+	 * 匹配的uri和domain中变量参数 = ['变量参数'=>值]
 	 * @var array
 	 */
 	protected $parameters;
 
 	/**
 	 * The parameter names for the route.
-	 *
+	 * domain和uri中参数变量名 = ['参数变量名', '参数变量名N']
 	 * @var array|null
 	 */
 	protected $parameterNames;
 
 	/**
 	 * The compiled version of the route.
-	 *
+	 *  值为\Symfony\Component\Routing\CompiledRoute类对象
 	 * @var \Symfony\Component\Routing\CompiledRoute
 	 */
 	protected $compiled;
 
 	/**
 	 * The container instance used by the route.
+	 * app容器
 	 *
 	 * @var \Illuminate\Container\Container
 	 */
@@ -90,9 +102,9 @@ class Route {
 	/**
 	 * Create a new Route instance.
 	 *
-	 * @param  array   $methods
+	 * @param  array   $methods 请求方式
 	 * @param  string  $uri
-	 * @param  \Closure|array  $action
+	 * @param  \Closure|array  $action 动作
 	 * @return void
 	 */
 	public function __construct($methods, $uri, $action)
@@ -114,18 +126,19 @@ class Route {
 
 	/**
 	 * Run the route action and return the response.
-	 *
+	 * 运行路由对象
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return mixed
 	 */
 	public function run(Request $request)
 	{
-		$this->container = $this->container ?: new Container;
+		$this->container = $this->container ?: new Container; //app容器
 
 		try
 		{
-			if ( ! is_string($this->action['uses']))
+			if ( ! is_string($this->action['uses'])) {//可执行函数
 				return $this->runCallable($request);
+			}
 
 			if ($this->customDispatcherIsBound())
 				return $this->runWithCustomDispatcher($request);
@@ -155,7 +168,7 @@ class Route {
 
 	/**
 	 * Run the route action and return the response.
-	 *
+	 * 调用控制器类的方法
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return mixed
 	 */
@@ -200,36 +213,36 @@ class Route {
 
 	/**
 	 * Determine if the route matches given request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  bool  $includingMethod
+	 * 当前请求对象是否匹配该路由对象
+	 * @param  \Illuminate\Http\Request  $request 请求对象
+	 * @param  bool  $includingMethod 是否比较当前请求方式是路由对象所支持的方式,默认true比较,false不比较方法
 	 * @return bool
 	 */
 	public function matches(Request $request, $includingMethod = true)
 	{
-		$this->compileRoute();
+		$this->compileRoute();//设置compiled属性值=\Symfony\Component\Routing\CompiledRoute类对象
 
 		foreach ($this->getValidators() as $validator)
 		{
 			if ( ! $includingMethod && $validator instanceof MethodValidator) continue;
 
-			if ( ! $validator->matches($this, $request)) return false;
+			if ( ! $validator->matches($this, $request)) return false; //不匹配
 		}
 
-		return true;
+		return true;//匹配
 	}
 
 	/**
 	 * Compile the route into a Symfony CompiledRoute instance.
-	 *
+	 * 设置compiled属性值
 	 * @return void
 	 */
 	protected function compileRoute()
 	{
-		$optionals = $this->extractOptionalParameters();
+		$optionals = $this->extractOptionalParameters();//获取url中可选的路由参数,返回[可选参数名=>null]
 
-		$uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);
-
+		$uri = preg_replace('/\{(\w+?)\?\}/', '{$1}', $this->uri);//去掉可选参数中的问号?
+		//设置compiled属性值=Symfony\Component\Routing\CompiledRoute类对象
 		$this->compiled = with(
 
 			new SymfonyRoute($uri, $optionals, $this->wheres, array(), $this->domain() ?: '')
@@ -239,19 +252,20 @@ class Route {
 
 	/**
 	 * Get the optional parameters for the route.
-	 *
+	 * 如$this->uri = 'user/{id?}'; 则返回['id'=>null]
+	 * 获取url中可选的路由参数,返回[可选参数名=>null]
 	 * @return array
 	 */
 	protected function extractOptionalParameters()
 	{
 		preg_match_all('/\{(\w+?)\?\}/', $this->uri, $matches);
-
+		//匹配则每个匹配到的值作为key,对应的值为null,不匹配返回空数组
 		return isset($matches[1]) ? array_fill_keys($matches[1], null) : [];
 	}
 
 	/**
 	 * Get the middlewares attached to the route.
-	 *
+	 * 获取该路由对象的所有中间件
 	 * @return array
 	 */
 	public function middleware()
@@ -379,9 +393,9 @@ class Route {
 
 	/**
 	 * Get a given parameter from the route.
-	 *
-	 * @param  string  $name
-	 * @param  mixed   $default
+	 * 获取变量参数值
+	 * @param  string  $name 变量参数名
+	 * @param  mixed   $default 不存在则返回默认值
 	 * @return string
 	 */
 	public function parameter($name, $default = null)
@@ -449,7 +463,7 @@ class Route {
 
 	/**
 	 * Get all of the parameter names for the route.
-	 *
+	 * 设置和获取参数变量名 = ['参数变量名', '参数变量名N']
 	 * @return array
 	 */
 	public function parameterNames()
@@ -462,12 +476,13 @@ class Route {
 	/**
 	 * Get the parameter names for the route.
 	 *
-	 * @return array
+	 * @return array = ['参数变量名', '参数变量名N']
 	 */
 	protected function compileParameterNames()
 	{
+		// {abc}.xxx.com/user/{id?}
 		preg_match_all('/\{(.*?)\}/', $this->domain().$this->uri, $matches);
-
+		//return ['abc', 'id']
 		return array_map(function($m) { return trim($m, '?'); }, $matches[1]);
 	}
 
@@ -479,35 +494,30 @@ class Route {
 	 */
 	public function bind(Request $request)
 	{
-		$this->compileRoute();
+		$this->compileRoute();//设置compiled属性值
 
-		$this->bindParameters($request);
+		$this->bindParameters($request);//domain和uri中的变量参数处理
 
 		return $this;
 	}
 
 	/**
 	 * Extract the parameter list from the request.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * 参数处理
+	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return array
 	 */
 	public function bindParameters(Request $request)
 	{
-		// If the route has a regular expression for the host part of the URI, we will
-		// compile that and get the parameter matches for this domain. We will then
-		// merge them into this parameters array so that this array is completed.
+		//uri中变量参数处理
 		$params = $this->matchToKeys(
 
 			array_slice($this->bindPathParameters($request), 1)
 
 		);
 
-		// If the route has a regular expression for the host part of the URI, we will
-		// compile that and get the parameter matches for this domain. We will then
-		// merge them into this parameters array so that this array is completed.
 		if ( ! is_null($this->compiled->getHostRegex()))
-		{
+		{//设置了域名匹配,则进行domain中变量参数进行处理
 			$params = $this->bindHostParameters(
 				$request, $params
 			);
@@ -524,6 +534,7 @@ class Route {
 	 */
 	protected function bindPathParameters(Request $request)
 	{
+		//通过uri正则匹配uri,返回匹配变量参数
 		preg_match($this->compiled->getRegex(), '/'.$request->decodedPath(), $matches);
 
 		return $matches;
@@ -551,8 +562,8 @@ class Route {
 	 */
 	protected function matchToKeys(array $matches)
 	{
-		if (count($this->parameterNames()) == 0) return array();
-
+		if (count($this->parameterNames()) == 0) return array();//domain和uri中没有变量参数
+		//取2个数组的交集
 		$parameters = array_intersect_key($matches, array_flip($this->parameterNames()));
 
 		return array_filter($parameters, function($value)
@@ -585,19 +596,10 @@ class Route {
 	 */
 	protected function parseAction($action)
 	{
-		// If the action is already a Closure instance, we will just set that instance
-		// as the "uses" property, because there is nothing else we need to do when
-		// it is available. Otherwise we will need to find it in the action list.
-		if (is_callable($action))
-		{
-			return array('uses' => $action);
-		}
 
-		// If no "uses" property has been set, we will dig through the array to find a
-		// Closure instance within this list. We will set the first Closure we come
-		// across into the "uses" property that will get fired off by this route.
-		elseif ( ! isset($action['uses']))
-		{
+		if (is_callable($action)) {//可回调方法: 如闭包,
+			return array('uses' => $action);
+		} elseif ( ! isset($action['uses'])) {//没有设置uses key,则查找一个
 			$action['uses'] = $this->findCallable($action);
 		}
 
@@ -627,9 +629,6 @@ class Route {
 	{
 		if (isset(static::$validators)) return static::$validators;
 
-		// To match the route, we will use a chain of responsibility pattern with the
-		// validator implementations. We will spin through each one making sure it
-		// passes and then we will know if the route as a whole matches request.
 		return static::$validators = array(
 			new MethodValidator, new SchemeValidator,
 			new HostValidator, new UriValidator,
@@ -827,7 +826,7 @@ class Route {
 
 	/**
 	 * Get the domain defined for the route.
-	 *
+	 * 路由对象的域名orip
 	 * @return string|null
 	 */
 	public function domain()

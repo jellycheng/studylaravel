@@ -11,13 +11,15 @@ use Illuminate\Contracts\Http\Kernel as KernelContract;
 class Kernel implements KernelContract {
 
 	/**
-	 * The application implementation. app对象
+	 * The application implementation.
+	 * app对象
 	 * @var \Illuminate\Contracts\Foundation\Application
 	 */
 	protected $app;
 
 	/**
-	 * The router instance.路由者对象
+	 * The router instance.
+	 * 路由管理者对象
 	 * @var \Illuminate\Routing\Router
 	 */
 	protected $router;
@@ -33,8 +35,8 @@ class Kernel implements KernelContract {
 		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志,可通过app['log']获取日志对象,写日志app['log']->info("信息内容");等价Log::info('信息内容');
 		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置,set_error_handler(),set_exception_handler(),register_shutdown_function()
 		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器,即把config/app.php中aliases配置的值定义好别名
-		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法
-		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（即执行所有服务提供者的boot()方法）
+		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法,服务提供者类来自config/app.php的providers配置key
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（即执行所有服务提供者的boot()方法,上一行代码中设置的）
 	];
 
 	/**
@@ -54,8 +56,8 @@ class Kernel implements KernelContract {
 	/**
 	 * Create a new HTTP kernel instance.
 	 *
-	 * @param  \Illuminate\Contracts\Foundation\Application  $app
-	 * @param  \Illuminate\Routing\Router  $router
+	 * @param  \Illuminate\Contracts\Foundation\Application  $app  app容器
+	 * @param  \Illuminate\Routing\Router  $router 路由管理者对象
 	 * @return void
 	 */
 	public function __construct(Application $app, Router $router)

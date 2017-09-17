@@ -26,8 +26,8 @@ class ControllerDispatcher {
 	/**
 	 * Create a new controller dispatcher instance.
 	 *
-	 * @param  \Illuminate\Routing\Router  $router
-	 * @param  \Illuminate\Container\Container  $container
+	 * @param  \Illuminate\Routing\Router  $router 路由管理者
+	 * @param  \Illuminate\Container\Container  $container app容器
 	 * @return void
 	 */
 	public function __construct(Router $router,
@@ -40,10 +40,10 @@ class ControllerDispatcher {
 	/**
 	 * Dispatch a request to a given controller and method.
 	 *
-	 * @param  \Illuminate\Routing\Route  $route
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  string  $controller
-	 * @param  string  $method
+	 * @param  \Illuminate\Routing\Route  $route 路由对象
+	 * @param  \Illuminate\Http\Request  $request 请求对象
+	 * @param  string  $controller 控制器类
+	 * @param  string  $method  控制器类方法
 	 * @return mixed
 	 */
 	public function dispatch(Route $route, Request $request, $controller, $method)

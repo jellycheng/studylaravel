@@ -34,7 +34,7 @@ class CompiledRoute implements \Serializable
      * @param string      $regex         The regular expression to use to match this route
      * @param array       $tokens        An array of tokens to use to generate URL for this route
      * @param array       $pathVariables An array of path variables
-     * @param string|null $hostRegex     Host regex
+     * @param string|null $hostRegex     Host regex 域名or主机ip
      * @param array       $hostTokens    Host tokens
      * @param array       $hostVariables An array of host variables
      * @param array       $variables     An array of variables (variables defined in the path and in the host patterns)
@@ -42,7 +42,7 @@ class CompiledRoute implements \Serializable
     public function __construct($staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = null, array $hostTokens = array(), array $hostVariables = array(), array $variables = array())
     {
         $this->staticPrefix = (string) $staticPrefix;
-        $this->regex = $regex;
+        $this->regex = $regex; //uri正则
         $this->tokens = $tokens;
         $this->pathVariables = $pathVariables;
         $this->hostRegex = $hostRegex;

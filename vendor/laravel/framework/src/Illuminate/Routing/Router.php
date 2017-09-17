@@ -18,43 +18,43 @@ class Router implements RegistrarContract {
 
 	/**
 	 * The event dispatcher instance.
-	 *
+	 * 事件对象
 	 * @var \Illuminate\Contracts\Events\Dispatcher
 	 */
 	protected $events;
 
 	/**
 	 * The IoC container instance.
-	 *
+	 * app容器对象
 	 * @var \Illuminate\Container\Container
 	 */
 	protected $container;
 
 	/**
 	 * The route collection instance.
-	 *
+	 * 路由集合对象
 	 * @var \Illuminate\Routing\RouteCollection
 	 */
 	protected $routes;
 
 	/**
 	 * The currently dispatched route instance.
-	 *
+	 * 当前匹配到的路由对象
 	 * @var \Illuminate\Routing\Route
 	 */
 	protected $current;
 
 	/**
 	 * The request currently being dispatched.
-	 *
+	 * 当前请求对象
 	 * @var \Illuminate\Http\Request
 	 */
 	protected $currentRequest;
 
 	/**
 	 * All of the short-hand keys for middlewares.
-	 *
-	 * @var array = ['中间件名1'=>'中间件类名1', '中间件名N'=>'中间件类名N',]
+	 * 路由中间介
+	 * @var array = ['中间件名1'=>'中间件类名1', '中间件名N'=>'中间件类名N','中间件名'=>'类名']
 	 */
 	protected $middleware = [];
 
@@ -88,7 +88,7 @@ class Router implements RegistrarContract {
 
 	/**
 	 * The route group attribute stack.
-	 *
+	 * 路由组设置使用的变量栈
 	 * @var array
 	 */
 	protected $groupStack = array();
@@ -102,7 +102,7 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Create a new Router instance.
-	 *
+	 * 创建路由管理者实例
 	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events Dispatcher类对象
 	 * @param  \Illuminate\Container\Container  $container app类对象
 	 * @return void
@@ -110,7 +110,7 @@ class Router implements RegistrarContract {
 	public function __construct(Dispatcher $events, Container $container = null)
 	{
 		$this->events = $events;//事件对象
-		$this->routes = new RouteCollection;
+		$this->routes = new RouteCollection; //路由集合对象
 		$this->container = $container ?: new Container;//app对象，容器对象
 	}
 
@@ -203,9 +203,9 @@ class Router implements RegistrarContract {
 	/**
 	 * Register a new route with the given verbs.
 	 *
-	 * @param  array|string  $methods
+	 * @param  array|string  $methods 请求方式,如GET,POST ['GET', 'POST']
 	 * @param  string  $uri
-	 * @param  \Closure|array|string  $action
+	 * @param  \Closure|array|string  $action 动作
 	 * @return \Illuminate\Routing\Route
 	 */
 	public function match($methods, $uri, $action)
@@ -231,7 +231,7 @@ class Router implements RegistrarContract {
 	 * Route a controller to a URI with wildcard routing.
 	 *
 	 * @param  string  $uri
-	 * @param  string  $controller
+	 * @param  string  $controller 类名
 	 * @param  array   $names
 	 * @return void
 	 */
@@ -239,9 +239,7 @@ class Router implements RegistrarContract {
 	{
 		$prepended = $controller;
 
-		// First, we will check to see if a controller prefix has been registered in
-		// the route group. If it has, we will need to prefix it before trying to
-		// reflect into the class instance and pull out the method for routing.
+		//
 		if ( ! empty($this->groupStack))
 		{
 			$prepended = $this->prependGroupUses($controller);
@@ -250,9 +248,7 @@ class Router implements RegistrarContract {
 		$routable = (new ControllerInspector)
 							->getRoutable($prepended, $uri);
 
-		// When a controller is routed using this method, we use Reflection to parse
-		// out all of the routable methods for the controller, then register each
-		// route explicitly for the developers, so reverse routing is possible.
+		//
 		foreach ($routable as $method => $routes)
 		{
 			foreach ($routes as $route)
@@ -277,9 +273,7 @@ class Router implements RegistrarContract {
 	{
 		$action = array('uses' => $controller.'@'.$method);
 
-		// If a given controller method has been named, we will assign the name to the
-		// controller action array, which provides for a short-cut to method naming
-		// so you don't have to define an individual route for these controllers.
+		//
 		$action['as'] = array_get($names, $method);
 
 		$this->{$route['verb']}($route['uri'], $action);
@@ -354,7 +348,7 @@ class Router implements RegistrarContract {
 	protected function updateGroupStack(array $attributes)
 	{
 		if ( ! empty($this->groupStack))
-		{
+		{//不为空说明路由组存在嵌套
 			$attributes = $this->mergeGroup($attributes, last($this->groupStack));
 		}
 
@@ -448,10 +442,10 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Add a route to the underlying route collection.
-	 *
-	 * @param  array|string  $methods
+	 * 向路由集合对象中添加路由对象
+	 * @param  array|string  $methods 请求方式
 	 * @param  string  $uri
-	 * @param  \Closure|array|string  $action
+	 * @param  \Closure|array|string  $action 动作
 	 * @return \Illuminate\Routing\Route
 	 */
 	protected function addRoute($methods, $uri, $action)
@@ -469,21 +463,16 @@ class Router implements RegistrarContract {
 	 */
 	protected function createRoute($methods, $uri, $action)
 	{
-		// If the route is routing to a controller we will parse the route action into
-		// an acceptable array format before registering it and creating this route
-		// instance itself. We need to build the Closure that will call this out.
+
 		if ($this->actionReferencesController($action))
-		{
-			$action = $this->convertToControllerAction($action);
+		{//不是闭包,且是字符串 or 数组的uses key是字符串
+			$action = $this->convertToControllerAction($action);//设置controller值=uses值
 		}
-
+		//实例化路由对象
 		$route = $this->newRoute(
-			$methods, $this->prefix($uri), $action
-		);
+								$methods, $this->prefix($uri), $action
+								);
 
-		// If we have groups that need to be merged, we will merge them now after this
-		// route has already been created and is ready to go. After we're done with
-		// the merge we will be ready to return the route back out to the caller.
 		if ($this->hasGroupStack())
 		{
 			$this->mergeGroupAttributesIntoRoute($route);
@@ -496,8 +485,8 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Create a new Route object.
-	 *
-	 * @param  array|string  $methods
+	 * 实例化路由类
+	 * @param  array|string  $methods 请求方式
 	 * @param  string  $uri
 	 * @param  mixed   $action
 	 * @return \Illuminate\Routing\Route
@@ -548,8 +537,8 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Determine if the action is routing to a controller.
-	 *
-	 * @param  array  $action
+	 * action是否设置为控制器
+	 * @param  array  $action = 闭包则返回false, 是字符串则返回true,数组中存在uses key且值是字符串则返回true
 	 * @return bool
 	 */
 	protected function actionReferencesController($action)
@@ -561,7 +550,7 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Add a controller based route action to the action array.
-	 *
+	 * 把uses值复制给controller
 	 * @param  array|string  $action
 	 * @return array
 	 */
@@ -577,9 +566,7 @@ class Router implements RegistrarContract {
 			$action['uses'] = $this->prependGroupUses($action['uses']);
 		}
 
-		// Here we will set this controller name on the action array just so we always
-		// have a copy of it for reference if we need it. This can be used while we
-		// search for a controller name or do some other type of fetch operation.
+		//把uses值复制给controller
 		$action['controller'] = $action['uses'];
 
 		return $action;
@@ -600,8 +587,8 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Dispatch the request to the application.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * 查找匹配路由
+	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return \Illuminate\Http\Response
 	 */
 	public function dispatch(Request $request)
@@ -621,7 +608,7 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Dispatch the request to a route and return the response.
-	 *
+	 * 根据请求对象匹配查找匹配到的路由对象
 	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return mixed
 	 */
@@ -661,13 +648,13 @@ class Router implements RegistrarContract {
 	/**
 	 * Run the given route within a Stack "onion" instance.
 	 *
-	 * @param  \Illuminate\Routing\Route  $route
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Routing\Route  $route 匹配到的route路由对象
+	 * @param  \Illuminate\Http\Request  $request 请求对象
 	 * @return mixed
 	 */
 	protected function runRouteWithinStack(Route $route, Request $request)
 	{
-		$middleware = $this->gatherRouteMiddlewares($route);
+		$middleware = $this->gatherRouteMiddlewares($route);//该路由的中间件
 
 		return (new Pipeline($this->container))
 						->send($request)
@@ -676,7 +663,7 @@ class Router implements RegistrarContract {
 						{
 							return $this->prepareResponse(
 								$request,
-								$route->run($request)
+								$route->run($request)  //执行匹配的路由对象run方法
 							);
 						});
 	}
@@ -698,13 +685,13 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Find the route matching a given request.
-	 *
+	 * 查找匹配的路由
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Routing\Route
 	 */
 	protected function findRoute($request)
 	{   //路由集合中匹配路由
-		$this->current = $route = $this->routes->match($request);//返回Route类对象
+		$this->current = $route = $this->routes->match($request);//返回匹配到的Route类对象,没匹配到则抛异常
 		$this->container->instance('Illuminate\Routing\Route', $route);//注入app对象中
 		return $this->substituteBindings($route);//返回Route类对象
 	}
@@ -788,7 +775,7 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Get all of the defined middleware short-hand names.
-	 *
+	 * 获取路由中间件配置
 	 * @return array
 	 */
 	public function getMiddleware()
@@ -798,9 +785,9 @@ class Router implements RegistrarContract {
 
 	/**
 	 * Register a short-hand name for a middleware.
-	 *
-	 * @param  string  $name
-	 * @param  string  $class
+	 * 设置路由中间件
+	 * @param  string  $name 中间件名
+	 * @param  string  $class 类名
 	 * @return $this
 	 */
 	public function middleware($name, $class)
@@ -1286,9 +1273,9 @@ class Router implements RegistrarContract {
 	 */
 	public function currentRouteAction()
 	{
-		if ( ! $this->current()) return;
+		if ( ! $this->current()) return;  //没有匹配到路由对象
 
-		$action = $this->current()->getAction();
+		$action = $this->current()->getAction();//获取匹配到的route路由对象的action属性值
 
 		return isset($action['controller']) ? $action['controller'] : null;
 	}

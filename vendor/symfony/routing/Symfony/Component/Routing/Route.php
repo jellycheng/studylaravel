@@ -606,7 +606,7 @@ class Route implements \Serializable
 
     /**
      * Compiles the route.
-     *
+     * 返回 Symfony\Component\Routing\CompiledRoute类对象
      * @return CompiledRoute A CompiledRoute instance
      *
      * @throws \LogicException If the Route cannot be compiled because the

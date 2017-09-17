@@ -19,7 +19,7 @@ class ResourceRegistrar {
 	/**
 	 * Create a new resource registrar instance.
 	 *
-	 * @param  \Illuminate\Routing\Router  $router
+	 * @param  \Illuminate\Routing\Router  $router 路由管理者
 	 * @return void
 	 */
 	public function __construct(Router $router)
@@ -37,9 +37,7 @@ class ResourceRegistrar {
 	 */
 	public function register($name, $controller, array $options = array())
 	{
-		// If the resource name contains a slash, we will assume the developer wishes to
-		// register these resource routes with a prefix so we will set that up out of
-		// the box so they don't have to mess with it. Otherwise, we will continue.
+		//
 		if (str_contains($name, '/'))
 		{
 			$this->prefixedResource($name, $controller, $options);
@@ -47,9 +45,7 @@ class ResourceRegistrar {
 			return;
 		}
 
-		// We need to extract the base resource from the resource name. Nested resources
-		// are supported in the framework, but we need to know what name to use for a
-		// place-holder on the route wildcards, which should be the base resources.
+		//
 		$base = $this->getResourceWildcard(last(explode('.', $name)));
 
 		$defaults = $this->resourceDefaults;

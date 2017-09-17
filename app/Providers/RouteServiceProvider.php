@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider {
 	/**
 	 * Define your route model bindings, pattern filters, etc.
 	 *
-	 * @param  \Illuminate\Routing\Router  $router
+	 * @param  \Illuminate\Routing\Router  $router 路由管理者
 	 * @return void
 	 */
 	public function boot(Router $router)
@@ -30,11 +30,12 @@ class RouteServiceProvider extends ServiceProvider {
 	/**
 	 * Define the routes for the application.
 	 *
-	 * @param  \Illuminate\Routing\Router  $router
+	 * @param  \Illuminate\Routing\Router  $router 路由管理者
 	 * @return void
 	 */
 	public function map(Router $router)
 	{
+		//设置路由
 		$router->group(['namespace' => $this->namespace], function($router)
 		{//控制器类均是在App\Http\Controllers\目录下
 			require app_path('Http/routes.php'); //加载路由配置
@@ -42,6 +43,7 @@ class RouteServiceProvider extends ServiceProvider {
 
 		//扩展路由
 		foreach (config('modules.list', []) as $dir => $module) {
+			//设置路由
 			$router->group(
 				[
 					'namespace' => 'App\Modules\\' . $dir . '\Http\Controllers', //控制器命名空间

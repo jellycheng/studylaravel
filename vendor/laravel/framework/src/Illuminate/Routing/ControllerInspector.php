@@ -17,8 +17,8 @@ class ControllerInspector {
 	/**
 	 * Get the routable methods for a controller.
 	 *
-	 * @param  string  $controller
-	 * @param  string  $prefix
+	 * @param  string  $controller 控制器类
+	 * @param  string  $prefix  uri
 	 * @return array
 	 */
 	public function getRoutable($controller, $prefix)
