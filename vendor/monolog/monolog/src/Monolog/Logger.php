@@ -155,7 +155,7 @@ class Logger implements LoggerInterface
      */
     public function pushHandler(HandlerInterface $handler)
     {
-        array_unshift($this->handlers, $handler);
+        array_unshift($this->handlers, $handler);//在数组开头插入一个或多个单元
     }
 
     /**
@@ -169,7 +169,7 @@ class Logger implements LoggerInterface
             throw new \LogicException('You tried to pop from an empty handler stack.');
         }
 
-        return array_shift($this->handlers);
+        return array_shift($this->handlers);//将数组开头的单元移出数组
     }
 
     /**

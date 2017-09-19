@@ -147,6 +147,8 @@ return [
 
 		//我定义的
 		'App\Providers\JellyServiceProvider',
+		'App\Providers\LogServiceProvider', //日志扩展
+
 
 	],
 

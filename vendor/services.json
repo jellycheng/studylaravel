@@ -27,7 +27,8 @@
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
-        "App\\Providers\\JellyServiceProvider"
+        "App\\Providers\\JellyServiceProvider",
+        "App\\Providers\\LogServiceProvider"
     ],
     "eager": [
         "Illuminate\\Auth\\AuthServiceProvider",
@@ -46,7 +47,8 @@
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
-        "App\\Providers\\JellyServiceProvider"
+        "App\\Providers\\JellyServiceProvider",
+        "App\\Providers\\LogServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
