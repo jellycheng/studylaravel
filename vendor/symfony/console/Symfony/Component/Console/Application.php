@@ -59,7 +59,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class Application
 {
-    private $commands = array();
+    private $commands = array(); //['命令类名'=>对象, '命令类别名'=>对象]
     private $wantHelps = false;
     private $runningCommand;
     private $name;
@@ -173,7 +173,7 @@ class Application
             return 0;
         }
 
-        $name = $this->getCommandName($input);
+        $name = $this->getCommandName($input);//获取当前要执行的命令名
         if (true === $input->hasParameterOption(array('--help', '-h'))) {
             if (!$name) {
                 $name = 'help';

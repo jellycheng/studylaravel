@@ -36,21 +36,21 @@ class Kernel implements KernelContract {
 	 * @var array
 	 */
 	protected $bootstrappers = [
-		'Illuminate\Foundation\Bootstrap\DetectEnvironment',
-		'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-		'Illuminate\Foundation\Bootstrap\ConfigureLogging',
-		'Illuminate\Foundation\Bootstrap\HandleExceptions',
-		'Illuminate\Foundation\Bootstrap\RegisterFacades',
-		'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
-		'Illuminate\Foundation\Bootstrap\RegisterProviders',
-		'Illuminate\Foundation\Bootstrap\BootProviders',
+		'Illuminate\Foundation\Bootstrap\DetectEnvironment', //分析.env文件，并设置当前环境
+		'Illuminate\Foundation\Bootstrap\LoadConfiguration',//加载config配置文件，设置时区,设置编码,可以使用$app['config']['app.aliases']获取配置值
+		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志,可通过app['log']获取日志对象,写日志app['log']->info("信息内容");等价Log::info('信息内容');
+		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置,set_error_handler(),set_exception_handler(),register_shutdown_function()
+		'Illuminate\Foundation\Bootstrap\RegisterFacades',//Facades类注入app对象，别名自动加载器,即把config/app.php中aliases配置的值定义好别名
+		'Illuminate\Foundation\Bootstrap\SetRequestForConsole',//容器中设置请求对象
+		'Illuminate\Foundation\Bootstrap\RegisterProviders',//调用app对象->registerConfiguredProviders()，并执行服务提供者类的register()方法,服务提供者类来自config/app.php的providers配置key
+		'Illuminate\Foundation\Bootstrap\BootProviders',//调用app对象->boot()方法（即执行所有服务提供者的boot()方法,上一行代码中设置的）
 	];
 
 	/**
 	 * Create a new console kernel instance.
 	 *
-	 * @param  \Illuminate\Contracts\Foundation\Application  $app
-	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+	 * @param  \Illuminate\Contracts\Foundation\Application接口实现类  $app
+	 * @param  \Illuminate\Contracts\Events\Dispatcher接口实现类  $events
 	 * @return void
 	 */
 	public function __construct(Application $app, Dispatcher $events)
@@ -87,7 +87,7 @@ class Kernel implements KernelContract {
 		{
 			$this->bootstrap();//启动初始化
 
-			return $this->getArtisan()->run($input, $output);
+			return $this->getArtisan()->run($input, $output);//z执行console app的run方法
 		}
 		catch (Exception $e)
 		{
@@ -192,13 +192,13 @@ class Kernel implements KernelContract {
 
 	/**
 	 * Get the Artisan application instance.
-	 * 获取Artisan类对象并匹配设置本类commands属性值
+	 * 获取Artisan类对象并设置本类commands属性值
 	 * @return \Illuminate\Console\Application
 	 */
 	protected function getArtisan()
 	{
 		if (is_null($this->artisan))
-		{
+		{   //实例化console app对象，同时实例化命令类并设置console app容器的commands属性=['命令类名'=>对象, '命令类别名'=>对象]
 			return $this->artisan = (new Artisan($this->app, $this->events))
 								->resolveCommands($this->commands);
 		}

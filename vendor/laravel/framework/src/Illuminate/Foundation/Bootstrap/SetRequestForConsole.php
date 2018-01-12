@@ -13,9 +13,9 @@ class SetRequestForConsole {
 	 */
 	public function bootstrap(Application $app)
 	{
-		$url = $app['config']->get('app.url', 'http://localhost');
+		$url = $app['config']->get('app.url', 'http://localhost');//获取应用程序url地址
 
-		$app->instance('request', Request::create($url, 'GET', [], [], [], $_SERVER));
+		$app->instance('request', Request::create($url, 'GET', [], [], [], $_SERVER));//容器中设置请求对象
 	}
 
 }

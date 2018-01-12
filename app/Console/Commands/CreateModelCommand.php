@@ -7,6 +7,7 @@ class CreateModelCommand extends Command {
 
 	/**
 	 * The console command name.
+     * 命令名
 	 * @var string
 	 */
 	protected $name = 'create:appmodel';
@@ -19,6 +20,7 @@ class CreateModelCommand extends Command {
 
 	/**
 	 * Execute the console command.
+     * 这里写业务逻辑
 	 * @return mixed
 	 */
 	public function handle()

@@ -35,7 +35,7 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	/**
 	 * Create a new Artisan console application.
 	 *
-	 * @param  \Illuminate\Contracts\Foundation\Application  $laravel
+	 * @param  \Illuminate\Contracts\Foundation\Application  $laravel 是laravel app容器对象
 	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events 事件对象
 	 * @return void
 	 */
@@ -80,7 +80,7 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	/**
 	 * Add a command to the console.
 	 *
-	 * @param  \Symfony\Component\Console\Command\Command  $command
+	 * @param  \Symfony\Component\Console\Command\Command  $command 命令类名
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
 	public function add(SymfonyCommand $command)
@@ -107,11 +107,11 @@ class Application extends SymfonyApplication implements ApplicationContract {
 	/**
 	 * Add a command, resolving through the application.
 	 *
-	 * @param  string  $command
+	 * @param  string  $command 命令类名
 	 * @return \Symfony\Component\Console\Command\Command
 	 */
 	public function resolve($command)
-	{   //实例化命令类
+	{   //实例化命令类并设置console app容器的commands属性=['命令类名'=>对象, '命令类别名'=>对象]
 		return $this->add($this->laravel->make($command));
 	}
 
@@ -126,7 +126,7 @@ class Application extends SymfonyApplication implements ApplicationContract {
 		$commands = is_array($commands) ? $commands : func_get_args();
 		foreach ($commands as $command)
 		{//循环每个命令
-			$this->resolve($command);
+			$this->resolve($command);//实例化命令类并设置console app容器的commands属性=['命令类名'=>对象, '命令类别名'=>对象]
 		}
 		return $this;
 	}
