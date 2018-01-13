@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Contracts\Encryption\Encrypter as EncrypterContract;
-
+//该类是自动查找的【即可以直接new IlluminateQueueClosure(Encrypter接口类);】，在 vendor/composer/autoload_classmap.php中配置
 class IlluminateQueueClosure {
 
 	/**
 	 * The encrypter instance.
-	 *
+	 * 接口类对象
 	 * @var \Illuminate\Contracts\Encryption\Encrypter  $crypt
 	 */
 	protected $crypt;
@@ -31,7 +31,7 @@ class IlluminateQueueClosure {
 	 */
 	public function fire($job, $data)
 	{
-		$closure = unserialize($this->crypt->decrypt($data['closure']));
+		$closure = unserialize($this->crypt->decrypt($data['closure']));//解密且解序列化，返回闭包
 
 		$closure($job);
 	}

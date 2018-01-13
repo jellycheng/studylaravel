@@ -2,7 +2,7 @@
 
 use RuntimeException;
 use ReflectionParameter;
-
+//自定义运行时异常类，类继承 RuntimeException extends Exception
 class MarshalException extends RuntimeException {
 
 	/**

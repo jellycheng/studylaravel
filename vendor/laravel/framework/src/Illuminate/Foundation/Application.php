@@ -109,7 +109,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	{
 	    //1.注册基本绑定，设置本类对象
 		$this->registerBaseBindings();
-		//2.注册服务提供者： 1.事件服务提供者，2.路由服务提供者   备注:服务提供者构造方法接收laravel app对象
+		//2.注册服务提供者： 1.事件服务提供者，2.路由服务提供者   备注:每个服务提供者类的构造方法均接收laravel app对象
 		$this->registerBaseServiceProviders();
 		//3.在容器中注册类的核心别名
 		$this->registerCoreContainerAliases();
@@ -463,7 +463,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 		$this->markAsRegistered($provider);
 
 		if ($this->booted)
-		{//调用过app对象的boot()方法，则调用$provider服务提供者类对象的boot()方法
+		{//如果已经调用过app对象的boot()方法，则调用$provider服务提供者类对象的boot()方法
 			$this->bootProvider($provider);
 		}
 		//返回服务提供者对象

@@ -1,5 +1,5 @@
 <?php namespace Illuminate\Contracts\Queue;
-
+//队列接口 
 interface Queue {
 
 	/**
