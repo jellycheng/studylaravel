@@ -6,7 +6,7 @@ class EnvironmentCommand extends Command {
 
 	/**
 	 * The console command name.
-	 *
+	 *  查看当前环境: php artisan env
 	 * @var string
 	 */
 	protected $name = 'env';

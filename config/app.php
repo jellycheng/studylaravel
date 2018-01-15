@@ -110,8 +110,10 @@ return [
 	'providers' => [
 		/*
 		 * Laravel Framework Service Providers...
-		 * laravel框架自带的服务提供者类(实际类),且均有register()方法,但boot()方法可选
+		 * laravel框架自带的服务提供者类(实际类),app自带的服务提供者类,项目自定义的服务提供者类,均有register()方法,但boot()方法可选
 		 */
+
+		//laravel框架自带的服务提供者类
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
 		'Illuminate\Bus\BusServiceProvider',

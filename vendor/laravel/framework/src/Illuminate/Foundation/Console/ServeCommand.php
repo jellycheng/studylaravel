@@ -7,7 +7,7 @@ class ServeCommand extends Command {
 
 	/**
 	 * The console command name.
-	 *
+	 * 启动php web服务: php artisan serve --host=localhost --port=8081
 	 * @var string
 	 */
 	protected $name = 'serve';

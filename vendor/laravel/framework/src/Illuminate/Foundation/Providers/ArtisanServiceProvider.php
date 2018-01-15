@@ -42,30 +42,31 @@ class ArtisanServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $commands = [
+		//本类方法名=>单例抽象物(抽象物格式: command.命令名)
 		'AppName' => 'command.app.name',
 		'ClearCompiled' => 'command.clear-compiled',
 		'CommandMake' => 'command.command.make',
 		'ConfigCache' => 'command.config.cache',
 		'ConfigClear' => 'command.config.clear',
-		'ConsoleMake' => 'command.console.make',
+		'ConsoleMake' => 'command.console.make',//php artisan make:console FooCommand命令文件名 --command=users:assign命令名
 		'EventGenerate' => 'command.event.generate',
 		'EventMake' => 'command.event.make',
-		'Down' => 'command.down',
-		'Environment' => 'command.environment',
+		'Down' => 'command.down',     //注册维护模式命令: php artisan down
+		'Environment' => 'command.environment', //查看当前环境: php artisan env
 		'Fresh' => 'command.fresh',
 		'HandlerCommand' => 'command.handler.command',
 		'HandlerEvent' => 'command.handler.event',
-		'KeyGenerate' => 'command.key.generate',
-		'ModelMake' => 'command.model.make',
+		'KeyGenerate' => 'command.key.generate',//生成appkey, php artisan key:generate --show
+		'ModelMake' => 'command.model.make',//php artisan make:model model类名
 		'Optimize' => 'command.optimize',
 		'ProviderMake' => 'command.provider.make',
 		'RequestMake' => 'command.request.make',
 		'RouteCache' => 'command.route.cache',
 		'RouteClear' => 'command.route.clear',
 		'RouteList' => 'command.route.list',
-		'Serve' => 'command.serve',
+		'Serve' => 'command.serve',//启动php web服务: php artisan serve --host=localhost --port=8081
 		'Tinker' => 'command.tinker',
-		'Up' => 'command.up',
+		'Up' => 'command.up',    //解除维护模式命令: php artisan up
 		'VendorPublish' => 'command.vendor.publish',
 	];
 
@@ -192,7 +193,7 @@ class ArtisanServiceProvider extends ServiceProvider {
 
 	/**
 	 * Register the command.
-	 *
+	 * 注册维护模式命令: php artisan down
 	 * @return void
 	 */
 	protected function registerDownCommand()

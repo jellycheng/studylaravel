@@ -7,7 +7,7 @@ class ModelMakeCommand extends GeneratorCommand {
 
 	/**
 	 * The console command name.
-	 *
+	 * php artisan make:model model类名
 	 * @var string
 	 */
 	protected $name = 'make:model';

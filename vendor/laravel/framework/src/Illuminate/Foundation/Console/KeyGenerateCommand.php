@@ -8,7 +8,7 @@ class KeyGenerateCommand extends Command {
 
 	/**
 	 * The console command name.
-	 *
+	 * 生成appkey, php artisan key:generate --show
 	 * @var string
 	 */
 	protected $name = 'key:generate';

@@ -8,7 +8,7 @@ class ConsoleMakeCommand extends GeneratorCommand {
 
 	/**
 	 * The console command name.
-	 *
+	 * php artisan make:console FooCommand命令文件名 --command=users:assign命令名
 	 * @var string
 	 */
 	protected $name = 'make:console';

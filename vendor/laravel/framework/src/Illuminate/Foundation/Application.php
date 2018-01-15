@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
+//Application是web和cli入口共用的类
 class Application extends Container implements ApplicationContract, HttpKernelInterface {
 
 	/**
