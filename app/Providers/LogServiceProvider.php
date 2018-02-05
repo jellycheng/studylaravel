@@ -18,7 +18,8 @@ class  LogServiceProvider extends ServiceProvider {
         $logPath = "/data1/logs/app/xfcrm-web";
         if (!is_dir($logPath)) mkdir($logPath, 0777, true);
         $log = $this->app['log'];
-        //$log->getMonolog()->getName(); 返回monolog的channel值，laravel传入的是环境代号  //echo $log->getMonolog()->getName();exit;
+        //$log->getMonolog()->getName(); 返回monolog的channel值，laravel传入的是环境代号
+        // echo $log->getMonolog()->getName();exit;
         //var_export($log->getMonolog()->getHandlers());exit;//Monolog\Handler\RotatingFileHandler
         /**
         //增加一种handler

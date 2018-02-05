@@ -30,7 +30,7 @@ class Kernel implements KernelContract {
 	 * @var array
 	 */
 	protected $bootstrappers = [
-		'Illuminate\Foundation\Bootstrap\DetectEnvironment',//分析.env文件，并设置当前环境
+		'Illuminate\Foundation\Bootstrap\DetectEnvironment',//分析.env文件，并设置当前环境(取.env中的APP_ENV值调用$app->detectEnvironment(环境值);方法)
 		'Illuminate\Foundation\Bootstrap\LoadConfiguration',//加载config配置文件，设置时区,设置编码,可以使用$app['config']['app.aliases']获取配置值
 		'Illuminate\Foundation\Bootstrap\ConfigureLogging',//设置日志,可通过app['log']获取日志对象,写日志app['log']->info("信息内容");等价Log::info('信息内容');
 		'Illuminate\Foundation\Bootstrap\HandleExceptions',//异常handle设置,set_error_handler(),set_exception_handler(),register_shutdown_function()

@@ -4,6 +4,9 @@ use Mockery;
 use RuntimeException;
 use Mockery\MockInterface;
 
+//Facade::setFacadeApplication($app); 注入app对象
+//在 Illuminate\Foundation\Bootstrap\RegisterFacades类的bootstrap()方法中有调用本类静态方法初始化
+
 abstract class Facade {
 
 	/**
@@ -171,7 +174,7 @@ abstract class Facade {
 
 	/**
 	 * Get the application instance behind the facade.
-	 *
+	 * 获取app对象
 	 * @return \Illuminate\Contracts\Foundation\Application
 	 */
 	public static function getFacadeApplication()
@@ -181,7 +184,7 @@ abstract class Facade {
 
 	/**
 	 * Set the application instance.
-	 *
+	 *  Facade::setFacadeApplication($app); 注入app对象
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
 	 * @return void
 	 */

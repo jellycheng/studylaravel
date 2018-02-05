@@ -377,7 +377,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 			}
 			return false;
 		}
-		return $this['env'];
+		return $this['env'];//调用本类offsetGet('env');方法
 	}
 
 	/**
@@ -399,7 +399,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	public function detectEnvironment(Closure $callback)
 	{
 		$args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;//有值则是cli方式,如--env=dev 无值则是http方式
-
+		//调用本类offsetSet('env', 环境值)方法,
 		return $this['env'] = (new EnvironmentDetector())->detect($callback, $args);
 	}
 
