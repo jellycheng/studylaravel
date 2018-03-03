@@ -10,13 +10,13 @@ class LoadConfiguration {
 
 	/**
 	 * Bootstrap the given application.
-	 *
+	 * 加载config/配置文件,并设置容器['config']=Repository对象
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
 	 * @return void
 	 */
 	public function bootstrap(Application $app)
 	{
-		$items = [];
+		$items = [];//配置值
 
 		if (file_exists($cached = $app->getCachedConfigPath()))
 		{//存在storage/framwwork/config.php文件则加载
@@ -46,7 +46,7 @@ class LoadConfiguration {
 	{
 		foreach ($this->getConfigurationFiles($app) as $key => $path)
 		{//遍历config目录，加载配置文件，文件名作为key，文件配置作为值
-			$config->set($key, require $path);
+			$config->set($key, require $path);//设置值
 		}
 	}
 

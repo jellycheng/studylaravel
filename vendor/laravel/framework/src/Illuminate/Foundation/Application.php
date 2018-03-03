@@ -445,7 +445,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	 * @return \Illuminate\Support\ServiceProvider
 	 */
 	public function register($provider, $options = array(), $force = false)
-	{	//服务提供者已实例化且执行过register()方法则返回true
+	{	//服务提供者已实例化且执行过register()方法则返回true 否则返回false
 		if ($registered = $this->getProvider($provider) && ! $force)
              return $registered;
 
@@ -774,7 +774,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
 	/**
 	 * Register a terminating callback with the application.
 	 * 注册terminating回调
-	 * @param  \Closure  $callback
+	 * @param  \Closure  $callback 闭包
 	 * @return $this
 	 */
 	public function terminating(Closure $callback)

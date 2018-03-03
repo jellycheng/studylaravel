@@ -8,7 +8,7 @@ class ConfigureLogging {
 
 	/**
 	 * Bootstrap the given application.
-	 *
+	 * 配置日志
 	 * @param  \Illuminate\Contracts\Foundation\Application  $app
 	 * @return void
 	 */

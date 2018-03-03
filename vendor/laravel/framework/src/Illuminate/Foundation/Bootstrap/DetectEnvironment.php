@@ -22,7 +22,7 @@ class DetectEnvironment {
 		}
 
 		$app->detectEnvironment(function()
-		{//设置当前环境值,注入app对象['env']=中
+		{//设置当前环境值,注入app对象['env']=APP_ENV值
 			return env('APP_ENV', 'production');//返回.env中配置的APP_ENV值
 		});
 	}

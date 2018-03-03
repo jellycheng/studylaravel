@@ -4,7 +4,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Application Debug Mode
+	| Application Debug Mode 是否调试
 	|--------------------------------------------------------------------------
 	|
 	| When your application is in debug mode, detailed error messages with
@@ -30,7 +30,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Application Timezone
+	| Application Timezone 时区
 	|--------------------------------------------------------------------------
 	|
 	| Here you may specify the default timezone for your application, which
@@ -43,7 +43,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Application Locale Configuration
+	| Application Locale Configuration 语言包
 	|--------------------------------------------------------------------------
 	|
 	| The application locale determines the default locale that will be used
@@ -69,7 +69,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Encryption Key
+	| Encryption Key 加密key
 	|--------------------------------------------------------------------------
 	|
 	| This key is used by the Illuminate encrypter service and should be set
@@ -84,7 +84,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Logging Configuration
+	| Logging Configuration日志配置
 	|--------------------------------------------------------------------------
 	|
 	| Here you may configure the log settings for your application. Out of
@@ -99,7 +99,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Autoloaded Service Providers
+	| Autoloaded Service Providers服务提供者配置
 	|--------------------------------------------------------------------------
 	|
 	| The service providers listed here will be automatically loaded on the
@@ -110,7 +110,8 @@ return [
 	'providers' => [
 		/*
 		 * Laravel Framework Service Providers...
-		 * laravel框架自带的服务提供者类(实际类),app自带的服务提供者类,项目自定义的服务提供者类,均有register()方法,但boot()方法可选
+		 * 1.laravel框架自带的服务提供者类(实际类),2.app自带的服务提供者类,3.项目(开发者)自定义的服务提供者类,
+		 * 这些服务提供者类均有register()方法,但boot()方法可选
 		 */
 
 		//laravel框架自带的服务提供者类
@@ -147,16 +148,15 @@ return [
 		'App\Providers\EventServiceProvider', //事件服务提供者
 		'App\Providers\RouteServiceProvider', //路由服务提供者
 
-		//我定义的
+		//我(开发者)定义的
 		'App\Providers\JellyServiceProvider',
 		'App\Providers\LogServiceProvider', //日志扩展
-
 
 	],
 
 	/*
 	|--------------------------------------------------------------------------
-	| Class Aliases  类别名配置,
+	| Class Aliases  facade类别名配置(门面模式),
 	| 配置好之后,后续代码则可以使用 use 别名;来使用类,
 	| 如 use DB; $results = DB::select('select * from t_general_user where iUserID = ?', [1]);
 	|--------------------------------------------------------------------------
@@ -167,7 +167,7 @@ return [
 	|
 	*/
 	'aliases' => [
-		//'别名'=>'类名', #class_alias(类名, 别名, true);
+		//'别名'=>'facade类名', #class_alias(facade类名, 别名, true);
 		'App'       => 'Illuminate\Support\Facades\App',
 		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
 		'Auth'      => 'Illuminate\Support\Facades\Auth',

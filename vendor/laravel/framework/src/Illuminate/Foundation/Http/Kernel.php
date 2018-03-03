@@ -63,22 +63,22 @@ class Kernel implements KernelContract {
 	public function __construct(Application $app, Router $router)
 	{
 		/*
-		 array ('app','Illuminate\\Container\\Container','events是事件对象','path','path.base',
-  				'path.config','path.database','path.lang','path.public','path.storage')
+		 ['app','Illuminate\\Container\\Container','events是事件对象','path','path.base',
+  				'path.config','path.database','path.lang','path.public','path.storage']
 		 */
 		//var_export($app->getInstancesAllKey4Jelly());exit;
 		/**
 		 app类的bindings属性值的key：
-		array (
-			0 => 'events',事件,在Illuminate\Events\EventServiceProvider.php文件中设置
-			1 => 'router',路由，在Illuminate\Routing\RoutingServiceProvider.php文件中设置
-			2 => 'url',                     在Illuminate\Routing\RoutingServiceProvider.php文件中设置
-			3 => 'redirect',               在Illuminate\Routing\RoutingServiceProvider.php文件中设置
-			4 => 'Illuminate\Contracts\Routing\ResponseFactory',在Illuminate\Routing\RoutingServiceProvider.php文件中设置
-			5 => 'Illuminate\Contracts\Http\Kernel',            在bootstrap/app.php文件中设置
-			6 => 'Illuminate\Contracts\Console\Kernel',         在bootstrap/app.php文件中设置
-			7 => 'Illuminate\Contracts\Debug\ExceptionHandler', 在bootstrap/app.php文件中设置
-		)
+			array (
+				0 => 'events',事件,在Illuminate\Events\EventServiceProvider.php文件中设置
+				1 => 'router',路由，在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+				2 => 'url',                     在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+				3 => 'redirect',               在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+				4 => 'Illuminate\Contracts\Routing\ResponseFactory',在Illuminate\Routing\RoutingServiceProvider.php文件中设置
+				5 => 'Illuminate\Contracts\Http\Kernel',            在bootstrap/app.php文件中设置
+				6 => 'Illuminate\Contracts\Console\Kernel',         在bootstrap/app.php文件中设置
+				7 => 'Illuminate\Contracts\Debug\ExceptionHandler', 在bootstrap/app.php文件中设置
+			)
 		 */
 		//var_export($app->getBindingsAllKey4Jelly());exit;
 		//var_export($app->getBindings());exit;
@@ -86,7 +86,7 @@ class Kernel implements KernelContract {
 		$this->router = $router;
 		foreach ($this->routeMiddleware as $key => $middleware)
 		{   //设置路由Router类对象的属性middleware（把在kernel中配置的中间介传给路由属性）=[中间介名=>中间介类]
-			$router->middleware($key, $middleware);//$this->middleware[中间件名] = 类名;
+			$router->middleware($key, $middleware);//$this路由管理者对象->middleware[中间件名] = 类名;
 		}
 		
 	}
@@ -113,14 +113,14 @@ class Kernel implements KernelContract {
 	/**
 	 * Send the given request through the middleware / router.
 	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\Response 返回响应对象
 	 */
 	protected function sendRequestThroughRouter($request)
 	{
-		$this->app->instance('request', $request);
-		Facade::clearResolvedInstance('request');//取消facade属性对象
-		$this->bootstrap();//调用启动执行的类,且这些类均有bootstrap($app对象)方法
-		//执行本类middleware属性设置的所有类->handle(请求对象,下一个闭包);最后执行dispatchToRouter()方法返回的闭包
+		$this->app->instance('request', $request);//方便通过app对象->make('request')获取请求对象
+		Facade::clearResolvedInstance('request');//取消facade属性值对象
+		$this->bootstrap();//调用启动执行的类,且这些类均有bootstrap($app对象)方法(即执行本类bootstrappers属性中配置的所有类的bootstrap($app对象)方法)
+		//执行本类middleware属性值配置的所有类->handle(请求对象,下一个闭包);最后执行dispatchToRouter()方法返回的闭包
 		return (new Pipeline($this->app))
 		            ->send($request)
 		            ->through($this->middleware)
@@ -188,10 +188,8 @@ class Kernel implements KernelContract {
 	 * @param  string  $middleware
 	 * @return $this
 	 */
-	public function pushMiddleware($middleware)
-	{
-		if (array_search($middleware, $this->middleware) === false)
-		{
+	public function pushMiddleware($middleware) {
+		if (array_search($middleware, $this->middleware) === false) {
 			$this->middleware[] = $middleware;
 		}
 
@@ -205,9 +203,8 @@ class Kernel implements KernelContract {
 	 */
 	public function bootstrap()
 	{
-		if ( ! $this->app->hasBeenBootstrapped())
-		{//app未启动执行完毕：判断标准是：app类的$hasBeenBootstrapped属性是否为真
-			$this->app->bootstrapWith($this->bootstrappers());//执行每个启动类的bootstrap($app对象)方法，然后标记app类的$hasBeenBootstrapped属性值=true
+		if ( ! $this->app->hasBeenBootstrapped()) {//app未启动执行完毕,判断标准是：app容器类的$hasBeenBootstrapped属性值是否为真
+			$this->app->bootstrapWith($this->bootstrappers());//执行每个启动类的bootstrap($app对象)方法，最后标记app容器类的$hasBeenBootstrapped属性值=true
 		}
 	}
 
@@ -221,7 +218,7 @@ class Kernel implements KernelContract {
 		return function($request)
 		{
 			$this->app->instance('request', $request);//注入请求对象
-            //分析请求，路由
+            //分析请求，路由,返回\Illuminate\Http\Response响应对象
 			return $this->router->dispatch($request);
 		};
 	}

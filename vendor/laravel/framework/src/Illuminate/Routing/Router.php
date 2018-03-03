@@ -589,7 +589,7 @@ class Router implements RegistrarContract {
 	 * Dispatch the request to the application.
 	 * 查找匹配路由
 	 * @param  \Illuminate\Http\Request  $request 请求对象
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\Response 响应对象
 	 */
 	public function dispatch(Request $request)
 	{

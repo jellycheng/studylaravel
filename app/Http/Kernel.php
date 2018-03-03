@@ -22,8 +22,10 @@ class Kernel extends HttpKernel {
 	 * The application's route middleware.
 	 * 路由中间介，会传递给router类对象的middleware属性中(在实例化本类时注入Router类中)
 	 * 一般新的项目不配置这个属性,把该属性值变为空数组,如何根据业务再自行配置路由中间介
-	 * 中间介类只有被调用才会实例化执行: 方式1: 控制器中$this->middleware('中间介名');
-	 * 	方式2: 在路由中配置 Route::group(['middleware'=>['中间介1', '中间介N'], 'prefix' => 'vshop', 'namespace' => 'Vshop'], function () { });
+	 * 路由中间介类只有被调用或者匹配到对应的路由时才会实例化执行:
+	 *  方式1: 控制器中$this->middleware('路由中间介名');
+	 * 	方式2: 在路由中配置:
+	 * 		  Route::group(['middleware'=>['中间介1', '中间介N'], 'prefix' => 'vshop', 'namespace' => 'Vshop'], function () { });
 	 *        Route::get('urlxxx/profile', ['middleware' =>'auth','uses'=>'UserController@showProfile']);
 	 * @var array
 	 */
